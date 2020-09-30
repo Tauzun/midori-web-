@@ -3,37 +3,14 @@
 </p>
 
 <div align="center">
-  <h1>Midori Browser</h1>
-
-<ul style="list-style-type: none; text-align: center; margin: 0; padding: 0;">
-
-<li style="display: inline-block; font-size: 20px; padding: 20px;"> 
+  <h1>Midori Browser</h1> 
 
 [![Actions Status](https://img.shields.io/badge/GitLab-Midori--Browser-brightgreen?style=flat&logo=gitlab)](https://gitlab.com/midori-web/)
-
-</li>
-<li style="display: inline-block; font-size: 20px; padding: 20px;"> 
-
-
 [![PayPal](https://img.shields.io/badge/PayPal-Donate-brightgreen?style=flat&logo=PayPal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UQPXCVUG2CKNG&source=url)
-</li>
-<li style="display: inline-block; font-size: 20px; padding: 20px;"> 
-
-
 [![Telegram](https://img.shields.io/badge/Telegram-EN-brightgreen?style=flat&logo=telegram)](https://t.me/midoriweb)
-</li>
-
-<li style="display: inline-block; font-size: 20px; padding: 20px;"> 
-
 [![Telegram](https://img.shields.io/badge/Telegram-ES-brightgreen?style=flat&logo=telegram)](https://t.me/midoriwebes)
-</li>
 
-</ul>
-
-<div style="text-align: justify;text-justify: inter-word;">
 Midori is a lightweight yet powerful web browser which runs just as well on little embedded computers named for delicious pastries as it does on beefy machines with a core temperature exceeding that of planet earth. And it looks good doing that, built on top of <code>Electron</code> and <code>React</code>. It aims to be fast, private, beautiful, extensible and functional.
-</div>
-
 </div>
 
 # Features
@@ -42,6 +19,7 @@ Midori is a lightweight yet powerful web browser which runs just as well on litt
   - Adblock filter list support
   - Private browsing
   - Manage cookies and scripts
+<a/>
 
 - **Chromium without Google services and low resources usage** - Since Midori Browser uses Electron under the hood which is based on only several and the most important Chromium components, it's not bloated with redundant Google tracking services and others.
 
@@ -91,3 +69,5 @@ It's somewhat true, but technically it doesn't matter (also please keep in mind 
 Choosing Electron was the best option to build the browser. We can build the UI however we want and make the customization even better. We don't have enough resources to build Chromium for weeks and edit almost 25 million lines of code and search for weeks for example the code responsible for changing button icons. Instead we chose Electron which uses only several Chromium components required to properly display the external content without any of the Google services, which makes the browser much lighter. Despite using only some part of Chromium, it doesn't really affect on the browser functionalities. We can implement all of the Chromium features except the Google services.
 </p>
 </div>
+
+This Midori renovation is based in Wexond.
