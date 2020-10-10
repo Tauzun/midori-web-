@@ -22,6 +22,10 @@
       {
         "target": "deb",
         "arch": ["ia32", "x64"]
+      },
+      {
+        "target": "pacman",
+        "arch": ["ia32", "x64"]
       }
     ]
   },
