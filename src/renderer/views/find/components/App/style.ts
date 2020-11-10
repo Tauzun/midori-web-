@@ -1,18 +1,13 @@
 import styled, { css } from 'styled-components';
 
 import { centerIcon } from '~/renderer/mixins';
+import { icons } from '~/renderer/constants/icons';
 import { ITheme } from '~/interfaces';
-import { ICON_SEARCH } from '~/renderer/constants';
-import {
-  DIALOG_BOX_SHADOW,
-  DIALOG_BORDER_RADIUS,
-} from '~/renderer/mixins/dialogs';
 
 export const StyledApp = styled.div`
-  margin: 16px;
-  margin-top: 3px;
-  box-shadow: ${DIALOG_BOX_SHADOW};
-  border-radius: ${DIALOG_BORDER_RADIUS}px;
+  margin: 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  border-radius: 6px;
   background: white;
 
   ${({ theme }: { theme?: ITheme }) => css`
@@ -36,7 +31,7 @@ export const SearchIcon = styled.div`
   ${centerIcon()};
   margin-left: 12px;
   opacity: 0.54;
-  background-image: url(${ICON_SEARCH});
+  background-image: url(${icons.search});
 
   ${({ theme }: { theme?: ITheme }) => css`
     filter: ${theme['dialog.lightForeground'] ? 'invert(100%)' : 'none'};

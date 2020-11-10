@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Textfield, TextFieldProps } from '../Textfield';
-import { ICON_INVISIBLE, ICON_VISIBLE } from '~/renderer/constants/icons';
+import { icons } from '~/renderer/constants';
 
 interface Props extends TextFieldProps {
   style?: any;
@@ -32,7 +32,7 @@ export class PasswordInput extends React.PureComponent<Props, State> {
   }
 
   public test() {
-    return this.ref.current.test((str) => str.trim().length !== 0);
+    return this.ref.current.test(str => str.trim().length !== 0);
   }
 
   public clear() {
@@ -49,7 +49,7 @@ export class PasswordInput extends React.PureComponent<Props, State> {
         dark={dark}
         label="Password"
         inputType={visible ? 'text' : 'password'}
-        icon={visible ? ICON_INVISIBLE : ICON_VISIBLE}
+        icon={visible ? icons.invisible : icons.visible}
         onIconClick={this.onIconClick}
         style={style}
       />

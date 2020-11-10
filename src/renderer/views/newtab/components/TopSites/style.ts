@@ -1,5 +1,4 @@
-import styled, { css } from 'styled-components';
-import { ITheme } from '~/interfaces';
+import styled from 'styled-components';
 
 export const StyledTopSites = styled.div`
   display: grid;
@@ -23,11 +22,5 @@ export const ItemBase = styled.div`
 
 export const Placeholder = styled(ItemBase)`
   box-sizing: border-box;
-
-  ${({ theme, imageSet }: { theme?: ITheme; imageSet: boolean }) => css`
-    border: 2px dashed
-      ${!imageSet && !theme['pages.lightForeground']
-        ? 'rgba(0, 0, 0, 0.2)'
-        : 'rgba(255, 255, 255, 0.3)'};
-  `}
+  border: 2px dashed rgba(255, 255, 255, 0.3);
 `;

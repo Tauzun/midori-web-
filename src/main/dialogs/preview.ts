@@ -1,50 +1,58 @@
-import { BrowserWindow } from 'electron';
-import { Application } from '../application';
-import { DIALOG_MARGIN_TOP, DIALOG_MARGIN } from '~/constants/design';
-import { PersistentDialog } from './dialog';
+import { AppWindow } from '../windows';
+import { MENU_WIDTH } from '~/constants/design';
+import { Dialog } from '.';
 
-const HEIGHT = 256;
+const WIDTH = MENU_WIDTH;
+const HEIGHT = 128;
 
-export class PreviewDialog extends PersistentDialog {
+export class PreviewDialog extends Dialog {
   public visible = false;
-  public tab: { id?: number; x?: number; y?: number } = {};
+  public tab: { id?: number; x?: number } = {};
 
-  constructor() {
-    super({
+  private timeout1: any;
+
+  constructor(appWindow: AppWindow) {
+    super(appWindow, {
       name: 'preview',
       bounds: {
+        width: appWindow.getBounds().width,
         height: HEIGHT,
+        y: 39,
       },
-      hideTimeout: 150,
+      hideTimeout: 200,
     });
   }
 
   public rearrange() {
-    const { width } = this.browserWindow.getContentBounds();
-    super.rearrange({ width, y: this.tab.y });
+    const { width } = this.appWindow.getContentBounds();
+    super.rearrange({ width });
   }
 
-  public async show(browserWindow: BrowserWindow) {
-    super.show(browserWindow, false);
+  public show() {
+    clearTimeout(this.timeout1);
+    this.appWindow.dialogs.searchDialog.rearrangePreview(true);
 
-    const {
-      id,
-      url,
-      title,
-      errorURL,
-    } = Application.instance.windows
-      .fromBrowserWindow(browserWindow)
-      .viewManager.views.get(this.tab.id);
+    super.show(false);
 
-    this.send('visible', true, {
-      id,
-      url: url.startsWith('midori-error') ? errorURL : url,
+    const tab = this.appWindow.viewManager.views.get(this.tab.id);
+
+    const url = tab.webContents.getURL();
+    const title = tab.webContents.getTitle();
+
+    this.webContents.send('visible', true, {
+      id: tab.id,
+      url: url.startsWith('midori-error') ? tab.errorURL : url,
       title,
-      x: this.tab.x - 8,
+      x: Math.round(this.tab.x - 8),
     });
   }
 
   public hide(bringToTop = true) {
+    clearTimeout(this.timeout1);
+    this.timeout1 = setTimeout(() => {
+      this.appWindow.dialogs.searchDialog.rearrangePreview(false);
+    }, 210);
+
     super.hide(bringToTop);
   }
 }

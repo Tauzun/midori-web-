@@ -1,4 +1,4 @@
-import { VIEW_Y_OFFSET } from '~/constants/design';
+import { TOOLBAR_HEIGHT } from '~/constants/design';
 import { AppWindow } from '../windows';
 import { Dialog } from '.';
 
@@ -12,13 +12,13 @@ export class CredentialsDialog extends Dialog {
       bounds: {
         height: HEIGHT,
         width: WIDTH,
-        y: VIEW_Y_OFFSET,
+        y: TOOLBAR_HEIGHT,
       },
     });
   }
 
   public rearrange() {
-    const { width } = this.appWindow.win.getContentBounds();
+    const { width } = this.appWindow.getContentBounds();
     super.rearrange({
       x: width - WIDTH,
     });

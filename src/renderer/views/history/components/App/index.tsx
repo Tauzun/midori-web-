@@ -4,20 +4,15 @@ import { hot } from 'react-hot-loader/root';
 
 import store, { QuickRange } from '../../store';
 import { NavigationDrawer } from '~/renderer/components/NavigationDrawer';
-import { ThemeProvider } from 'styled-components';
+import { Style } from '../../style';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { icons } from '~/renderer/constants/icons';
 import { SelectionDialog } from '~/renderer/components/SelectionDialog';
 import { HistorySection } from '../HistorySection';
 import { Container, Content, LeftContent } from '~/renderer/components/Pages';
 import { GlobalNavigationDrawer } from '~/renderer/components/GlobalNavigationDrawer';
-import {
-  ICON_HISTORY,
-  ICON_ALL,
-  ICON_TODAY,
-  ICON_WEEK,
-  ICON_CALENDAR,
-  ICON_TRASH,
-} from '~/renderer/constants';
-import { WebUIStyle } from '~/renderer/mixins/default-styles';
+
+const GlobalStyle = createGlobalStyle`${Style}`;
 
 const onScroll = (e: any) => {
   const scrollPos = e.target.scrollTop;
@@ -48,12 +43,12 @@ const RangeItem = observer(
   ),
 );
 
-const onCancelClick = (e: React.MouseEvent<HTMLDivElement>) => {
+const onCancelClick = (e: React.MouseEvent) => {
   e.stopPropagation();
   store.selectedItems = [];
 };
 
-const onDeleteClick = (e: React.MouseEvent<HTMLDivElement>) => {
+const onDeleteClick = (e: React.MouseEvent) => {
   e.stopPropagation();
   store.deleteSelected();
 };
@@ -68,7 +63,7 @@ const HistorySections = observer(() => {
         onDeleteClick={onDeleteClick}
         onCancelClick={onCancelClick}
       />
-      {store.sections.map((data) => (
+      {store.sections.map(data => (
         <HistorySection data={data} key={data.date.getTime()} />
       ))}
     </LeftContent>
@@ -90,26 +85,26 @@ export default hot(
     return (
       <ThemeProvider theme={{ ...store.theme }}>
         <Container>
-          <WebUIStyle />
+          <GlobalStyle />
           <GlobalNavigationDrawer></GlobalNavigationDrawer>
           <NavigationDrawer title="History" search onSearchInput={onInput}>
-            <RangeItem icon={ICON_ALL} range="all">
+            <RangeItem icon={icons.all} range="all">
               All
             </RangeItem>
-            <RangeItem icon={ICON_TODAY} range="today">
+            <RangeItem icon={icons.today} range="today">
               Today
             </RangeItem>
-            <RangeItem icon={ICON_HISTORY} range="yesterday">
+            <RangeItem icon={icons.history} range="yesterday">
               Yesterday
             </RangeItem>
-            <RangeItem icon={ICON_WEEK} range="last-week">
+            <RangeItem icon={icons.week} range="last-week">
               Last week
             </RangeItem>
-            <RangeItem icon={ICON_CALENDAR} range="older">
+            <RangeItem icon={icons.calendar} range="older">
               Older
             </RangeItem>
             <div style={{ flex: 1 }} />
-            <NavigationDrawer.Item icon={ICON_TRASH} onClick={onClearClick}>
+            <NavigationDrawer.Item icon={icons.trash} onClick={onClearClick}>
               Clear browsing data
             </NavigationDrawer.Item>
           </NavigationDrawer>

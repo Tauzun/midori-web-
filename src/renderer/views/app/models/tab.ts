@@ -10,10 +10,18 @@ import {
   TAB_MAX_WIDTH,
   TAB_PINNED_WIDTH,
 } from '../constants';
+import { getColorBrightness } from '~/utils';
+import { NEWTAB_URL } from '~/constants/tabs';
 import { closeWindow } from '../utils/windows';
 import { callViewMethod } from '~/utils/view';
-import { animateTab } from '../utils/tabs';
-import { NEWTAB_URL } from '~/constants/tabs';
+
+const isColorAcceptable = (color: string) => {
+  if (store.theme['tab.allowLightBackground']) {
+    return getColorBrightness(color) > 120;
+  }
+
+  return getColorBrightness(color) < 170;
+};
 
 export class ITab {
   @observable
@@ -29,9 +37,6 @@ export class ITab {
   public isMuted = false;
 
   @observable
-  public isPlaying = false;
-
-  @observable
   public title = 'New tab';
 
   @observable
@@ -44,16 +49,20 @@ export class ITab {
   public tabGroupId: number;
 
   @observable
-  public addressbarValue: string = null;
-
-  public addressbarFocused = false;
-  public addressbarSelectionRange = [0, 0];
-
   public width = 0;
-  public left = 0;
+
+  @observable
+  public background = store.theme.accentColor;
 
   @observable
   public url = '';
+
+  @observable
+  public findInfo = {
+    occurrences: '0/0',
+    text: '',
+    visible: false,
+  };
 
   @observable
   public blockedAds = 0;
@@ -61,10 +70,15 @@ export class ITab {
   @observable
   public hasCredentials = false;
 
+  @observable
+  public customColor = false;
+
+  public left = 0;
   public lastUrl = '';
   public isClosing = false;
   public ref = React.createRef<HTMLDivElement>();
 
+  public hasThemeColor = false;
   public removeTimeout: any;
 
   public marginLeft = 0;
@@ -77,6 +91,24 @@ export class ITab {
   @computed
   public get isHovered() {
     return store.tabs.hoveredTabId === this.id;
+  }
+
+  @computed
+  public get borderVisible() {
+    const tabs = this.tabGroup.tabs;
+
+    const i = tabs.indexOf(this);
+    const nextTab = tabs[i + 1];
+
+    if (
+      (nextTab && (nextTab.isHovered || nextTab.isSelected)) ||
+      this.isSelected ||
+      this.isHovered
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   @computed
@@ -97,22 +129,95 @@ export class ITab {
     this.id = id;
     this.isPinned = pinned;
 
-    if (NEWTAB_URL.startsWith(url)) {
-      this.addressbarFocused = true;
-    }
-
     if (active) {
       requestAnimationFrame(() => {
         this.select();
       });
     }
 
-    if (process.env.ENABLE_EXTENSIONS) {
-      const { defaultBrowserActions } = store.extensions;
+    ipcRenderer.on(`view-url-updated-${this.id}`, async (e, url: string) => {
+      this.url = url;
+      this.updateData();
+    });
 
-      for (const item of defaultBrowserActions) {
-        store.extensions.addBrowserActionToTab(this.id, item);
+    ipcRenderer.on(`view-title-updated-${this.id}`, (e, title: string) => {
+      this.title = title;
+      this.updateData();
+    });
+
+    ipcRenderer.on(`view-did-navigate-${this.id}`, async (e, url: string) => {
+      this.background = store.theme.accentColor;
+      this.customColor = false;
+      this.favicon = '';
+    });
+
+    ipcRenderer.on(
+      `load-commit-${this.id}`,
+      async (
+        e,
+        event,
+        url: string,
+        isInPlace: boolean,
+        isMainFrame: boolean,
+      ) => {
+        if (isMainFrame) {
+          this.blockedAds = 0;
+        }
+      },
+    );
+
+    ipcRenderer.on(`update-tab-favicon-${this.id}`, (e, favicon) => {
+      this.favicon = favicon;
+      this.updateData();
+    });
+
+    ipcRenderer.on(`update-tab-color-${this.id}`, (e, color) => {
+      if (isColorAcceptable(color)) {
+        this.background = color;
+        this.customColor = true;
+      } else {
+        this.background = store.theme.accentColor;
+        this.customColor = false;
       }
+    });
+
+    ipcRenderer.on(`blocked-ad-${this.id}`, () => {
+      this.blockedAds++;
+    });
+
+    ipcRenderer.on(
+      `browserview-theme-color-updated-${this.id}`,
+      (e, themeColor: string) => {
+        if (themeColor && isColorAcceptable(themeColor)) {
+          this.background = themeColor;
+          this.hasThemeColor = true;
+          this.customColor = true;
+        } else {
+          this.background = store.theme.accentColor;
+          this.hasThemeColor = false;
+          this.customColor = false;
+        }
+      },
+    );
+
+    ipcRenderer.on(`tab-pinned-${this.id}`, (e, isPinned: boolean) => {
+      this.isPinned = isPinned;
+    });
+
+    ipcRenderer.on(`view-loading-${this.id}`, (e, loading: boolean) => {
+      this.loading = loading;
+    });
+
+    ipcRenderer.on(`has-credentials-${this.id}`, (e, found: boolean) => {
+      this.hasCredentials = found;
+    });
+
+    const { defaultBrowserActions, browserActions } = store.extensions;
+
+    for (const item of defaultBrowserActions) {
+      const browserAction = { ...item };
+      browserAction.tabId = this.id;
+      browserActions.push(browserAction);
     }
   }
 
@@ -124,7 +229,7 @@ export class ITab {
         windowId: store.windowId,
         url: this.url,
         favicon: this.favicon,
-        pinned: !!this.isPinned,
+        pinned: this.isPinned,
         title: this.title,
         isUserDefined: false,
         order: store.tabs.list.indexOf(this),
@@ -137,26 +242,18 @@ export class ITab {
   }
 
   @action
-  public async select() {
+  public select() {
     if (!this.isClosing) {
       store.tabs.selectedTabId = this.id;
 
       ipcRenderer.send(`browserview-show-${store.windowId}`);
+      ipcRenderer.send(`view-select-${store.windowId}`, this.id);
+      ipcRenderer.send(`update-find-info-${store.windowId}`, this.id, {
+        ...this.findInfo,
+      });
 
-      const focused = this.addressbarFocused;
-
-      await ipcRenderer.invoke(
-        `view-select-${store.windowId}`,
-        this.id,
-        !this.addressbarFocused,
-      );
-
-      if (focused) {
-        store.inputRef.focus();
-        store.inputRef.setSelectionRange(
-          this.addressbarSelectionRange[0],
-          this.addressbarSelectionRange[1],
-        );
+      if (this.url.startsWith(NEWTAB_URL)) {
+        ipcRenderer.send(`search-show-${store.windowId}`);
       }
     }
   }
@@ -169,10 +266,10 @@ export class ITab {
     }
 
     if (tabs === null) {
-      tabs = store.tabs.list.filter((x) => !x.isClosing);
+      tabs = store.tabs.list.filter(x => !x.isClosing);
     }
 
-    const pinnedTabs = tabs.filter((x) => x.isPinned).length;
+    const pinnedTabs = tabs.filter(x => x.isPinned).length;
 
     const realTabsLength = tabs.length - pinnedTabs + store.tabs.removedTabs;
 
@@ -193,7 +290,7 @@ export class ITab {
   }
 
   public getLeft(calcNewLeft = false) {
-    const tabs = store.tabs.list.filter((x) => !x.isClosing).slice();
+    const tabs = store.tabs.list.filter(x => !x.isClosing).slice();
 
     const index = tabs.indexOf(this);
 
@@ -216,7 +313,7 @@ export class ITab {
 
     if (this.tabGroup.tabs.length === 1) {
       store.tabGroups.list = store.tabGroups.list.filter(
-        (x) => x.id !== this.tabGroupId,
+        x => x.id !== this.tabGroupId,
       );
     }
 
@@ -226,13 +323,13 @@ export class ITab {
 
   @action
   public setLeft(left: number, animation: boolean) {
-    animateTab('translateX', left, this.ref.current, animation);
+    store.tabs.animateProperty('x', this.ref.current, left, animation);
     this.left = left;
   }
 
   @action
   public setWidth(width: number, animation: boolean) {
-    animateTab('width', width, this.ref.current, animation);
+    store.tabs.animateProperty('width', this.ref.current, width, animation);
     this.width = width;
   }
 
@@ -244,11 +341,11 @@ export class ITab {
 
     const selected = store.tabs.selectedTabId === this.id;
 
-    store.startupTabs.removeStartupTabItem(this.id);
+    store.startupTabs.removeStartupTabItem(this.id, store.windowId);
 
     ipcRenderer.send(`view-destroy-${store.windowId}`, this.id);
 
-    const notClosingTabs = store.tabs.list.filter((x) => !x.isClosing);
+    const notClosingTabs = store.tabs.list.filter(x => !x.isClosing);
     let index = notClosingTabs.indexOf(this);
 
     if (notClosingTabs.length === 1) {
@@ -290,7 +387,7 @@ export class ITab {
 
     this.removeTimeout = setTimeout(() => {
       store.tabs.removeTab(this.id);
-    }, TAB_ANIMATION_DURATION);
+    }, TAB_ANIMATION_DURATION * 1000);
   }
 
   public callViewMethod = (scope: string, ...args: any[]): Promise<any> => {

@@ -1,16 +1,15 @@
 export interface ITheme {
-  'titlebar.backgroundColor': string;
-
-  'addressbar.backgroundColor': string;
-  'addressbar.textColor': string;
-
   'toolbar.backgroundColor': string;
   'toolbar.bottomLine.backgroundColor': string;
   'toolbar.lightForeground': boolean;
   'toolbar.separator.color': string;
 
-  'tab.textColor': string;
+  'tab.backgroundOpacity': number;
+  'tab.selectedHover.backgroundOpacity': number;
+  'tab.hover.backgroundOpacity': number;
   'tab.selected.textColor': string;
+  'tab.textColor': string;
+  'tab.allowLightBackground': boolean;
 
   'control.backgroundColor': string;
   'control.hover.backgroundColor': string;
@@ -23,8 +22,16 @@ export interface ITheme {
   'dialog.textColor': string;
   'dialog.lightForeground': boolean;
 
-  'searchBox.backgroundColor': string;
-  'searchBox.lightForeground': boolean;
+  'searchBox.input.textColor': string;
+  'searchBox.input.lightForeground': boolean;
+  'searchBox.input.backgroundColor': string;
+
+  'searchBox.subHeading.backgroundColor': string;
+  'searchBox.subHeading.textColor': string;
+
+  'searchBox.suggestions.textColor': string;
+  'searchBox.suggestions.backgroundColor': string;
+  'searchBox.suggestions.lightForeground': boolean;
 
   'pages.backgroundColor': string;
   'pages.lightForeground': boolean;
@@ -33,18 +40,11 @@ export interface ITheme {
   'pages.navigationDrawer2.backgroundColor': string;
 
   'dropdown.backgroundColor': string;
-  'dropdown.backgroundColor.translucent': string;
-  'dropdown.separator.color': string;
 
   backgroundColor: string;
   accentColor: string;
 
   animations?: boolean;
-
-  titlebarHeight?: number;
-  tabHeight?: number;
-  tabMarginTop?: number;
-  isCompact?: boolean;
 
   dark?: boolean;
 }

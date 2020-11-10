@@ -1,20 +1,17 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { ThemeProvider } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 
+import { Style } from '../../style';
 import { StyledApp, Input, CurrentIcon, SearchBox } from './style';
 import store from '../../store';
 import { callViewMethod } from '~/utils/view';
 import { ipcRenderer } from 'electron';
 import { Suggestions } from '../Suggestions';
-import { ICON_SEARCH, ICON_PAGE } from '~/renderer/constants';
-import { UIStyle } from '~/renderer/mixins/default-styles';
-import {
-  COMPACT_TITLEBAR_HEIGHT,
-  DEFAULT_TITLEBAR_HEIGHT,
-  TOOLBAR_HEIGHT,
-} from '~/constants/design';
+import { icons } from '~/renderer/constants';
+
+const GlobalStyle = createGlobalStyle`${Style}`;
 
 const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
   if (e.which === 13) {
@@ -38,20 +35,35 @@ const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
 
     callViewMethod(store.tabId, 'loadURL', url);
 
-    store.hide();
+    setTimeout(() => {
+      ipcRenderer.send(`hide-${store.id}`);
+    });
   }
 };
 
 const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const key = e.keyCode;
   const { suggestions } = store;
   const { list } = suggestions;
   const input = store.inputRef.current;
 
-  store.canSuggest = store.getCanSuggest(e.keyCode);
+  if (
+    key !== 8 && // backspace
+    key !== 13 && // enter
+    key !== 17 && // ctrl
+    key !== 18 && // alt
+    key !== 16 && // shift
+    key !== 9 && // tab
+    key !== 20 && // capslock
+    key !== 46 && // delete
+    key !== 32 // space
+  ) {
+    store.canSuggest = true;
+  } else {
+    store.canSuggest = false;
+  }
 
-  if (e.key === 'Escape') {
-    store.hide({ focus: true, escape: true });
-  } else if (e.keyCode === 38 || e.keyCode === 40) {
+  if (e.keyCode === 38 || e.keyCode === 40) {
     e.preventDefault();
     if (
       e.keyCode === 40 &&
@@ -62,28 +74,28 @@ const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       suggestions.selected--;
     }
 
-    let suggestion = list.find((x) => x.id === suggestions.selected);
+    let suggestion = list.find(x => x.id === suggestions.selected);
 
     if (!suggestion) {
-      suggestion = store.searchedTabs.find(
-        (x) => x.id === suggestions.selected,
-      );
+      suggestion = store.searchedTabs.find(x => x.id === suggestions.selected);
     }
 
-    input.value = suggestion.isSearch ? suggestion.primaryText : suggestion.url;
+    input.value = suggestion.primaryText;
   }
 };
 
 const onInput = (e: any) => {
   store.inputText = e.currentTarget.value;
 
-  if (e.currentTarget.value.trim() === '') {
-    store.hide({ focus: true });
-  }
-
   // TODO: if (store.settings.object.suggestions) {
   store.suggest();
   // }
+};
+
+const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+  setTimeout(() => {
+    store.inputRef.current.select();
+  }, 10);
 };
 
 export const App = hot(
@@ -96,14 +108,24 @@ export const App = hot(
       for (const s of store.suggestions.list) {
         height += 38;
       }
+
+      for (const s of store.searchedTabs) {
+        height += 38;
+      }
+
+      if (store.suggestions.list.length > 0) {
+        height += 30;
+      }
+
+      if (store.searchedTabs.length > 0) {
+        height += 30;
+      }
     }
 
-    requestAnimationFrame(() => {
-      ipcRenderer.send(`height-${store.id}`, height);
-    });
+    ipcRenderer.send(`height-${store.id}`, height);
 
     const suggestion = store.suggestions.selectedSuggestion;
-    let favicon = ICON_SEARCH;
+    let favicon = icons.search;
     let customIcon = true;
 
     if (suggestion && suggestionsVisible) {
@@ -115,25 +137,17 @@ export const App = hot(
       } else if (
         favicon == null ||
         favicon.trim() === '' ||
-        favicon === ICON_PAGE
+        favicon === icons.page
       ) {
-        favicon = ICON_PAGE;
+        favicon = icons.page;
         customIcon = true;
       }
     }
 
     return (
-      <ThemeProvider
-        theme={{
-          ...store.theme,
-          searchBoxHeight:
-            store.settings.topBarVariant === 'compact'
-              ? COMPACT_TITLEBAR_HEIGHT
-              : TOOLBAR_HEIGHT - 1,
-        }}
-      >
-        <StyledApp>
-          <UIStyle />
+      <ThemeProvider theme={{ ...store.theme }}>
+        <StyledApp visible={store.visible}>
+          <GlobalStyle />
           <SearchBox>
             <CurrentIcon
               style={{
@@ -148,8 +162,10 @@ export const App = hot(
             <Input
               onKeyDown={onKeyDown}
               onInput={onInput}
+              onFocus={onFocus}
               ref={store.inputRef}
               onKeyPress={onKeyPress}
+              placeholder="Search or type in a URL"
             ></Input>
           </SearchBox>
           <Suggestions visible={suggestionsVisible}></Suggestions>

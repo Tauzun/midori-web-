@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { centerIcon } from '~/renderer/mixins';
-import { transparency, ICON_DROPDOWN } from '~/renderer/constants';
+import { icons, transparency } from '~/renderer/constants';
 import { ITheme } from '~/interfaces';
 
 export const StyledSection = styled.div`
@@ -44,7 +44,7 @@ export const Label = styled.div`
 export const DropIcon = styled.div`
   width: 20px;
   height: 20px;
-  background-image: url(${ICON_DROPDOWN});
+  background-image: url(${icons.dropDown});
   opacity: ${transparency.icons.inactive};
   margin-left: auto;
   margin-right: 16px;

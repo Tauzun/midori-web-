@@ -23,36 +23,35 @@ export class Store extends DialogStore {
 
     (async () => {
       this.folders = await ipcRenderer.invoke('bookmarks-get-folders');
-      this.currentFolder = this.folders.find((x) => x.static === 'main');
+      this.currentFolder = this.folders.find(x => x.static === 'main');
     })();
 
-    ipcRenderer.on('data', async (e, data) => {
-      const { bookmark, title, url, favicon } = data;
+    ipcRenderer.on('visible', async (e, flag, data) => {
+      this.visible = flag;
 
-      if (!bookmark) {
-        this.dialogTitle = !bookmark ? 'Bookmark added' : 'Edit bookmark';
-      }
+      if (flag) {
+        const { bookmark, title, url, favicon } = data;
 
-      this.bookmark = bookmark;
-      this.folders = await ipcRenderer.invoke('bookmarks-get-folders');
+        this.bookmark = bookmark;
+        this.folders = await ipcRenderer.invoke('bookmarks-get-folders');
 
-      if (!this.bookmark) {
-        this.bookmark = await ipcRenderer.invoke('bookmarks-add', {
-          title,
-          url,
-          favicon,
-          parent: this.folders.find((x) => x.static === 'main')._id,
-        });
-      }
+        if (!this.bookmark) {
+          this.bookmark = await ipcRenderer.invoke('bookmarks-add', {
+            title,
+            url,
+            favicon,
+            parent: this.folders[0]._id,
+          });
+          this.dialogTitle = 'Bookmark added';
+        } else {
+          this.dialogTitle = 'Edit bookmark';
+        }
 
-      this.currentFolder = this.folders.find(
-        (x) => x._id === this.bookmark.parent,
-      );
-
-      if (this.titleRef.current) {
-        this.titleRef.current.value = title;
-        this.titleRef.current.focus();
-        this.titleRef.current.select();
+        if (this.titleRef.current) {
+          this.titleRef.current.value = title;
+          this.titleRef.current.focus();
+          this.titleRef.current.select();
+        }
       }
     });
   }

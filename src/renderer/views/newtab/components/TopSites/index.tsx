@@ -8,14 +8,14 @@ import { TopSite } from '../TopSite';
 export const TopSites = observer(() => {
   return (
     <StyledTopSites>
-      {store.topSites.map((item) => (
+      {store.topSites.map(item => (
         <TopSite key={item._id} item={item} />
       ))}
       {store.topSites.length < 8 && <TopSite />}
       {Array(8 - Math.min(8, store.topSites.length + 1))
         .fill(1)
         .map((v, i) => (
-          <Placeholder imageSet={store.imageVisible} key={i} />
+          <Placeholder key={i} />
         ))}
     </StyledTopSites>
   );

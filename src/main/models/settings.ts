@@ -1,15 +1,14 @@
 import { ipcMain, nativeTheme, dialog } from 'electron';
 
-import { DEFAULT_SETTINGS, DEFAULT_SEARCH_ENGINES } from '~/constants';
+import { DEFAULT_SETTINGS } from '~/constants';
 
 import { promises } from 'fs';
 
 import { getPath, makeId } from '~/utils';
 import { EventEmitter } from 'events';
 import { runAdblockService, stopAdblockService } from '../services/adblock';
-import { Application } from '../application';
+import { WindowsManager } from '../windows-manager';
 import { WEBUI_BASE_URL } from '~/constants/files';
-import { ISettings } from '~/interfaces';
 
 export class Settings extends EventEmitter {
   public object = DEFAULT_SETTINGS;
@@ -18,23 +17,29 @@ export class Settings extends EventEmitter {
 
   private loaded = false;
 
-  public constructor() {
+  private windowsManager: WindowsManager;
+
+  public constructor(windowsManager: WindowsManager) {
     super();
+
+    this.windowsManager = windowsManager;
 
     ipcMain.on(
       'save-settings',
       (e, { settings }: { settings: string; incognito: boolean }) => {
-        this.updateSettings(JSON.parse(settings));
+        this.object = { ...this.object, ...JSON.parse(settings) };
+
+        this.addToQueue();
       },
     );
 
-    ipcMain.on('get-settings-sync', async (e) => {
+    ipcMain.on('get-settings-sync', async e => {
       await this.onLoad();
       this.update();
       e.returnValue = this.object;
     });
 
-    ipcMain.on('get-settings', async (e) => {
+    ipcMain.on('get-settings', async e => {
       await this.onLoad();
       this.update();
       e.sender.send('update-settings', this.object);
@@ -61,7 +66,7 @@ export class Settings extends EventEmitter {
   }
 
   private onLoad = async (): Promise<void> => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       if (!this.loaded) {
         this.once('load', () => {
           resolve();
@@ -73,26 +78,20 @@ export class Settings extends EventEmitter {
   };
 
   public update = () => {
-    let themeSource = 'system';
-
     if (this.object.themeAuto) {
       this.object.theme = nativeTheme.shouldUseDarkColors
         ? 'midori-dark'
         : 'midori-light';
-    } else {
-      themeSource = this.object.theme === 'midori-dark' ? 'dark' : 'light';
     }
 
-    if (themeSource !== nativeTheme.themeSource) {
-      nativeTheme.themeSource = themeSource as any;
-    }
+    for (const window of this.windowsManager.list) {
+      window.webContents.send('update-settings', this.object);
 
-    Application.instance.dialogs.sendToAll('update-settings', this.object);
+      Object.values(window.dialogs).forEach(dialog => {
+        dialog.webContents.send('update-settings', this.object);
+      });
 
-    for (const window of Application.instance.windows.list) {
-      window.send('update-settings', this.object);
-
-      window.viewManager.views.forEach(async (v) => {
+      window.viewManager.views.forEach(v => {
         if (v.webContents.getURL().startsWith(WEBUI_BASE_URL)) {
           v.webContents.send('update-settings', this.object);
         }
@@ -100,15 +99,27 @@ export class Settings extends EventEmitter {
     }
 
     const contexts = [
-      Application.instance.sessions.view,
-      Application.instance.sessions.viewIncognito,
+      this.windowsManager.sessionsManager.extensions,
+      this.windowsManager.sessionsManager.extensionsIncognito,
     ];
 
-    contexts.forEach((e) => {
+    contexts.forEach(e => {
+      if (e.extensions['midori-darkreader']) {
+        e.extensions['midori-darkreader'].backgroundPage.webContents.send(
+          'api-runtime-sendMessage',
+          {
+            message: {
+              name: 'toggle',
+              toggle: this.object.darkContents,
+            },
+          },
+        );
+      }
+
       if (this.object.shield) {
-        runAdblockService(e);
+        runAdblockService(e.session);
       } else {
-        stopAdblockService(e);
+        stopAdblockService(e.session);
       }
     });
   };
@@ -118,17 +129,9 @@ export class Settings extends EventEmitter {
       const file = await promises.readFile(getPath('settings.json'), 'utf8');
       const json = JSON.parse(file);
 
-      if (typeof json.version === 'string') {
-        // Migrate from 3.1.0
-        Application.instance.storage.remove({
-          scope: 'startupTabs',
-          query: {},
-          multi: true,
-        });
-      }
-
-      if (typeof json.version === 'string' || json.version === 1) {
-        json.searchEngines = DEFAULT_SEARCH_ENGINES;
+      if (!json.version) {
+        // Migrate from 3.0.0 to 3.1.0
+        json.searchEngines = [];
       }
 
       if (json.themeAuto === undefined) {
@@ -146,7 +149,6 @@ export class Settings extends EventEmitter {
       this.object = {
         ...this.object,
         ...json,
-        version: DEFAULT_SETTINGS.version,
       };
 
       this.loaded = true;
@@ -165,7 +167,7 @@ export class Settings extends EventEmitter {
     try {
       await promises.writeFile(
         getPath('settings.json'),
-        JSON.stringify({ ...this.object, version: DEFAULT_SETTINGS.version }),
+        JSON.stringify(this.object),
       );
 
       if (this.queue.length >= 3) {
@@ -199,11 +201,5 @@ export class Settings extends EventEmitter {
         this.save();
       });
     }
-  }
-
-  public updateSettings(settings: Partial<ISettings>) {
-    this.object = { ...this.object, ...settings };
-
-    this.addToQueue();
   }
 }

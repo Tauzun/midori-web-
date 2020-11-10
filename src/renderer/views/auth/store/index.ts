@@ -1,4 +1,5 @@
 import { observable } from 'mobx';
+import { ipcRenderer } from 'electron';
 import { DialogStore } from '~/models/dialog-store';
 
 export class Store extends DialogStore {
@@ -6,11 +7,11 @@ export class Store extends DialogStore {
   public url: string;
 
   public constructor() {
-    super({ hideOnBlur: false, visibilityWrapper: false });
+    super({ hideOnBlur: false });
 
-    this.onUpdateTabInfo = (tabId, auth) => {
-      this.url = auth.url;
-    };
+    ipcRenderer.on('request-auth', (e, url) => {
+      this.url = url;
+    });
   }
 }
 

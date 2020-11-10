@@ -9,7 +9,7 @@ export const Container = styled.div`
   ${({ darken }: { darken?: boolean }) => css`
     &:after {
       opacity: ${darken ? 0.54 : 0};
-      pointer-events: ${darken ? 'inherit' : 'none'};
+      pointer-events: ${darken ? 'auto' : 'none'};
     }
   `}
 

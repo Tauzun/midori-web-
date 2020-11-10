@@ -1,20 +1,23 @@
+import { ipcRenderer } from 'electron';
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { ThemeProvider } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 
+import { Style } from '../../style';
 import { Button } from '~/renderer/components/Button';
 import store from '../../store';
 import { Textfield } from '~/renderer/components/Textfield';
 import { PasswordInput } from '~/renderer/components/PasswordInput';
 import { StyledApp, Title, Buttons, Subtitle } from './style';
-import { UIStyle } from '~/renderer/mixins/default-styles';
+
+const GlobalStyle = createGlobalStyle`${Style}`;
 
 const ref1 = React.createRef<Textfield>();
 const ref2 = React.createRef<PasswordInput>();
 
 const sendResponse = (credentials: any) => {
-  store.send('result', credentials);
+  ipcRenderer.send(`request-auth-result-${store.windowId}`, credentials);
 };
 
 const onClick = () => {
@@ -33,13 +36,13 @@ export const App = hot(
         theme={{ ...store.theme, dark: store.theme['dialog.lightForeground'] }}
       >
         <StyledApp>
-          <UIStyle />
+          <GlobalStyle />
           <Title>Login</Title>
           <Subtitle>{store.url}</Subtitle>
           <Textfield
             dark={store.theme['dialog.lightForeground']}
             ref={ref1}
-            test={(str) => str.trim().length !== 0}
+            test={str => str.trim().length !== 0}
             style={{ width: '100%', marginTop: 16 }}
             label="Username"
           ></Textfield>

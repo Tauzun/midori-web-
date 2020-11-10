@@ -1,49 +1,44 @@
-import { VIEW_Y_OFFSET } from '~/constants/design';
-import { BrowserWindow } from 'electron';
-import { Application } from '../application';
+import { ipcMain } from 'electron';
+import { AppWindow } from '../windows';
+import { TOOLBAR_HEIGHT } from '~/constants/design';
+import { Dialog } from '.';
 
-export const requestAuth = (
-  browserWindow: BrowserWindow,
-  url: string,
-  tabId: number,
-): Promise<boolean> => {
-  return new Promise((resolve, reject) => {
-    const appWindow = Application.instance.windows.fromBrowserWindow(
-      browserWindow,
-    );
+const WIDTH = 400;
+const HEIGHT = 500;
 
-    const tab = appWindow.viewManager.views.get(tabId);
-    tab.requestedAuth = { url };
-
-    const dialog = Application.instance.dialogs.show({
+export class AuthDialog extends Dialog {
+  public constructor(appWindow: AppWindow) {
+    super(appWindow, {
       name: 'auth',
-      browserWindow,
-      getBounds: () => {
-        const { width } = browserWindow.getContentBounds();
-        return {
-          width: 400,
-          height: 500,
-          x: width / 2 - 400 / 2,
-          y: VIEW_Y_OFFSET,
-        };
-      },
-      tabAssociation: {
-        tabId,
-        getTabInfo: (tabId) => {
-          const tab = appWindow.viewManager.views.get(tabId);
-          return tab.requestedAuth;
-        },
-      },
-      onWindowBoundsUpdate: (disposition) => {
-        if (disposition === 'resize') dialog.rearrange();
+      bounds: {
+        width: WIDTH,
+        height: HEIGHT,
+        y: TOOLBAR_HEIGHT,
       },
     });
+  }
 
-    if (!dialog) return;
+  public requestAuth(
+    url: string,
+  ): Promise<{ username: string; password: string }> {
+    return new Promise(resolve => {
+      this.show();
 
-    dialog.on('result', (e, result) => {
-      resolve(result);
-      dialog.hide();
+      this.webContents.send('request-auth', url);
+
+      ipcMain.once(`request-auth-result-${this.appWindow.id}`, (e, result) => {
+        this.hide();
+        resolve(result);
+      });
     });
-  });
-};
+  }
+
+  public rearrange() {
+    const { width } = this.appWindow.getContentBounds();
+
+    super.rearrange({
+      x: Math.round(width / 2 - WIDTH / 2),
+      y: TOOLBAR_HEIGHT,
+    });
+  }
+}

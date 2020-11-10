@@ -1,8 +1,9 @@
 import { parse } from 'url';
 
+import storage from '../services/storage';
 import { IFormFillData } from '~/interfaces';
 import { getFormFillValue, getFormFillSubValue } from '~/utils/form-fill';
-import { Application } from '../application';
+import { windowsManager } from '..';
 
 const getType = (name: string) => {
   return name === 'username' || name === 'login' || name === 'password'
@@ -12,10 +13,10 @@ const getType = (name: string) => {
 
 export const getFormFillMenuItems = async (name: string, value: string) => {
   const dataType = getType(name);
-  const { url } = Application.instance.windows.current.viewManager.selected;
+  const url = windowsManager.currentWindow.viewManager.selected.webContents.getURL();
   const { hostname } = parse(url);
 
-  const items = await Application.instance.storage.find<IFormFillData>({
+  const items = await storage.find<IFormFillData>({
     scope: 'formfill',
     query: {
       type: dataType,
@@ -44,5 +45,5 @@ export const getFormFillMenuItems = async (name: string, value: string) => {
 
       return null;
     })
-    .filter((r) => r);
+    .filter(r => r);
 };

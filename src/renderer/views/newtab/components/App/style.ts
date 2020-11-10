@@ -1,11 +1,8 @@
 import styled, { css } from 'styled-components';
 import { centerIcon } from '~/renderer/mixins';
 
-import { ContextMenuRow } from '~/renderer/components/ContextMenu';
-import { ITheme } from '~/interfaces';
-
 export const Image = styled.div`
-  position: absolute;
+  position: fixed;
   z-index: 1;
   background-size: cover;
   background-position: center;
@@ -20,34 +17,30 @@ export const Image = styled.div`
     opacity: ${src === '' ? 0 : 1};
     transform: ${src === '' ? 'scale(1.05)' : 'scale(1)'};
     background-image: url(${src});
-    background-attachment: fixed;
-
-    &:after {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      z-index: 2;
-      background-image: radial-gradient(
-          rgba(0, 0, 0, 0) 0%,
-          rgba(0, 0, 0, 0.5) 100%
-        ),
-        radial-gradient(rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.3) 166%);
-    }
   `};
 `;
 
 export const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  position: relative;
   overflow: hidden;
+  position: relative;
 
-  ${({ fullSize }: { fullSize: boolean }) => css`
-    height: ${fullSize ? '100vh' : 'auto'};
-  `};
+  &:before {
+    content: '';
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 2;
+    background-attachment: fixed;
+    background-image: radial-gradient(
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.5) 100%
+      ),
+      radial-gradient(rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.3) 166%);
+  }
 `;
 
 export const Content = styled.div`
@@ -57,33 +50,24 @@ export const Content = styled.div`
   margin: 0 auto;
   max-width: 1366px;
   position: relative;
-  min-height: 97px;
   z-index: 3;
 `;
 
-export const RightBar = styled.div`
-  position: absolute;
-  display: flex;
-  right: 32px;
-  flex-flow: column;
-  height: 100%;
-  padding-top: 32px;
-`;
-
 export const Menu = styled.div`
-  display: flex;
   position: absolute;
-  flex-flow: row;
+  left: 0;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
   justify-content: center;
-  width: 100%;
-  bottom: 32px;
+  margin-left: 16px;
 `;
 
 export const IconItem = styled.div`
-  width: 34px;
-  height: 34px;
-  margin-left: 16px;
-  opacity: 0.8;
+  width: 40px;
+  height: 40px;
+  margin-top: 8px;
+  opacity: 0.54;
   z-index: 3;
   cursor: pointer;
   border-radius: 4px;
@@ -93,25 +77,13 @@ export const IconItem = styled.div`
     margin-top: 0;
   }
 
-  ${({
-    icon,
-    imageSet,
-    theme,
-  }: {
-    icon?: string;
-    theme?: ITheme;
-    imageSet?: boolean;
-  }) => css`
-    filter: ${!imageSet && !theme['pages.lightForeground']
-      ? 'invert(100%)'
-      : 'none'};
+  &:hover {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(2.5px);
+  }
 
-    &:hover {
-      opacity: 1;
-      background-color: rgba(255, 255, 255, 0.1);
-      backdrop-filter: ${imageSet ? 'blur(2.5px)' : 'none'};
-    }
-
+  ${({ icon }: { icon?: string }) => css`
     &:after {
       position: absolute;
       content: '';

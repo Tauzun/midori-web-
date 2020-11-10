@@ -38,34 +38,30 @@ const extPopupConfig = getConfig({
 });
 
 applyEntries('app', appConfig, [
-  ...(process.env.ENABLE_AUTOFILL ? ['form-fill', 'credentials'] : []),
   'app',
   'permissions',
   'auth',
+  'form-fill',
+  'credentials',
   'find',
   'menu',
   'search',
   'preview',
   'tabgroup',
-  'downloads-dialog',
+  'downloads',
   'add-bookmark',
-  'zoom',
 ]);
 
-if (process.env.ENABLE_EXTENSIONS) {
-  extPopupConfig.entry['extension-popup'] = [
-    `./src/renderer/views/extension-popup`,
-  ];
-  extPopupConfig.plugins.push(
-    new HtmlWebpackPlugin({
-      title: 'Midori',
-      template: 'static/pages/extension-popup.html',
-      filename: `extension-popup.html`,
-      chunks: [`vendor.app`, 'extension-popup'],
-    }),
-  );
+extPopupConfig.entry['extension-popup'] = [
+  `./src/renderer/views/extension-popup`,
+];
+extPopupConfig.plugins.push(
+  new HtmlWebpackPlugin({
+    title: 'Midori Next',
+    template: 'static/pages/extension-popup.html',
+    filename: `extension-popup.html`,
+    chunks: [`vendor.app`, 'extension-popup'],
+  }),
+);
 
-  module.exports = [appConfig, extPopupConfig];
-} else {
-  module.exports = appConfig;
-}
+module.exports = [appConfig, extPopupConfig];

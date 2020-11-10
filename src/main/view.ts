@@ -2,26 +2,14 @@ import { BrowserView, app, ipcMain } from 'electron';
 import { parse as parseUrl } from 'url';
 import { getViewMenu } from './menus/view';
 import { AppWindow } from './windows';
+import storage from './services/storage';
+import Vibrant = require('node-vibrant');
 import { IHistoryItem, IBookmark } from '~/interfaces';
 import { WEBUI_BASE_URL } from '~/constants/files';
-import { NEWTAB_URL } from '~/constants/tabs';
-import {
-  ZOOM_FACTOR_MIN,
-  ZOOM_FACTOR_MAX,
-  ZOOM_FACTOR_INCREMENT,
-} from '~/constants/web-contents';
-import { TabEvent } from '~/interfaces/tabs';
-import { Queue } from '~/utils/queue';
-import { Application } from './application';
 
-interface IAuthInfo {
-  url: string;
-}
-
-export class View {
-  public browserView: BrowserView;
-
-  public isNewTab = false;
+export class View extends BrowserView {
+  public title = '';
+  public url = '';
   public homeUrl: string;
   public favicon = '';
   public incognito = false;
@@ -36,20 +24,8 @@ export class View {
 
   public bookmark: IBookmark;
 
-  public findInfo = {
-    occurrences: '0/0',
-    text: '',
-  };
-
-  public requestedAuth: IAuthInfo;
-  public requestedPermission: any;
-
-  private historyQueue = new Queue();
-
-  private lastUrl = '';
-
   public constructor(window: AppWindow, url: string, incognito: boolean) {
-    this.browserView = new BrowserView({
+    super({
       webPreferences: {
         preload: `${app.getAppPath()}/build/view-preload.bundle.js`,
         nodeIntegration: false,
@@ -70,22 +46,12 @@ export class View {
     this.webContents.userAgent = this.webContents.userAgent
       .replace(/ Midori\\?.([^\s]+)/g, '')
       .replace(/ Electron\\?.([^\s]+)/g, '')
-      .replace(/Chrome\\?.([^\s]+)/g, 'Chrome/85.0.4103.102');
-
-    (this.webContents as any).windowId = window.win.id;
+      .replace(/Chrome\\?.([^\s]+)/g, 'Chrome/79.0.3945.88');
 
     this.window = window;
     this.homeUrl = url;
 
-    this.webContents.session.webRequest.onBeforeSendHeaders(
-      (details, callback) => {
-        const { object: settings } = Application.instance.settings;
-        if (settings.doNotTrack) details.requestHeaders['DNT'] = '1';
-        callback({ requestHeaders: details.requestHeaders });
-      },
-    );
-
-    ipcMain.handle(`get-error-url-${this.id}`, async (e) => {
+    ipcMain.handle(`get-error-url-${this.webContents.id}`, async e => {
       return this.errorURL;
     });
 
@@ -95,20 +61,26 @@ export class View {
     });
 
     this.webContents.addListener('found-in-page', (e, result) => {
-      Application.instance.dialogs
-        .getDynamic('find')
-        .browserView.webContents.send('found-in-page', result);
+      this.window.dialogs.findDialog.webContents.send('found-in-page', result);
     });
 
     this.webContents.addListener('page-title-updated', (e, title) => {
-      this.window.updateTitle();
+      this.title = title;
+
+      this.updateWindowTitle();
       this.updateData();
 
-      this.emitEvent('title-updated', title);
+      this.window.webContents.send(
+        `view-title-updated-${this.webContents.id}`,
+        title,
+      );
     });
 
     this.webContents.addListener('did-navigate', async (e, url) => {
-      this.emitEvent('did-navigate', url);
+      this.window.webContents.send(
+        `view-did-navigate-${this.webContents.id}`,
+        url,
+      );
 
       await this.addHistoryItem(url);
       this.updateURL(url);
@@ -118,7 +90,10 @@ export class View {
       'did-navigate-in-page',
       async (e, url, isMainFrame) => {
         if (isMainFrame) {
-          this.emitEvent('did-navigate', url);
+          this.window.webContents.send(
+            `view-did-navigate-${this.webContents.id}`,
+            url,
+          );
 
           await this.addHistoryItem(url, true);
           this.updateURL(url);
@@ -128,20 +103,26 @@ export class View {
 
     this.webContents.addListener('did-stop-loading', () => {
       this.updateNavigationState();
-      this.emitEvent('loading', false);
+      this.window.webContents.send(
+        `view-loading-${this.webContents.id}`,
+        false,
+      );
     });
 
     this.webContents.addListener('did-start-loading', () => {
       this.updateNavigationState();
-      this.emitEvent('loading', true);
+      this.window.webContents.send(`view-loading-${this.webContents.id}`, true);
     });
 
-    this.webContents.addListener('did-start-navigation', async (e, ...args) => {
+    this.webContents.addListener('did-start-navigation', async (...args) => {
       this.updateNavigationState();
 
       this.favicon = '';
 
-      this.emitEvent('load-commit', ...args);
+      this.window.webContents.send(
+        `load-commit-${this.webContents.id}`,
+        ...args,
+      );
     });
 
     this.webContents.addListener(
@@ -174,8 +155,7 @@ export class View {
     this.webContents.addListener(
       'did-fail-load',
       (e, errorCode, errorDescription, validatedURL, isMainFrame) => {
-        //ignore -3 (ABORTED) - An operation was aborted (due to user action).
-        if (isMainFrame && errorCode !== -3) {
+        if (isMainFrame) {
           this.errorURL = validatedURL;
 
           this.webContents.loadURL(`midori-error://network-error/${errorCode}`);
@@ -194,34 +174,40 @@ export class View {
           let fav = this.favicon;
 
           if (fav.startsWith('http')) {
-            fav = await Application.instance.storage.addFavicon(fav);
+            fav = await storage.addFavicon(fav);
           }
 
-          this.emitEvent('favicon-updated', fav);
+          this.window.webContents.send(
+            `update-tab-favicon-${this.webContents.id}`,
+            fav,
+          );
+
+          const buf = Buffer.from(fav.split('base64,')[1], 'base64');
+
+          try {
+            const palette = await Vibrant.from(buf).getPalette();
+
+            if (!palette.Vibrant) return;
+
+            this.window.webContents.send(
+              `update-tab-color-${this.webContents.id}`,
+              palette.Vibrant.getHex(),
+            );
+          } catch (e) {
+            console.error(e);
+          }
         } catch (e) {
           this.favicon = '';
-          // console.error(e);
+          console.error(e);
         }
       },
     );
 
-    this.webContents.addListener('zoom-changed', (e, zoomDirection) => {
-      const newZoomFactor =
-        this.webContents.zoomFactor +
-        (zoomDirection === 'in'
-          ? ZOOM_FACTOR_INCREMENT
-          : -ZOOM_FACTOR_INCREMENT);
-
-      if (
-        newZoomFactor <= ZOOM_FACTOR_MAX &&
-        newZoomFactor >= ZOOM_FACTOR_MIN
-      ) {
-        this.webContents.zoomFactor = newZoomFactor;
-        this.emitEvent('zoom-updated', this.webContents.zoomFactor);
-        window.viewManager.emitZoomUpdate();
-      } else {
-        e.preventDefault();
-      }
+    this.webContents.addListener('did-change-theme-color', (e, color) => {
+      this.window.webContents.send(
+        `browserview-theme-color-updated-${this.webContents.id}`,
+        color,
+      );
     });
 
     this.webContents.addListener(
@@ -240,78 +226,43 @@ export class View {
       },
     );
 
-    this.webContents.addListener('media-started-playing', () => {
-      this.emitEvent('media-playing', true);
-    });
-
-    this.webContents.addListener('media-paused', () => {
-      this.emitEvent('media-paused', true);
-    });
-
-    if (url.startsWith(NEWTAB_URL)) this.isNewTab = true;
-
-    this.webContents.loadURL(url);
-
-    this.browserView.setAutoResize({
+    this.setAutoResize({
       width: true,
       height: true,
-      horizontal: false,
-      vertical: false,
-    });
-  }
-
-  public get webContents() {
-    return this.browserView.webContents;
-  }
-
-  public get url() {
-    return this.webContents.getURL();
-  }
-
-  public get title() {
-    return this.webContents.getTitle();
-  }
-
-  public get id() {
-    return this.webContents.id;
-  }
-
-  public get isSelected() {
-    return this.id === this.window.viewManager.selectedId;
+    } as any);
+    this.webContents.loadURL(url);
   }
 
   public updateNavigationState() {
-    if (this.browserView.isDestroyed()) return;
+    if (this.isDestroyed()) return;
 
-    if (this.window.viewManager.selectedId === this.id) {
-      this.window.send('update-navigation-state', {
+    if (this.window.viewManager.selectedId === this.webContents.id) {
+      this.window.webContents.send('update-navigation-state', {
         canGoBack: this.webContents.canGoBack(),
         canGoForward: this.webContents.canGoForward(),
       });
     }
   }
 
-  public destroy() {
-    this.browserView.destroy();
-    this.browserView = null;
-  }
-
   public async updateCredentials() {
-    if (!process.env.ENABLE_AUTOFILL || this.browserView.isDestroyed()) return;
+    if (this.isDestroyed()) return;
 
-    const item = await Application.instance.storage.findOne<any>({
+    const item = await storage.findOne<any>({
       scope: 'formfill',
       query: {
         url: this.hostname,
       },
     });
 
-    this.emitEvent('credentials', item != null);
+    this.window.webContents.send(
+      `has-credentials-${this.webContents.id}`,
+      item != null,
+    );
   }
 
   public async addHistoryItem(url: string, inPage = false) {
     if (
-      url !== this.lastUrl &&
+      url !== this.url &&
       !url.startsWith(WEBUI_BASE_URL) &&
       !url.startsWith('midori-error://') &&
       !this.incognito
@@ -323,94 +274,83 @@ export class View {
         date: new Date().getTime(),
       };
 
-      await this.historyQueue.enqueue(async () => {
-        this.lastHistoryId = (
-          await Application.instance.storage.insert<IHistoryItem>({
-            scope: 'history',
-            item: historyItem,
-          })
-        )._id;
+      this.lastHistoryId = (
+        await storage.insert<IHistoryItem>({
+          scope: 'history',
+          item: historyItem,
+        })
+      )._id;
 
-        historyItem._id = this.lastHistoryId;
+      historyItem._id = this.lastHistoryId;
 
-        Application.instance.storage.history.push(historyItem);
-      });
+      storage.history.push(historyItem);
     } else if (!inPage) {
-      await this.historyQueue.enqueue(async () => {
-        this.lastHistoryId = '';
-      });
+      this.lastHistoryId = '';
     }
   }
 
   public updateURL = (url: string) => {
-    this.emitEvent('url-updated', url);
+    if (this.url === url) return;
 
-    if (this.lastUrl === url) return;
+    this.url = url;
 
-    this.lastUrl = url;
-
-    this.isNewTab = url.startsWith(NEWTAB_URL);
+    this.window.webContents.send(
+      `view-url-updated-${this.webContents.id}`,
+      url,
+    );
 
     this.updateData();
-
-    if (process.env.ENABLE_AUTOFILL) this.updateCredentials();
-
+    this.updateCredentials();
     this.updateBookmark();
   };
 
   public updateBookmark() {
-    this.bookmark = Application.instance.storage.bookmarks.find(
-      (x) => x.url === this.url,
+    this.bookmark = storage.bookmarks.find(
+      x => x.url === this.webContents.getURL(),
     );
-
-    if (!this.isSelected) return;
-
-    this.window.send('is-bookmarked', !!this.bookmark);
+    this.window.webContents.send('is-bookmarked', !!this.bookmark);
   }
 
   public async updateData() {
     if (!this.incognito) {
-      const id = this.lastHistoryId;
-      if (id) {
+      if (this.lastHistoryId) {
         const { title, url, favicon } = this;
 
-        this.historyQueue.enqueue(async () => {
-          await Application.instance.storage.update({
-            scope: 'history',
-            query: {
-              _id: id,
-            },
-            value: {
-              title,
-              url,
-              favicon,
-            },
-            multi: false,
-          });
-
-          const item = Application.instance.storage.history.find(
-            (x) => x._id === id,
-          );
-
-          if (item) {
-            item.title = title;
-            item.url = url;
-            item.favicon = favicon;
-          }
+        storage.update({
+          scope: 'history',
+          query: {
+            _id: this.lastHistoryId,
+          },
+          value: {
+            title,
+            url,
+            favicon,
+          },
+          multi: false,
         });
+
+        const item = storage.history.find(x => x._id === this.lastHistoryId);
+
+        if (item) {
+          item.title = title;
+          item.url = url;
+          item.favicon = favicon;
+        }
       }
     }
   }
 
-  public send(channel: string, ...args: any[]) {
-    this.webContents.send(channel, ...args);
+  public updateWindowTitle() {
+    if (this.window.viewManager.selectedId === this.webContents.id) {
+      if (this.title.trim() !== '') {
+        this.window.setTitle(`${this.title} - ${app.name}`);
+      } else {
+        this.window.setTitle(`${app.name}`);
+      }
+    }
   }
 
   public get hostname() {
     return parseUrl(this.url).hostname;
-  }
-
-  public emitEvent(event: TabEvent, ...args: any[]) {
-    this.window.send('tab-event', event, this.id, args);
   }
 }

@@ -5,13 +5,20 @@ import { ITheme } from '~/interfaces';
 export const Line = styled.div`
   height: 1px;
   width: 100%;
-  z-index: 100;
+  z-index: 2;
   position: relative;
-  background-color: black;
+
+  ${({ theme }: { theme: ITheme }) => css`
+    background-color: ${theme['toolbar.bottomLine.backgroundColor']};
+  `}
 `;
 
 export const StyledApp = styled.div`
   display: flex;
   flex-flow: column;
-  background-color: #fff;
+  height: 100vh;
+
+  ${({ theme }: { theme: ITheme }) => css`
+    background-color: ${theme.backgroundColor};
+  `}
 `;

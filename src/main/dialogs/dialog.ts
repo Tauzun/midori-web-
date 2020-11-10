@@ -1,6 +1,6 @@
-import { BrowserView, app, ipcMain, BrowserWindow } from 'electron';
+import { BrowserView, app, ipcMain } from 'electron';
 import { join } from 'path';
-import { roundifyRectangle } from '../services/dialogs-service';
+import { AppWindow } from '../windows';
 
 interface IOptions {
   name: string;
@@ -18,9 +18,8 @@ interface IRectangle {
   height?: number;
 }
 
-export class PersistentDialog {
-  public browserWindow: BrowserWindow;
-  public browserView: BrowserView;
+export class Dialog extends BrowserView {
+  public appWindow: AppWindow;
 
   public visible = false;
 
@@ -31,163 +30,119 @@ export class PersistentDialog {
     height: 0,
   };
 
-  public name: string;
-
   private timeout: any;
   private hideTimeout: number;
+  private name: string;
 
-  private loaded = false;
-  private showCallback: any = null;
-
-  public constructor({
-    bounds,
-    name,
-    devtools,
-    hideTimeout,
-    webPreferences,
-  }: IOptions) {
-    this.browserView = new BrowserView({
+  public constructor(
+    appWindow: AppWindow,
+    { bounds, name, devtools, hideTimeout, webPreferences }: IOptions,
+  ) {
+    super({
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
-        enableRemoteModule: true,
+        affinity: 'dialog',
         ...webPreferences,
       },
     });
 
+    this.appWindow = appWindow;
     this.bounds = { ...this.bounds, ...bounds };
     this.hideTimeout = hideTimeout;
     this.name = name;
 
-    const { webContents } = this.browserView;
-
-    ipcMain.on(`hide-${webContents.id}`, () => {
-      this.hide(false, false);
-    });
-
-    webContents.once('dom-ready', () => {
-      this.loaded = true;
-
-      if (this.showCallback) {
-        this.showCallback();
-        this.showCallback = null;
-      }
+    ipcMain.on(`hide-${this.webContents.id}`, () => {
+      this.hide();
     });
 
     if (process.env.NODE_ENV === 'development') {
-      this.webContents.loadURL(`http://localhost:4444/${this.name}.html`);
+      this.webContents.loadURL(`http://localhost:4444/${name}.html`);
+      if (devtools) {
+        this.webContents.openDevTools({ mode: 'detach' });
+      }
     } else {
       this.webContents.loadURL(
-        join('file://', app.getAppPath(), `build/${this.name}.html`),
+        join('file://', app.getAppPath(), `build/${name}.html`),
       );
     }
-  }
-
-  public get webContents() {
-    return this.browserView.webContents;
-  }
-
-  public get id() {
-    return this.webContents.id;
   }
 
   public rearrange(rect: IRectangle = {}) {
-    this.bounds = roundifyRectangle({
-      height: rect.height || this.bounds.height || 0,
-      width: rect.width || this.bounds.width || 0,
-      x: rect.x || this.bounds.x || 0,
-      y: rect.y || this.bounds.y || 0,
-    });
+    this.bounds = {
+      height: rect.height || this.bounds.height,
+      width: rect.width || this.bounds.width,
+      x: rect.x || this.bounds.x,
+      y: rect.y || this.bounds.y,
+    };
 
     if (this.visible) {
-      this.browserView.setBounds(this.bounds as any);
+      this.setBounds(this.bounds as any);
     }
   }
 
-  public show(browserWindow: BrowserWindow, focus = true, waitForLoad = true) {
-    return new Promise((resolve) => {
-      this.browserWindow = browserWindow;
+  public toggle() {
+    if (!this.visible) this.show();
+    else this.hide();
+  }
 
-      clearTimeout(this.timeout);
+  public show(focus = true) {
+    if (this.visible) return;
 
-      browserWindow.webContents.send(
-        'dialog-visibility-change',
-        this.name,
-        true,
-      );
+    this.visible = true;
 
-      const callback = () => {
-        if (this.visible) {
-          if (focus) this.webContents.focus();
-          return;
-        }
+    clearTimeout(this.timeout);
 
-        this.visible = true;
-
-        browserWindow.addBrowserView(this.browserView);
-        this.rearrange();
-
+    if (process.platform === 'darwin') {
+      setTimeout(() => {
+        this.bringToTop();
         if (focus) this.webContents.focus();
+      });
+    } else {
+      this.bringToTop();
+      if (focus) this.webContents.focus();
+    }
 
-        resolve();
-      };
-
-      if (!this.loaded && waitForLoad) {
-        this.showCallback = callback;
-        return;
-      }
-
-      callback();
-    });
+    this.rearrange();
   }
 
   public hideVisually() {
-    this.send('visible', false);
+    this.webContents.send('visible', false);
   }
 
-  public send(channel: string, ...args: any[]) {
-    this.webContents.send(channel, ...args);
+  private _hide() {
+    this.setBounds({
+      height: this.bounds.height,
+      width: 1,
+      x: 0,
+      y: -this.bounds.height + 1,
+    });
   }
 
-  public hide(bringToTop = false, hideVisually = true) {
-    if (!this.browserWindow) return;
-
-    if (hideVisually) this.hideVisually();
-
-    if (!this.visible) return;
-
-    this.browserWindow.webContents.send(
-      'dialog-visibility-change',
-      this.name,
-      false,
-    );
-
+  public hide(bringToTop = false) {
     if (bringToTop) {
       this.bringToTop();
     }
 
+    if (!this.visible) return;
+
     clearTimeout(this.timeout);
 
     if (this.hideTimeout) {
-      this.timeout = setTimeout(() => {
-        this.browserWindow.removeBrowserView(this.browserView);
-      }, this.hideTimeout);
+      this.timeout = setTimeout(() => this._hide(), this.hideTimeout);
     } else {
-      this.browserWindow.removeBrowserView(this.browserView);
+      this._hide();
     }
 
     this.visible = false;
 
-    // this.appWindow.fixDragging();
+    this.hideVisually();
+
+    this.appWindow.fixDragging();
   }
 
   public bringToTop() {
-    this.browserWindow.removeBrowserView(this.browserView);
-    this.browserWindow.addBrowserView(this.browserView);
-  }
-
-  public destroy() {
-    this.browserView.destroy();
-    this.browserView = null;
+    this.appWindow.removeBrowserView(this);
+    this.appWindow.addBrowserView(this);
   }
 }

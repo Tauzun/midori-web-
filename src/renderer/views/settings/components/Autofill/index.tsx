@@ -6,10 +6,10 @@ import {
   ContextMenu,
   ContextMenuItem,
 } from '~/renderer/components/ContextMenu';
+import { icons } from '~/renderer/constants';
 import { Passwords } from './Passwords';
 import { Addresses } from './Addresses';
 import { Header } from '../App/style';
-import { ICON_EDIT, ICON_TRASH } from '~/renderer/constants';
 
 const onEditClick = () => {
   store.dialogContent = 'edit-address';
@@ -20,7 +20,7 @@ const onRemoveClick = () => {
   store.autoFill.removeItem(item);
 };
 
-const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+const onMouseDown = (e: React.MouseEvent) => {
   e.stopPropagation();
 };
 
@@ -40,11 +40,11 @@ const Menu = observer(() => {
       visible={store.autoFill.menuVisible}
     >
       {item && item.type === 'address' && (
-        <ContextMenuItem icon={ICON_EDIT} onClick={onEditClick}>
+        <ContextMenuItem icon={icons.edit} onClick={onEditClick}>
           Edit
         </ContextMenuItem>
       )}
-      <ContextMenuItem icon={ICON_TRASH} onClick={onRemoveClick}>
+      <ContextMenuItem icon={icons.trash} onClick={onRemoveClick}>
         Remove
       </ContextMenuItem>
     </ContextMenu>

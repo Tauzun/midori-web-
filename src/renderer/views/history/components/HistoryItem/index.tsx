@@ -6,9 +6,9 @@ import { IHistoryItem } from '~/interfaces';
 import { ListItem } from '~/renderer/components/ListItem';
 import { formatTime } from '../../utils';
 import store from '../../store';
-import { ICON_PAGE } from '~/renderer/constants/icons';
+import { icons } from '~/renderer/constants';
 
-const onClick = (item: IHistoryItem) => () => {
+const onClick = (item: IHistoryItem) => (e: React.MouseEvent) => {
   const index = store.selectedItems.indexOf(item._id);
 
   if (index === -1) {
@@ -18,14 +18,12 @@ const onClick = (item: IHistoryItem) => () => {
   }
 };
 
-const onRemoveClick = (item: IHistoryItem) => (
-  e: React.MouseEvent<HTMLDivElement>,
-) => {
+const onRemoveClick = (item: IHistoryItem) => (e: React.MouseEvent) => {
   e.stopPropagation();
   store.removeItems([item._id]);
 };
 
-const onTitleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+const onTitleClick = (e: React.MouseEvent) => {
   e.stopPropagation();
 };
 
@@ -36,7 +34,7 @@ export default observer(({ data }: { data: IHistoryItem }) => {
   let customFavicon = false;
 
   if (favicon == null || favicon.trim() === '') {
-    favicon = ICON_PAGE;
+    favicon = icons.page;
   } else {
     favicon = store.favicons.get(data.favicon);
     customFavicon = true;

@@ -6,7 +6,7 @@ import { Textfield } from '~/renderer/components/Textfield';
 import { RadioButton } from '~/renderer/components/RadioButton';
 import { Button } from '~/renderer/components/Button';
 import { IStartupTab } from '~/interfaces/startup-tab';
-import { BLUE_500, ICON_CLOSE } from '~/renderer/constants';
+import { icons, GREEN_500, GREEN_300 } from '~/renderer/constants';
 import store from '../../store';
 
 interface Props {
@@ -119,9 +119,9 @@ class StartupControl extends React.PureComponent<Props, State> {
                   key={index}
                   width={350}
                   placeholder={item.url}
-                  onChange={(value) => this.onUpdateItemURL(index, value)}
-                  icon={ICON_CLOSE}
-                  onIconClick={(target) => this.onDeleteItemClick(index)}
+                  onChange={value => this.onUpdateItemURL(index, value)}
+                  icon={icons.close}
+                  onIconClick={target => this.onDeleteItemClick(index)}
                   delay={500}
                   style={{ marginBottom: 8 }}
                 />
@@ -130,8 +130,8 @@ class StartupControl extends React.PureComponent<Props, State> {
 
             <Button
               type="outlined"
-              foreground={BLUE_500}
-              background={BLUE_500}
+              foreground={GREEN_500}
+              background={GREEN_500}
               onClick={this.onAddNewPageClick}
             >
               Add a new page
@@ -145,6 +145,6 @@ class StartupControl extends React.PureComponent<Props, State> {
 
 export const OnStartup = observer(() => {
   const { type } = store.settings.startupBehavior;
-  const startupTabList = store.startupTabs.list.filter((x) => x.isUserDefined);
+  const startupTabList = store.startupTabs.list.filter(x => x.isUserDefined);
   return <StartupControl initialValue={type} initialURLS={startupTabList} />;
 });

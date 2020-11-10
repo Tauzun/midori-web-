@@ -1,48 +1,20 @@
 /* eslint-disable */
 const { resolve, join } = require('path');
-const { writeFileSync, readFileSync, existsSync } = require('fs');
 const merge = require('webpack-merge');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const createStyledComponentsTransformer = require('typescript-plugin-styled-components')
   .default;
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 /* eslint-enable */
 
 const INCLUDE = resolve(__dirname, 'src');
 
-const BUILD_FLAGS = {
-  ENABLE_EXTENSIONS: true,
-  ENABLE_AUTOFILL: false,
-};
-
-process.env = {
-  ...process.env,
-  ...BUILD_FLAGS,
-};
-
-const dev = process.env.DEV === '1';
-let prebuild = process.env.PREBUILD === '1';
-
-process.env.NODE_ENV = dev ? 'development' : 'production';
-
-if (dev) prebuild = false;
-
-const CHUNKS_ENTRIES_MAP_PATH = 'chunks-entries-map.json';
-
-if (!dev && !prebuild && !existsSync(CHUNKS_ENTRIES_MAP_PATH)) {
-  throw new Error('Chunks to entries map file does not exist.');
-}
-
-const chunksEntriesMap =
-  prebuild || dev
-    ? {}
-    : JSON.parse(readFileSync(CHUNKS_ENTRIES_MAP_PATH, 'utf8'));
+const dev = process.env.ENV === 'dev';
 
 const styledComponentsTransformer = createStyledComponentsTransformer({
-  minify: !dev,
+  minify: true,
   displayName: dev,
 });
 
@@ -76,8 +48,8 @@ const config = {
           {
             loader: 'ts-loader',
             options: {
-              experimentalWatchApi: dev,
-              transpileOnly: true, // TODO: dev
+              experimentalWatchApi: true,
+              transpileOnly: true,
               getCustomTransformers: () => ({
                 before: [styledComponentsTransformer],
               }),
@@ -87,6 +59,13 @@ const config = {
 
         include: INCLUDE,
       },
+      /*{
+        test: /\.node$/,
+        loader: 'awesome-node-loader',
+        options: {
+          name: '[contenthash].[ext]',
+        },
+      },*/
     ],
   },
 
@@ -104,67 +83,31 @@ const config = {
   },
 
   plugins: [
-    new webpack.EnvironmentPlugin(['NODE_ENV', ...Object.keys(BUILD_FLAGS)]),
+    // new BundleAnalyzerPlugin()
   ],
 
   externals: {
     keytar: `require('keytar')`,
   },
-
-  optimization: {
-    minimizer:
-      !dev && !prebuild
-        ? [
-            new TerserPlugin({
-              extractComments: true,
-              terserOptions: {
-                ecma: 8,
-                output: {
-                  comments: false,
-                },
-              },
-              parallel: true,
-              cache: true,
-            }),
-          ]
-        : [],
-  },
 };
-
-if (dev) {
-  config.plugins.push(new ForkTsCheckerWebpackPlugin());
-  config.plugins.push(new HardSourceWebpackPlugin());
-}
 
 function getConfig(...cfg) {
   return merge(config, ...cfg);
 }
 
-const getHtml = (scope, name, entries = []) => {
-  let excludeChunks = entries.filter((x) => x !== name);
-
-  if (!dev) {
-    excludeChunks = excludeChunks.concat(
-      Object.entries(chunksEntriesMap)
-        .filter((x) => !x[1].includes(name))
-        .map((x) => x[0]),
-    );
-  }
-
+const getHtml = (scope, name) => {
   return new HtmlWebpackPlugin({
-    title: 'Midori',
+    title: 'Midori Next',
     template: 'static/pages/app.html',
     filename: `${name}.html`,
-    excludeChunks,
+    chunks: [`vendor.${scope}`, name],
   });
 };
 
 const applyEntries = (scope, config, entries) => {
   for (const entry of entries) {
     config.entry[entry] = [`./src/renderer/views/${entry}`];
-    if (!prebuild) {
-      config.plugins.push(getHtml(scope, entry, entries));
-    }
+    config.plugins.push(getHtml(scope, entry));
 
     if (dev) {
       config.entry[entry].unshift('react-hot-loader/patch');
@@ -172,98 +115,29 @@ const applyEntries = (scope, config, entries) => {
   }
 };
 
-const getBaseConfig = (name) => {
+const getBaseConfig = name => {
   const config = {
     plugins: [],
 
     output: {},
-
     entry: {},
 
     optimization: {
-      runtimeChunk: {
-        name: `runtime.${name}`,
+      splitChunks: {
+        cacheGroups: {
+          vendor: {
+            chunks: 'initial',
+            name: `vendor.${name}`,
+            minChunks: 2,
+          },
+        },
       },
     },
   };
 
   if (dev) {
-    config.entry.vendor = [
-      'styled-components',
-      'react-hot-loader',
-      'react',
-      'react-dom',
-      'mobx',
-      'mobx-react-lite',
-    ];
-
-    config.optimization.splitChunks = {
-      cacheGroups: {
-        vendor: {
-          chunks: 'initial',
-          name: `vendor.${name}`,
-          test: 'vendor',
-          enforce: true,
-        },
-      },
-    };
-  } else {
-    config.optimization.splitChunks = {
-      chunks: 'all',
-      maxInitialRequests: Infinity,
-      minSize: 0,
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name(module) {
-            const packageName = module.context
-              .match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
-              .replace('@', 'at');
-
-            const bundleName = `npm.${packageName}.${name}`;
-
-            chunksEntriesMap[bundleName] = Array.from(module._chunks).map(
-              (x) => x.name,
-            );
-
-            if (prebuild) {
-              writeFileSync(
-                CHUNKS_ENTRIES_MAP_PATH,
-                JSON.stringify(chunksEntriesMap),
-              );
-            }
-
-            return bundleName;
-          },
-        },
-      },
-    };
-  }
-
-  if (prebuild) {
-    config.plugins.push({
-      apply: (compiler) => {
-        compiler.hooks.compilation.tap('Compilation', (compilation) => {
-          compilation.hooks.afterOptimizeChunkAssets.tap(
-            'AfterOptimizeChunkAssets',
-            (chunks) => {
-              for (const chunk of chunks) {
-                if (chunk.name.indexOf('~') !== -1) {
-                  chunksEntriesMap[chunk.name] = chunk.name
-                    .split('.')[0]
-                    .split('~');
-                }
-              }
-
-              writeFileSync(
-                CHUNKS_ENTRIES_MAP_PATH,
-                JSON.stringify(chunksEntriesMap),
-              );
-            },
-          );
-        });
-      },
-    });
+    config.plugins.push(new ForkTsCheckerWebpackPlugin());
+    config.plugins.push(new HardSourceWebpackPlugin());
   }
 
   return config;

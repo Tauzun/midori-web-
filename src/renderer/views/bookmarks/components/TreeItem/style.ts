@@ -1,8 +1,7 @@
 import styled, { css } from 'styled-components';
 
 import { centerIcon } from '~/renderer/mixins';
-import { transparency } from '~/renderer/constants';
-import { ICON_FOLDER, ICON_DROPDOWN } from '~/renderer/constants/icons';
+import { icons, transparency } from '~/renderer/constants';
 import { ITheme } from '~/interfaces';
 
 export const StyledTreeItem = styled.div`
@@ -33,7 +32,7 @@ export const DropIcon = styled.div`
   min-width: 24px;
   min-height: 24px;
   margin: 0px 2px;
-  background-image: url(${ICON_DROPDOWN});
+  background-image: url(${icons.dropDown});
   border-radius: 100%;
   ${centerIcon(20)};
   ${({
@@ -60,7 +59,7 @@ export const FolderIcon = styled.div`
   min-width: 24px;
   min-height: 24px;
   opacity: ${transparency.icons.inactive};
-  background-image: url(${ICON_FOLDER});
+  background-image: url(${icons.folder});
   ${centerIcon(20)}
 
   ${({ theme }: { theme?: ITheme }) => css`

@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { ThemeProvider } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 
+import { Style } from '../../style';
 import { StyledApp } from './style';
 import { QuickMenu } from '../QuickMenu';
 import store from '../../store';
-import { UIStyle } from '~/renderer/mixins/default-styles';
+
+const GlobalStyle = createGlobalStyle`${Style}`;
 
 export const App = hot(
   observer(() => {
@@ -14,9 +16,9 @@ export const App = hot(
       <ThemeProvider
         theme={{ ...store.theme, dark: store.theme['dialog.lightForeground'] }}
       >
-        <StyledApp>
-          <UIStyle />
+        <StyledApp visible={store.visible}>
           <QuickMenu />
+          <GlobalStyle />
         </StyledApp>
       </ThemeProvider>
     );

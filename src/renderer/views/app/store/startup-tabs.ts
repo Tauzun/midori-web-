@@ -8,7 +8,6 @@ import { IStartupTab } from '~/interfaces/startup-tab';
 import { extname } from 'path';
 import { existsSync } from 'fs';
 import { ITab } from '../models';
-import { defaultTabOptions } from '~/constants/tabs';
 
 export class StartupTabsStore {
   public db = new Database<IStartupTab>('startupTabs');
@@ -26,56 +25,46 @@ export class StartupTabsStore {
 
   public async load() {
     if (this.isLoaded) return;
-
     this.isLoaded = true;
-
     let tabsToLoad: IStartupTab[] = [];
-
     if (this.store.settings.object.startupBehavior.type === 'continue') {
       tabsToLoad = await this.db.get({ windowId: this.store.windowId });
-    } else if (this.store.windowId === 1) {
-      if (this.store.settings.object.startupBehavior.type === 'urls') {
-        tabsToLoad = await this.db.get({
-          $or: [{ isUserDefined: true }, { pinned: true }],
-        } as any);
-        this.list = tabsToLoad.filter((x) => x.isUserDefined);
-      } else if (this.store.settings.object.startupBehavior.type === 'empty') {
-        tabsToLoad = await this.db.get({ pinned: true });
-      }
-    }
-
-    if (this.store.settings.object.startupBehavior.type !== 'continue') {
-      this.clearStartupTabs(false, false);
+    } else if (this.store.settings.object.startupBehavior.type === 'urls') {
+      tabsToLoad = await this.db.get({});
+      tabsToLoad = tabsToLoad.filter(x => x.isUserDefined || x.pinned);
+      this.list = tabsToLoad.filter(x => x.isUserDefined);
+    } else {
+      tabsToLoad = await this.db.get({ pinned: true });
     }
 
     const args = remote.process.argv;
     let needsNewTabPage = false;
     // If we have tabs saved, load them
-    if (tabsToLoad && tabsToLoad.length > 0) {
+    if (tabsToLoad && tabsToLoad.length > 0 && this.store.windowId === 1) {
       this.clearStartupTabs(true, false);
 
-      this.store.tabs.addTabs(
-        tabsToLoad
-          .sort((x, y) =>
-            x.pinned && y.pinned
-              ? x.order - y.order
-              : x.pinned
-              ? -1
-              : y.pinned
-              ? 1
-              : x.order - y.order,
-          )
-          .map((tab, i) => ({
-            url: prefixHttp(tab.url),
-            pinned: tab.pinned,
-            active:
-              i === tabsToLoad.length - 1 &&
-              !(args.length > 1 && isURL(args[args.length - 1])),
-          })),
-      );
+      let i = 0;
+      for (const tab in tabsToLoad.sort((x, y) =>
+        x.pinned && y.pinned
+          ? x.order - y.order
+          : x.pinned
+          ? -1
+          : y.pinned
+          ? 1
+          : x.order - y.order,
+      )) {
+        this.store.tabs.addTab({
+          url: prefixHttp(tabsToLoad[tab].url),
+          pinned: tabsToLoad[tab].pinned,
+          active:
+            i === tabsToLoad.length - 1 &&
+            !(args.length > 1 && isURL(args[args.length - 1])),
+        });
+        i++;
+      }
 
       // If we only load up pinned tabs, add a new tab page
-      if (tabsToLoad.filter((x) => !x.pinned).length == 0) {
+      if (tabsToLoad.filter(x => !x.pinned).length == 0) {
         needsNewTabPage = true;
       }
     } else {
@@ -83,35 +72,35 @@ export class StartupTabsStore {
       needsNewTabPage = true;
     }
 
-    // load up command line args. If there are any, we don't need a new tab page.
+    //load up command line args. If there are any, we don't need a new tab page.
 
     if (args.length > 1 && this.store.windowId === 1) {
       const path = remote.process.argv[1];
       const ext = extname(path);
 
       if (existsSync(path) && ext === '.html') {
-        this.store.tabs.addTabs([{ url: `file:///${path}`, active: true }]);
+        this.store.tabs.addTab({ url: `file:///${path}`, active: true });
         needsNewTabPage = false;
       } else if (isURL(path)) {
-        this.store.tabs.addTabs([
-          {
-            url: prefixHttp(path),
-            active: true,
-          },
-        ]);
+        this.store.tabs.addTab({
+          url: prefixHttp(path),
+          active: true,
+        });
         needsNewTabPage = false;
       }
     }
 
     if (needsNewTabPage) {
-      this.store.tabs.addTabs([defaultTabOptions]);
+      this.store.tabs.addTab();
     }
   }
 
   public async addStartupTabItem(item: IStartupTab) {
-    const itemToReplace = this.list.find((x) => x.id === item.id);
+    const itemToReplace = this.list.find(
+      x => x.id === item.id && x.windowId === item.windowId,
+    );
     if (itemToReplace) {
-      this.db.update({ id: item.id }, item);
+      this.db.update(itemToReplace, item);
       this.list[this.list.indexOf(itemToReplace)] = {
         ...itemToReplace,
         ...item,
@@ -122,11 +111,15 @@ export class StartupTabsStore {
     }
   }
 
-  public removeStartupTabItem(tabId: number) {
-    const itemToDelete = this.list.find((x) => x.id === tabId);
+  public removeStartupTabItem(tabId: number, windowId: number) {
+    const itemToDelete = this.list.find(
+      x => x.id === tabId && x.windowId === windowId,
+    );
     if (itemToDelete) {
-      this.list = this.list.filter((x) => x.id !== tabId);
-      this.db.remove({ id: tabId });
+      this.list = this.list.filter(
+        x => x.id !== tabId || x.windowId !== windowId,
+      );
+      this.db.remove(itemToDelete);
     }
   }
 
@@ -148,13 +141,13 @@ export class StartupTabsStore {
       this.list = [];
     } else if (!removePinned) {
       this.db.remove({ pinned: false }, true);
-      this.list = this.list.filter((x) => x.pinned);
+      this.list = this.list.filter(x => x.pinned);
     } else if (!removeUserDefined) {
       this.db.remove({ isUserDefined: false }, true);
-      this.list = this.list.filter((x) => x.isUserDefined);
+      this.list = this.list.filter(x => x.isUserDefined);
     } else {
       this.db.remove({ isUserDefined: false, pinned: false }, true);
-      this.list = this.list.filter((x) => x.isUserDefined || x.pinned);
+      this.list = this.list.filter(x => x.isUserDefined || x.pinned);
     }
   }
 }

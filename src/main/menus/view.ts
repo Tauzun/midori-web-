@@ -1,12 +1,5 @@
 import { AppWindow } from '../windows';
-import {
-  clipboard,
-  nativeImage,
-  Menu,
-  session,
-  ipcMain,
-  BrowserView,
-} from 'electron';
+import { clipboard, nativeImage, Menu, session } from 'electron';
 import { isURL, prefixHttp } from '~/utils';
 import { saveAs, viewSource, printPage } from './common-actions';
 
@@ -63,7 +56,12 @@ export const getViewMenu = (
       },
       {
         label: 'Copy image',
-        click: () => webContents.copyImageAt(params.x, params.y),
+        click: () => {
+          const img = nativeImage.createFromDataURL(params.srcURL);
+
+          clipboard.clear();
+          clipboard.writeImage(img);
+        },
       },
       {
         label: 'Copy image address',

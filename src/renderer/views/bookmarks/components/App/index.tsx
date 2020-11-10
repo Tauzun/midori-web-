@@ -4,7 +4,9 @@ import { hot } from 'react-hot-loader/root';
 
 import store from '../../store';
 import { NavigationDrawer } from '~/renderer/components/NavigationDrawer';
-import { ThemeProvider } from 'styled-components';
+import { Style } from '../../style';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { icons } from '~/renderer/constants/icons';
 import { SelectionDialog } from '~/renderer/components/SelectionDialog';
 import { Container, Content, LeftContent } from '~/renderer/components/Pages';
 import { GlobalNavigationDrawer } from '~/renderer/components/GlobalNavigationDrawer';
@@ -27,15 +29,8 @@ import { Bookmark } from '../Bookmark';
 import { ipcRenderer } from 'electron';
 import { Textfield } from '~/renderer/components/Textfield';
 import { Button } from '~/renderer/components/Button';
-import {
-  ICON_EDIT,
-  ICON_TRASH,
-  ICON_SAVE,
-  ICON_DOWNLOAD,
-  ICON_NEW_FOLDER,
-} from '~/renderer/constants';
-import parse from 'node-bookmarks-parser';
-import { WebUIStyle } from '~/renderer/mixins/default-styles';
+
+const GlobalStyle = createGlobalStyle`${Style}`;
 
 const onScroll = (e: any) => {
   const scrollPos = e.target.scrollTop;
@@ -84,7 +79,7 @@ const onPathItemClick = (item: IBookmark) => () => {
 };
 
 const onImportClick = async () => {
-  const res = parse(await ipcRenderer.invoke('import-bookmarks'));
+  const res = await ipcRenderer.invoke('import-bookmarks');
   addImported(res);
 };
 
@@ -92,7 +87,7 @@ const onExportClick = async () => {
   ipcRenderer.invoke('export-bookmarks');
 };
 
-const onContextMenuMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+const onContextMenuMouseDown = (e: React.MouseEvent) => {
   e.stopPropagation();
 };
 
@@ -100,7 +95,7 @@ const onContainerMouseDown = () => {
   store.dialogVisible = false;
 };
 
-const onDialogMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+const onDialogMouseDown = (e: React.MouseEvent) => {
   e.stopPropagation();
 };
 
@@ -139,7 +134,7 @@ const BookmarksList = observer(() => {
         onCancelClick={onCancelClick}
       />
       <PathView>
-        {store.path.map((item) => (
+        {store.path.map(item => (
           <PathItem onClick={onPathItemClick(item)} key={item._id}>
             {getBookmarkTitle(item)}
           </PathItem>
@@ -147,7 +142,7 @@ const BookmarksList = observer(() => {
       </PathView>
       {!!items.length && (
         <EmptySection>
-          {items.map((data) => (
+          {items.map(data => (
             <Bookmark data={data} key={data._id} />
           ))}
         </EmptySection>
@@ -172,21 +167,24 @@ export default hot(
           onMouseDown={onContainerMouseDown}
           darken={store.dialogVisible}
         >
-          <WebUIStyle />
+          <GlobalStyle />
           <GlobalNavigationDrawer></GlobalNavigationDrawer>
           <NavigationDrawer title="Bookmarks" search onSearchInput={onInput}>
             <Tree />
             <div style={{ flex: 1 }} />
             <NavigationDrawer.Item
-              icon={ICON_NEW_FOLDER}
+              icon={icons.newFolder}
               onClick={onNewFolderClick}
             >
               New folder
             </NavigationDrawer.Item>
-            <NavigationDrawer.Item icon={ICON_DOWNLOAD} onClick={onImportClick}>
+            <NavigationDrawer.Item
+              icon={icons.download}
+              onClick={onImportClick}
+            >
               Import
             </NavigationDrawer.Item>
-            <NavigationDrawer.Item icon={ICON_SAVE} onClick={onExportClick}>
+            <NavigationDrawer.Item icon={icons.save} onClick={onExportClick}>
               Export
             </NavigationDrawer.Item>
           </NavigationDrawer>
@@ -199,18 +197,18 @@ export default hot(
             visible={store.menuVisible}
           >
             {store.currentBookmark && !store.currentBookmark.isFolder && (
-              <ContextMenuItem onClick={onEditClick} icon={ICON_EDIT}>
+              <ContextMenuItem onClick={onEditClick} icon={icons.edit}>
                 Edit
               </ContextMenuItem>
             )}
             {store.currentBookmark && store.currentBookmark.isFolder && (
-              <ContextMenuItem onClick={onRenameClick} icon={ICON_EDIT}>
+              <ContextMenuItem onClick={onRenameClick} icon={icons.edit}>
                 Rename
               </ContextMenuItem>
             )}
             <ContextMenuItem
               onClick={onRemoveClick(store.currentBookmark)}
-              icon={ICON_TRASH}
+              icon={icons.trash}
             >
               Delete
             </ContextMenuItem>

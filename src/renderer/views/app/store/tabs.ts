@@ -13,7 +13,7 @@ import store from '.';
 import { ipcRenderer } from 'electron';
 import { defaultTabOptions } from '~/constants/tabs';
 import { TOOLBAR_HEIGHT } from '~/constants/design';
-import { TabEvent } from '~/interfaces/tabs';
+import { TweenLite } from 'gsap';
 
 export class TabsStore {
   @observable
@@ -97,83 +97,17 @@ export class TabsStore {
       }
     });
 
-    ipcRenderer.on('select-tab-index', (e, i) => {
-      this.list[i]?.select();
-    });
-
-    ipcRenderer.on('select-last-tab', () => {
-      this.list[this.list.length - 1]?.select();
-    });
-
-    ipcRenderer.on('select-previous-tab', () => {
-      const i = this.list.indexOf(this.selectedTab);
-      const prevTab = this.list[i - 1];
-
-      if (!prevTab) {
-        if (this.list[this.list.length - 1]) {
-          this.list[this.list.length - 1].select();
-        }
-      } else {
-        prevTab.select();
+    ipcRenderer.on('remove-tab', (e, id: number) => {
+      const tab = this.getTabById(id);
+      if (tab) {
+        tab.close();
       }
     });
 
-    ipcRenderer.on('remove-tab', (e, id: number) => {
-      this.getTabById(id)?.close();
-    });
-
-    ipcRenderer.on('tab-event', (e, event: TabEvent, tabId, args) => {
+    ipcRenderer.on('update-tab-find-info', (e, tabId: number, data) => {
       const tab = this.getTabById(tabId);
-
       if (tab) {
-        if (event === 'blocked-ad') {
-          tab.blockedAds++;
-        } else if (
-          event === 'url-updated' ||
-          event === 'title-updated' ||
-          event === 'favicon-updated'
-        ) {
-          if (event === 'url-updated') {
-            const [url] = args;
-            tab.url = url;
-
-            if (tab.id === this.selectedTabId && !store.addressbarFocused) {
-              this.selectedTab.addressbarValue = null;
-            }
-          } else if (event === 'title-updated') {
-            const [title] = args;
-            tab.title = title;
-          } else if (event === 'favicon-updated') {
-            const [favicon] = args;
-            tab.favicon = favicon;
-          }
-
-          tab.updateData();
-        } else if (event === 'load-commit') {
-          const [, , isMainFrame] = args;
-          if (isMainFrame) {
-            tab.blockedAds = 0;
-          }
-        } else if (event === 'did-navigate') {
-          tab.favicon = '';
-        } else if (event === 'media-playing') {
-          tab.isPlaying = true;
-        } else if (event === 'media-paused') {
-          tab.isPlaying = false;
-        } else if (
-          event === 'loading' ||
-          event === 'pinned' ||
-          event === 'credentials'
-        ) {
-          const [state] = args;
-          if (event === 'loading') {
-            tab.loading = state;
-          } else if (event === 'pinned') {
-            tab.isPinned = state;
-          } else if (event === 'credentials') {
-            tab.hasCredentials = state;
-          }
-        }
+        tab.findInfo = data;
       }
     });
 
@@ -184,7 +118,7 @@ export class TabsStore {
     ipcRenderer.on('get-search-tabs', () => {
       ipcRenderer.send(
         'get-search-tabs',
-        this.list.map((tab) => ({
+        this.list.map(tab => ({
           favicon: tab.favicon,
           url: tab.url,
           title: tab.title,
@@ -210,7 +144,7 @@ export class TabsStore {
   }
 
   public getTabById(id: number) {
-    return this.list.find((x) => x.id === id);
+    return this.list.find(x => x.id === id);
   }
 
   @action public createTab(
@@ -233,31 +167,10 @@ export class TabsStore {
     requestAnimationFrame(() => {
       tab.setLeft(tab.getLeft(), false);
       this.updateTabsBounds(true);
-      this.scrollToEnd(TAB_ANIMATION_DURATION);
+
+      this.scrollToEnd(TAB_ANIMATION_DURATION * 1000);
     });
     return tab;
-  }
-
-  @action public createTabs(
-    options: chrome.tabs.CreateProperties[],
-    ids: number[],
-  ) {
-    this.removedTabs = 0;
-
-    const tabs = options.map((option, i) => {
-      const tab = new ITab(option, ids[i]);
-      this.list.push(tab);
-      return tab;
-    });
-
-    requestAnimationFrame(() => {
-      this.updateTabsBounds(false);
-      if (this.scrollable) {
-        this.containerRef.current.scrollLeft = this.containerRef.current.scrollWidth;
-      }
-    });
-
-    return tabs;
   }
 
   public scrollToEnd = (milliseconds: number) => {
@@ -295,25 +208,6 @@ export class TabsStore {
       opts,
     );
     return this.createTab(opts, id, tabGroupId);
-  }
-
-  @action
-  public async addTabs(options: chrome.tabs.CreateProperties[]) {
-    ipcRenderer.send(`hide-window-${store.windowId}`);
-
-    for (let i = 0; i < options.length; i++) {
-      if (i === options.length - 1) {
-        options[i].active = true;
-      } else {
-        options[i].active = false;
-      }
-    }
-
-    const ids = await ipcRenderer.invoke(
-      `views-create-${store.windowId}`,
-      options,
-    );
-    return this.createTabs(options, ids);
   }
 
   public removeTab(id: number) {
@@ -369,9 +263,8 @@ export class TabsStore {
     this.setTabsLefts(animation);
   }
 
-  @action
   public calculateTabMargins() {
-    const tabs = this.list.filter((x) => !x.isClosing);
+    const tabs = this.list.filter(x => !x.isClosing);
 
     let currentGroup: number;
 
@@ -394,9 +287,8 @@ export class TabsStore {
     }
   }
 
-  @action
   public setTabGroupsLefts(animation: boolean) {
-    const tabs = this.list.filter((x) => !x.isClosing);
+    const tabs = this.list.filter(x => !x.isClosing);
 
     let left = 0;
     let currentGroup: number;
@@ -420,7 +312,7 @@ export class TabsStore {
 
   @action
   public setTabsWidths(animation: boolean) {
-    const tabs = this.list.filter((x) => !x.isClosing);
+    const tabs = this.list.filter(x => !x.isClosing);
 
     const containerWidth = this.containerWidth;
     let currentGroup: ITabGroup;
@@ -451,7 +343,7 @@ export class TabsStore {
 
   @action
   public setTabsLefts(animation: boolean) {
-    const tabs = this.list.filter((x) => !x.isClosing);
+    const tabs = this.list.filter(x => !x.isClosing);
 
     const { containerWidth } = store.tabs;
 
@@ -495,7 +387,7 @@ export class TabsStore {
       if (
         callingTab.left < tabGroup.left ||
         callingTab.left + callingTab.width >=
-          tabGroup.left + tabGroup.width + 20
+        tabGroup.left + tabGroup.width + 20
       ) {
         callingTab.removeFromGroup();
         return;
@@ -506,7 +398,7 @@ export class TabsStore {
       for (let i = index - 1; i >= 0; i--) {
         const tab = tabs[i];
 
-        if (callingTab.isPinned && !tab.isPinned) break;
+        if (callingTab.isPinned && callingTab.isPinned && tab.isPinned) break;
 
         const { tabGroup } = tab;
 
@@ -533,7 +425,7 @@ export class TabsStore {
       for (let i = index + 1; i < tabs.length; i++) {
         const tab = tabs[i];
 
-        if (callingTab.isPinned && !tab.isPinned) break;
+        if (callingTab.isPinned && callingTab.isPinned && tab.isPinned) break;
 
         const { tabGroup } = tab;
 
@@ -586,8 +478,7 @@ export class TabsStore {
         return;
       }
 
-      store.canOpenSearch = false;
-
+      store.canToggleMenu = false;
       selectedTab.isDragging = true;
 
       const newLeft =
@@ -601,9 +492,9 @@ export class TabsStore {
       if (
         newLeft + selectedTab.width >
         container.current.scrollLeft +
-          container.current.offsetWidth -
-          TABS_PADDING +
-          20
+        container.current.offsetWidth -
+        TABS_PADDING +
+        20
       ) {
         left =
           container.current.scrollLeft +
@@ -635,5 +526,21 @@ export class TabsStore {
 
   public revertClosed() {
     this.addTab({ active: true, url: this.closedUrl });
+  }
+
+  public animateProperty(
+    property: string,
+    obj: any,
+    value: number,
+    animation: boolean,
+  ) {
+    if (obj) {
+      const props: any = {
+        ease: 'power2',
+      };
+      props[property] = value;
+
+      TweenLite.to(obj, animation ? TAB_ANIMATION_DURATION : 0, props);
+    }
   }
 }

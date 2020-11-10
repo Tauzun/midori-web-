@@ -1,6 +1,4 @@
-import { observable, computed } from 'mobx';
-import { EXTENSIONS_PROTOCOL } from '~/constants';
-import { format } from 'url';
+import { observable } from 'mobx';
 
 interface Options {
   icon: string;
@@ -14,27 +12,7 @@ export class IBrowserAction {
   public icon?: string;
 
   @observable
-  private _popup?: string;
-
-  public set popup(url: string) {
-    if (!url) {
-      this._popup = null;
-    } else if (url.startsWith(EXTENSIONS_PROTOCOL)) {
-      this._popup = url;
-    } else {
-      this._popup = format({
-        protocol: EXTENSIONS_PROTOCOL,
-        slashes: true,
-        hostname: this.extensionId,
-        pathname: url,
-      });
-    }
-  }
-
-  @computed
-  public get popup() {
-    return this._popup;
-  }
+  public popup?: string;
 
   @observable
   public title?: string;
@@ -52,13 +30,11 @@ export class IBrowserAction {
 
   public extensionId?: string;
 
-  public wasOpened = false;
-
   public constructor(options: Options) {
     const { icon, title, extensionId, popup } = options;
     this.icon = icon;
     this.title = title;
-    this.extensionId = extensionId;
     this.popup = popup;
+    this.extensionId = extensionId;
   }
 }

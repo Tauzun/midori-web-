@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action } from 'mobx';
 import { ipcRenderer } from 'electron';
 
 import { ISettings } from '~/interfaces';
@@ -43,21 +43,9 @@ export class SettingsStore {
     });
   }
 
-  @computed
-  public get searchEngine() {
-    return this.object.searchEngines[this.object.searchEngine];
-  }
-
   @action
   public updateSettings(newSettings: ISettings) {
-    const prevState = { ...this.object };
     this.object = { ...this.object, ...newSettings };
-
-    if (prevState.topBarVariant !== newSettings.topBarVariant) {
-      requestAnimationFrame(() => {
-        this.store.tabs.updateTabsBounds(true);
-      });
-    }
   }
 
   public async save() {

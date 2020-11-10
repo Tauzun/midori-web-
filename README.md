@@ -70,4 +70,4 @@ Choosing Electron was the best option to build the browser. We can build the UI 
 </p>
 </div>
 
-This Midori renovation is based in Wexond.
+This Midori renovation is based in Wexond. 

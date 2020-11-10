@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ERROR_COLOR, BLUE_500 } from '~/renderer/constants';
+import { ERROR_COLOR, GREEN_500 } from '~/renderer/constants';
 import { StyledTextfield, Input, Label, Indicator, Icon } from './style';
 
 export type TestFunction = (str: string) => boolean;
@@ -32,7 +32,7 @@ export class Textfield extends React.PureComponent<TextFieldProps, State> {
   private timer: number;
 
   private static defaultProps: TextFieldProps = {
-    color: BLUE_500,
+    color: GREEN_500,
     inputType: 'text',
     width: 280,
     delay: 200,
@@ -106,7 +106,7 @@ export class Textfield extends React.PureComponent<TextFieldProps, State> {
     clearTimeout(this.timer);
     const { onChange } = this.props;
 
-    this.setState({ error: false, value: this.inputRef.current.value });
+    this.setState({ error: false });
     if (onChange) {
       onChange(this.inputRef.current.value);
     }

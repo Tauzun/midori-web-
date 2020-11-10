@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { ThemeProvider } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 
+import { Style } from '../../style';
 import { StyledApp, Title, Row, Label, Buttons } from './style';
 import store from '../../store';
 import { Input, Dropdown } from '~/renderer/components/Input';
 import { Button } from '~/renderer/components/Button';
 import { ipcRenderer, remote } from 'electron';
 import { getBookmarkTitle } from '~/renderer/views/bookmarks/utils';
-import { UIStyle } from '~/renderer/mixins/default-styles';
+
+const GlobalStyle = createGlobalStyle`${Style}`;
 
 const onDone = () => {
   store.hide();
@@ -28,7 +30,7 @@ const onChange = () => {
 const onDropdownClick = (e: React.MouseEvent<HTMLDivElement>) => {
   const { left, top, height } = e.currentTarget.getBoundingClientRect();
   const menu = remote.Menu.buildFromTemplate([
-    ...store.folders.map((folder) => ({
+    ...store.folders.map(folder => ({
       label: getBookmarkTitle(folder),
       click: () => {
         store.currentFolder = folder;
@@ -56,7 +58,7 @@ export const App = hot(
     return (
       <ThemeProvider theme={{ ...store.theme }}>
         <StyledApp visible={store.visible}>
-          <UIStyle />
+          <GlobalStyle />
           <Title>{store.dialogTitle}</Title>
           <Row>
             <Label>Name</Label>

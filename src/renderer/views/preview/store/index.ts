@@ -37,22 +37,22 @@ export class Store extends DialogStore {
     return parsed.hostname;
   }
 
-  constructor() {
-    super({ visibilityWrapper: false, persistent: true });
+  public constructor() {
+    super();
 
-    ipcRenderer.on('visible', (e, visible, tab) => {
+    ipcRenderer.on('visible', (e, flag, tab) => {
       clearTimeout(this.timeout);
       clearTimeout(this.timeout1);
 
-      if (!visible) {
-        this.visible = false;
+      if (!flag) {
+        this.visible = flag;
       }
 
-      if (visible) {
+      if (flag) {
         this.timeout1 = setTimeout(() => {
           this.xTransition = true;
         }, 80);
-      } else if (!visible) {
+      } else if (!flag) {
         this.timeout = setTimeout(() => {
           this.xTransition = false;
         }, 100);
@@ -63,8 +63,8 @@ export class Store extends DialogStore {
         this.url = tab.url;
         this.x = tab.x;
 
-        if (visible && this.title !== '' && this.url !== '') {
-          this.visible = visible;
+        if (flag && this.title !== '' && this.url !== '') {
+          this.visible = flag;
         }
       }
     });

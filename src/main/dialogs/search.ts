@@ -1,81 +1,92 @@
-import { ipcMain, BrowserWindow } from 'electron';
-import {
-  DIALOG_MIN_HEIGHT,
-  DIALOG_MARGIN_TOP,
-  DIALOG_MARGIN,
-} from '~/constants/design';
-import { PersistentDialog } from './dialog';
-import { Application } from '../application';
+import { AppWindow } from '../windows';
+import { ipcMain } from 'electron';
+import { Dialog } from '.';
 
 const WIDTH = 800;
-const HEIGHT = 80;
+const HEIGHT = 56;
 
-export class SearchDialog extends PersistentDialog {
+export class SearchDialog extends Dialog {
+  private queueShow = false;
+
+  private lastHeight = 0;
   private isPreviewVisible = false;
 
-  public data = {
-    text: '',
-    x: 0,
-    y: 0,
-    width: 200,
-  };
-
-  public constructor() {
-    super({
+  public constructor(appWindow: AppWindow) {
+    super(appWindow, {
       name: 'search',
       bounds: {
         width: WIDTH,
         height: HEIGHT,
         y: 48,
       },
-
+      hideTimeout: 300,
       devtools: false,
     });
 
-    ipcMain.on(`height-${this.id}`, (e, height) => {
+    ipcMain.on(`height-${this.webContents.id}`, (e, height) => {
+      const { width } = this.appWindow.getContentBounds();
       super.rearrange({
         height: this.isPreviewVisible
-          ? Math.max(DIALOG_MIN_HEIGHT, HEIGHT + height)
-          : HEIGHT + height,
+          ? Math.max(120, 56 + height)
+          : 56 + height,
+        x: Math.round(width / 2 - WIDTH / 2),
       });
+      this.lastHeight = 56 + height;
     });
 
-    ipcMain.on(`addressbar-update-input-${this.id}`, (e, data) => {
-      this.browserWindow.webContents.send('addressbar-update-input', data);
+    ipcMain.on(`can-show-${this.webContents.id}`, () => {
+      if (this.queueShow) this.show();
     });
+  }
+
+  public toggle() {
+    if (!this.visible) this.show();
+    else this.hide();
   }
 
   public rearrange() {
-    super.rearrange({
-      x: this.data.x - DIALOG_MARGIN,
-      y: this.data.y - DIALOG_MARGIN_TOP,
-      width: this.data.width + 2 * DIALOG_MARGIN,
-    });
+    const { width } = this.appWindow.getContentBounds();
+    super.rearrange({ x: Math.round(width / 2 - WIDTH / 2) });
   }
 
-  private onResize = () => {
-    this.hide();
-  };
+  public rearrangePreview(toggle: boolean) {
+    this.isPreviewVisible = toggle;
+    if (toggle) {
+      super.rearrange({
+        height: Math.max(120, this.bounds.height),
+      });
+    } else {
+      super.rearrange({
+        height: this.lastHeight,
+      });
+    }
+  }
 
-  public async show(browserWindow: BrowserWindow) {
-    super.show(browserWindow, true, false);
+  public show() {
+    this.appWindow.dialogs.previewDialog.hide(false);
 
-    browserWindow.once('resize', this.onResize);
+    super.show();
 
-    this.send('visible', true, {
-      id: Application.instance.windows.current.viewManager.selectedId,
-      ...this.data,
+    this.queueShow = true;
+
+    const selected = this.appWindow.viewManager.selected;
+
+    const url = selected.webContents.getURL();
+
+    this.webContents.send('visible', true, {
+      id: this.appWindow.viewManager.selectedId,
+      url: url.startsWith('midori-error') ? selected.errorURL : url,
     });
+
+    this.appWindow.webContents.send('get-search-tabs');
 
     ipcMain.once('get-search-tabs', (e, tabs) => {
-      this.send('search-tabs', tabs);
+      this.webContents.send('search-tabs', tabs);
     });
-
-    browserWindow.webContents.send('get-search-tabs');
   }
 
-  public hide(bringToTop = false) {
-    super.hide(bringToTop);
-    this.browserWindow.removeListener('resize', this.onResize);
+  public hide() {
+    super.hide();
+    this.queueShow = false;
   }
 }

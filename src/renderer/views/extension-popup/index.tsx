@@ -17,25 +17,18 @@ const removeWebview = () => {
   }
 };
 
-const _hide = () => {
-  app.classList.remove('visible');
-  removeWebview();
-};
-
 const hide = () => {
-  visible = false;
-  _hide();
-  setTimeout(() => {
-    ipcRenderer.send(`hide-${getWebContentsId()}`);
-  });
+  if (!visible || !webview) return;
+  ipcRenderer.send(`hide-${getWebContentsId()}`);
 };
 
 const show = () => {
+  if (visible) return;
   app.classList.add('visible');
   visible = true;
 };
 
-const createWebview = (url: string, inspect: boolean) => {
+const createWebview = (url: string) => {
   webview = document.createElement('webview');
 
   webview.setAttribute('partition', 'persist:view');
@@ -53,44 +46,36 @@ const createWebview = (url: string, inspect: boolean) => {
   webview.style.height = '100%';
 
   webview.addEventListener('dom-ready', () => {
-    remote.webContents
-      .fromId(webview.getWebContentsId())
-      .addListener('context-menu', (e, params) => {
-        const menu = remote.Menu.buildFromTemplate([
-          {
-            label: 'Inspect element',
-            click: () => {
-              webview.inspectElement(params.x, params.y);
-            },
+    webview.getWebContents().addListener('context-menu', (e, params) => {
+      const menu = remote.Menu.buildFromTemplate([
+        {
+          label: 'Inspect element',
+          click: () => {
+            webview.inspectElement(params.x, params.y);
           },
-        ]);
+        },
+      ]);
 
-        menu.popup();
-      });
-
-    if (inspect) {
-      webview.openDevTools();
-    }
+      menu.popup();
+    });
   });
 
-  webview.addEventListener('ipc-message', (e) => {
+  webview.addEventListener('ipc-message', e => {
     if (e.channel === 'webview-size') {
-      let [width, height] = e.args;
-
-      width = width === 0 ? 1 : width;
-      height = height === 0 ? 1 : height;
-
-      container.style.width = width + 'px';
+      const [width, height] = e.args;
+      container.style.width = (width < 10 ? 200 : width) + 'px';
       container.style.height = height + 'px';
 
-      ipcRenderer.send(`bounds-${getWebContentsId()}`, width + 32, height + 40);
+      ipcRenderer.send(`bounds-${getWebContentsId()}`, width + 16, height + 16);
 
       show();
 
       webview.focus();
     } else if (e.channel === 'webview-blur') {
       if (visible && !webview.isDevToolsOpened()) {
-        hide();
+        setTimeout(() => {
+          hide();
+        });
       }
     }
   });
@@ -98,9 +83,21 @@ const createWebview = (url: string, inspect: boolean) => {
   container.appendChild(webview);
 };
 
-ipcRenderer.on('data', (e, data) => {
-  const { url, inspect } = data;
-  createWebview(url, inspect);
+ipcRenderer.on('visible', (e, flag, data) => {
+  if (flag) {
+    const { url } = data;
+    createWebview(url);
+  } else {
+    visible = false;
+    app.classList.remove('visible');
+    removeWebview();
+  }
 });
 
-ipcRenderer.send(`loaded-${getWebContentsId()}`);
+ipcRenderer.on('inspect', () => {
+  if (webview) {
+    webview.addEventListener('dom-ready', () => {
+      webview.openDevTools();
+    });
+  }
+});

@@ -1,46 +1,47 @@
-import { BrowserWindow } from 'electron';
-import { Application } from '../application';
-import {
-  DIALOG_MARGIN_TOP,
-  DIALOG_MARGIN,
-  DIALOG_TOP,
-} from '~/constants/design';
+import { AppWindow } from '../windows';
+import { Dialog } from '.';
+import { ipcMain } from 'electron';
 
-export const showDownloadsDialog = (
-  browserWindow: BrowserWindow,
-  x: number,
-  y: number,
-) => {
-  let height = 0;
+const WIDTH = 350;
 
-  const dialog = Application.instance.dialogs.show({
-    name: 'downloads-dialog',
-    browserWindow,
-    getBounds: () => {
-      const winBounds = browserWindow.getContentBounds();
-      const maxHeight = winBounds.height - DIALOG_TOP - 16;
+export class DownloadsDialog extends Dialog {
+  public visible = false;
 
-      height = Math.round(Math.min(winBounds.height, height + 28));
+  private height = 0;
 
-      dialog.browserView.webContents.send(
-        `max-height`,
-        Math.min(maxHeight, height),
-      );
+  public left = 0;
 
-      return {
-        x: x - 350 + DIALOG_MARGIN,
-        y: y - DIALOG_MARGIN_TOP,
-        width: 350,
-        height,
-      };
-    },
-    onWindowBoundsUpdate: () => dialog.hide(),
-  });
+  constructor(appWindow: AppWindow) {
+    super(appWindow, {
+      name: 'downloads',
+      bounds: {
+        width: WIDTH,
+        height: 0,
+        y: 34,
+      },
+    });
 
-  if (!dialog) return;
+    ipcMain.on(`height-${this.webContents.id}`, (e, height) => {
+      this.height = height;
+      this.rearrange();
+    });
+  }
 
-  dialog.on('height', (e, h) => {
-    height = h;
-    dialog.rearrange();
-  });
-};
+  public rearrange() {
+    const { width, height } = this.appWindow.getContentBounds();
+
+    const maxHeight = height - 34 - 16;
+
+    super.rearrange({
+      x: Math.round(Math.min(this.left - WIDTH / 2, width - WIDTH)),
+      height: Math.round(Math.min(height, this.height + 16)),
+    });
+
+    this.webContents.send(`max-height`, Math.min(maxHeight, this.height));
+  }
+
+  public show() {
+    super.show();
+    this.webContents.send('visible', true);
+  }
+}

@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import Ripple from '../Ripple';
 import { StyledButton, StyledLabel } from './styles';
 
 interface Props {
@@ -28,5 +29,6 @@ export const Button = ({
     style={style}
   >
     <StyledLabel>{children}</StyledLabel>
+    <Ripple color={foreground || '#fff'} />
   </StyledButton>
 );

@@ -6,8 +6,13 @@ import { WEBUI_BASE_URL } from '~/constants/files';
 import { injectChromeWebstoreInstallButton } from './chrome-webstore';
 
 const tabId = ipcRenderer.sendSync('get-webcontents-id');
+const arg = process.argv.find(x => x.startsWith('--window-id='));
 
-export const windowId: number = ipcRenderer.sendSync('get-window-id');
+export let windowId: number = null;
+
+if (arg) {
+  windowId = parseInt(arg.split('--window-id=')[1], 10);
+}
 
 const goBack = () => {
   ipcRenderer.invoke(`web-contents-call`, {
@@ -23,7 +28,7 @@ const goForward = () => {
   });
 };
 
-window.addEventListener('mouseup', (e) => {
+window.addEventListener('mouseup', e => {
   if (e.button === 3) {
     e.preventDefault();
     goBack();
@@ -61,7 +66,7 @@ function getScrollStartPoint(x: number, y: number) {
   return { left, right };
 }
 
-document.addEventListener('wheel', (e) => {
+document.addEventListener('wheel', e => {
   verticalMouseMove += e.deltaY;
   horizontalMouseMove += e.deltaX;
 
@@ -94,39 +99,35 @@ ipcRenderer.on('scroll-touch-end', () => {
   resetCounters();
 });
 
-if (process.env.ENABLE_AUTOFILL) {
-  window.addEventListener('load', AutoComplete.loadForms);
-  window.addEventListener('mousedown', AutoComplete.onWindowMouseDown);
-}
+window.addEventListener('load', AutoComplete.loadForms);
+window.addEventListener('mousedown', AutoComplete.onWindowMouseDown);
 
-const postMsg = (data: any, res: any) => {
-  window.postMessage(
-    {
-      id: data.id,
-      result: res,
-      type: 'result',
-    },
-    '*',
-  );
+const emitCallback = (msg: string, data: any) => {
+  ipcRenderer.once(msg, (e, res) => {
+    window.postMessage(
+      {
+        id: data.id,
+        result: res,
+        type: 'result',
+      },
+      '*',
+    );
+  });
 };
 
 const hostname = window.location.href.substr(WEBUI_BASE_URL.length);
 
-if (
-  process.env.ENABLE_EXTENSIONS &&
-  window.location.host === 'chrome.google.com'
-) {
+if (window.location.host === 'chrome.google.com') {
   injectChromeWebstoreInstallButton();
 }
 
-const settings = ipcRenderer.sendSync('get-settings-sync');
 if (
   window.location.href.startsWith(WEBUI_BASE_URL) ||
   window.location.protocol === 'midori-error:'
 ) {
-  (async function () {
+  (async function() {
     const w = await webFrame.executeJavaScript('window');
-    w.settings = settings;
+    w.settings = ipcRenderer.sendSync('get-settings-sync');
     w.require = (id: string) => {
       if (id === 'electron') {
         return { ipcRenderer };
@@ -150,13 +151,6 @@ if (
       };
     }
   })();
-} else {
-  (async function () {
-    if (settings.doNotTrack) {
-      const w = await webFrame.executeJavaScript('window');
-      Object.defineProperty(w.navigator, 'doNotTrack', { value: 1 });
-    }
-  })();
 }
 
 if (window.location.href.startsWith(WEBUI_BASE_URL)) {
@@ -170,20 +164,17 @@ if (window.location.href.startsWith(WEBUI_BASE_URL)) {
     }
   });
 
-  window.addEventListener('message', async ({ data }) => {
+  window.addEventListener('message', ({ data }) => {
     if (data.type === 'storage') {
-      const res = await ipcRenderer.invoke(`storage-${data.operation}`, {
+      ipcRenderer.send(`storage-${data.operation}`, data.id, {
         scope: data.scope,
         ...data.data,
       });
 
-      postMsg(data, res);
+      emitCallback(data.id, data);
     } else if (data.type === 'credentials-get-password') {
-      const res = await ipcRenderer.invoke(
-        'credentials-get-password',
-        data.data,
-      );
-      postMsg(data, res);
+      ipcRenderer.send('credentials-get-password', data.id, data.data);
+      emitCallback(data.id, data);
     } else if (data.type === 'save-settings') {
       ipcRenderer.send('save-settings', { settings: data.data });
     }

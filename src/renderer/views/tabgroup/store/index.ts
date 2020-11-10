@@ -10,16 +10,17 @@ export class Store extends DialogStore {
 
   public constructor() {
     super();
-    this.init();
-  }
 
-  public async init() {
-    const tabGroup = await this.invoke('tabgroup');
+    ipcRenderer.on('visible', (e, flag, tabGroup) => {
+      this.visible = flag;
 
-    this.tabGroupId = tabGroup.id;
-    this.inputRef.current.inputRef.current.focus();
-    this.inputRef.current.inputRef.current.value = tabGroup.name;
-    this.inputRef.current.inputRef.current.select();
+      if (flag) {
+        this.tabGroupId = tabGroup.id;
+        this.inputRef.current.inputRef.current.focus();
+        this.inputRef.current.inputRef.current.value = tabGroup.name;
+        this.inputRef.current.inputRef.current.select();
+      }
+    });
   }
 }
 

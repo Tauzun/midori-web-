@@ -19,6 +19,8 @@ export const TEAL_500 = '#009688';
 
 export const GREEN_500 = '#4CAF50';
 
+export const GREEN_300 = '#65f687';
+
 export const LIGHT_GREEN_500 = '#8BC34A';
 
 export const LIME_500 = '#CDDC39';

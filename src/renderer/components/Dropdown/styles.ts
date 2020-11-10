@@ -1,16 +1,12 @@
 import styled, { css } from 'styled-components';
 
-import {
-  EASING_FUNCTION,
-  transparency,
-  ICON_DROPDOWN,
-} from '~/renderer/constants';
+import { EASING_FUNCTION, transparency, icons } from '~/renderer/constants';
 import { centerIcon } from '~/renderer/mixins';
 import { ITheme } from '~/interfaces';
 
 export const StyledDropdown = styled.div`
+  width: 200px;
   height: 32px;
-  min-width: 200px;
   position: relative;
   border-radius: 4px;
   user-select: none;
@@ -43,7 +39,7 @@ export const DropIcon = styled.div`
   margin-left: auto;
   margin-right: 2px;
   opacity: ${transparency.icons.inactive};
-  background-image: url(${ICON_DROPDOWN});
+  background-image: url(${icons.dropDown});
   transition: 0.2s ${EASING_FUNCTION} transform;
   ${centerIcon(24)};
 

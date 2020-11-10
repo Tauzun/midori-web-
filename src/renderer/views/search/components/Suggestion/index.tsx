@@ -1,14 +1,13 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { transparency, ICON_PAGE, ICON_SEARCH } from '~/renderer/constants';
+import { transparency, icons } from '~/renderer/constants';
 import {
   StyledSuggestion,
   PrimaryText,
   Dash,
   SecondaryText,
   Icon,
-  Url,
 } from './style';
 import { ISuggestion } from '~/interfaces';
 import store from '../../store';
@@ -28,7 +27,7 @@ const onMouseLeave = (suggestion: ISuggestion) => () => {
 };
 
 const onClick = (suggestion: ISuggestion) => () => {
-  let url = suggestion.isSearch ? suggestion.primaryText : suggestion.url;
+  let url = suggestion.primaryText;
 
   if (suggestion.isSearch) {
     url = store.searchEngine.url.replace('%s', url);
@@ -38,22 +37,24 @@ const onClick = (suggestion: ISuggestion) => () => {
 
   callViewMethod(store.tabId, 'loadURL', url);
 
-  store.hide();
+  setTimeout(() => {
+    ipcRenderer.send(`hide-${store.id}`);
+  });
 };
 
 export const Suggestion = observer(({ suggestion }: Props) => {
   const { hovered } = suggestion;
-  const { primaryText, secondaryText, url } = suggestion;
+  const { primaryText, secondaryText } = suggestion;
 
   const selected = store.suggestions.selected === suggestion.id;
 
   let { favicon } = suggestion;
 
   if (favicon == null || favicon.trim() === '') {
-    favicon = ICON_PAGE;
+    favicon = icons.page;
   }
 
-  const customFavicon = favicon !== ICON_PAGE && favicon !== ICON_SEARCH;
+  const customFavicon = favicon !== icons.page && favicon !== icons.search;
 
   return (
     <StyledSuggestion
@@ -68,15 +69,15 @@ export const Suggestion = observer(({ suggestion }: Props) => {
           backgroundImage: `url(${favicon})`,
           opacity: customFavicon ? 1 : transparency.icons.inactive,
           filter: !customFavicon
-            ? store.theme['searchBox.lightForeground']
+            ? store.theme['searchBox.suggestions.lightForeground']
               ? 'invert(100%)'
               : 'none'
             : 'none',
         }}
       />
-      {primaryText && <PrimaryText>{primaryText}</PrimaryText>}
-      {primaryText && (secondaryText || url) && <Dash>&ndash;</Dash>}
-      {url ? <Url>{url}</Url> : <SecondaryText>{secondaryText}</SecondaryText>}
+      <PrimaryText>{primaryText}</PrimaryText>
+      {primaryText != null && secondaryText != null && <Dash>&mdash;</Dash>}
+      <SecondaryText>{secondaryText}</SecondaryText>
     </StyledSuggestion>
   );
 });

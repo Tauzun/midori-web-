@@ -26,7 +26,7 @@ export const StyledSmallDialog = styled.div`
 
   ${({ visible, theme }: { visible: boolean; theme?: ITheme }) => css`
     opacity: ${visible ? 1 : 0};
-    pointer-events: ${visible ? 'inherit' : 'none'};
+    pointer-events: ${visible ? 'auto' : 'none'};
     background-color: ${theme['dialog.backgroundColor']};
   `};
 `;

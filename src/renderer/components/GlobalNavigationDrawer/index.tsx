@@ -1,14 +1,8 @@
 import * as React from 'react';
 import { NavigationDrawer } from '../NavigationDrawer';
 import { observer } from 'mobx-react-lite';
+import { icons } from '~/renderer/constants';
 import { WEBUI_BASE_URL, WEBUI_URL_SUFFIX } from '~/constants/files';
-import {
-  ICON_SETTINGS,
-  ICON_HISTORY,
-  ICON_BOOKMARKS,
-  ICON_EXTENSIONS,
-  ICON_DOWNLOAD,
-} from '~/renderer/constants/icons';
 
 const MenuItem = observer(
   ({
@@ -37,19 +31,19 @@ const MenuItem = observer(
 export const GlobalNavigationDrawer = () => {
   return (
     <NavigationDrawer dense title="">
-      <MenuItem name="settings" icon={ICON_SETTINGS}>
+      <MenuItem name="settings" icon={icons.settings}>
         Settings
       </MenuItem>
-      <MenuItem name="history" icon={ICON_HISTORY}>
+      <MenuItem name="history" icon={icons.history}>
         History
       </MenuItem>
-      <MenuItem name="bookmarks" icon={ICON_BOOKMARKS}>
+      <MenuItem name="bookmarks" icon={icons.bookmarks}>
         Bookmarks
       </MenuItem>
-      <MenuItem name="downloads" icon={ICON_DOWNLOAD}>
+      <MenuItem name="downloads" icon={icons.download}>
         Downloads
       </MenuItem>
-      <MenuItem name="extensions" icon={ICON_EXTENSIONS}>
+      <MenuItem name="extensions" icon={icons.extensions}>
         Extensions
       </MenuItem>
     </NavigationDrawer>

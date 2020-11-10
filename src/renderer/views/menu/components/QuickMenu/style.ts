@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { ITheme } from '~/interfaces';
-import { centerIcon } from '~/renderer/mixins';
-import { ICON_ARROW_RIGHT } from '~/renderer/constants/icons';
+import { centerIcon, getLetterSpacing } from '~/renderer/mixins';
+import { icons } from '~/renderer/constants';
 
 export const Line = styled.div`
   height: 1px;
@@ -19,10 +19,11 @@ export const MenuItem = styled.div`
   align-items: center;
   display: flex;
   position: relative;
-  padding: 0 12px;
+  padding: 0 16px;
   font-size: 12px;
+  letter-spacing: ${getLetterSpacing(12, 0.1)}rem;
 
-  ${({ arrow }: { arrow?: boolean; disabled?: boolean }) =>
+  ${({ arrow }: { arrow?: boolean }) =>
     arrow &&
     css`
       &:after {
@@ -33,17 +34,11 @@ export const MenuItem = styled.div`
         height: 100%;
         opacity: 0.54;
         ${centerIcon(20)};
-        background-image: url(${ICON_ARROW_RIGHT});
+        background-image: url(${icons.arrowRight});
         ${({ theme }: { theme?: ITheme }) => css`
           filter: ${theme['dialog.lightForeground'] ? 'invert(100%)' : 'none'};
         `};
       }
-    `};
-
-  ${({ disabled }: { arrow?: boolean; disabled?: boolean }) =>
-    css`
-      pointer-events: ${disabled ? 'none' : 'inherit'};
-      opacity: ${disabled ? 0.54 : 1};
     `};
 
   &:hover {
@@ -60,10 +55,12 @@ export const MenuItemTitle = styled.div`
 `;
 
 export const MenuItems = styled.div`
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
   flex: 1;
   overflow: hidden;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 
   ${({ theme }: { theme?: ITheme }) => css`
     background-color: ${theme['dialog.backgroundColor']};
@@ -78,7 +75,7 @@ export const Content = styled.div`
 `;
 
 export const Icon = styled.div`
-  margin-right: 12px;
+  margin-right: 16px;
   width: 20px;
   height: 20px;
   ${centerIcon()};

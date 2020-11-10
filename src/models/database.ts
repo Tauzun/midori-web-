@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron';
-import { toJS } from 'mobx';
+
+import { makeId } from '~/utils';
 
 interface IAction<T> {
   item?: Partial<T>;
@@ -19,12 +20,18 @@ export class Database<T> {
     operation: 'get' | 'get-one' | 'update' | 'insert' | 'remove',
     data: IAction<T>,
   ): Promise<any> {
-    const res = await ipcRenderer.invoke(`storage-${operation}`, {
-      scope: this.scope,
-      ...toJS(data, { recurseEverything: true }),
-    });
+    return new Promise(resolve => {
+      const id = makeId(32);
 
-    return res;
+      ipcRenderer.send(`storage-${operation}`, id, {
+        scope: this.scope,
+        ...data,
+      });
+
+      ipcRenderer.once(id, (e, res) => {
+        resolve(res);
+      });
+    });
   }
 
   public async insert(item: T): Promise<T> {

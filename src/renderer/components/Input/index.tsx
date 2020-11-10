@@ -2,9 +2,10 @@ import styled, { css } from 'styled-components';
 
 import { ITheme } from '~/interfaces';
 import { centerIcon } from '~/renderer/mixins';
-import { ICON_DROPDOWN } from '~/renderer/constants/icons';
+import { icons } from '~/renderer/constants';
 
 export const Control = css`
+  width: 200px;
   height: 32px;
   position: relative;
   border: none;
@@ -25,9 +26,7 @@ export const Control = css`
   `}
 `;
 
-export const Input = styled.input.attrs(() => ({
-  spellCheck: false,
-}))`
+export const Input = styled.input`
   ${Control}
 `;
 
@@ -41,7 +40,7 @@ export const Dropdown = styled.div`
     height: 20px;
     width: 20px;
     ${centerIcon()};
-    background-image: url(${ICON_DROPDOWN});
+    background-image: url(${icons.dropDown});
 
     ${({ dark }: { dark: boolean }) => css`
       filter: ${dark ? 'invert(100%)' : 'none'};

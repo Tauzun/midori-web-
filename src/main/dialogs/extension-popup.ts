@@ -1,51 +1,58 @@
-import { BrowserWindow } from 'electron';
-import { Application } from '../application';
-import { DIALOG_MARGIN_TOP, DIALOG_MARGIN } from '~/constants/design';
+import { AppWindow } from '../windows';
+import { Dialog } from '.';
+import { ipcMain } from 'electron';
 
-export const showExtensionDialog = (
-  browserWindow: BrowserWindow,
-  x: number,
-  y: number,
-  url: string,
-  inspect = false,
-) => {
-  if (!process.env.ENABLE_EXTENSIONS) return;
+export class ExtensionPopup extends Dialog {
+  public visible = false;
 
-  let height = 512;
-  let width = 512;
+  private height = 512;
 
-  const dialog = Application.instance.dialogs.show({
-    name: 'extension-popup',
-    browserWindow,
-    getBounds: () => {
-      return {
-        x: x - width + DIALOG_MARGIN,
-        y: y - DIALOG_MARGIN_TOP,
-        height: Math.min(1024, height),
-        width: Math.min(1024, width),
-      };
-    },
-    onWindowBoundsUpdate: () => dialog.hide(),
-  });
+  public left = 0;
 
-  if (!dialog) return;
+  private width = 512;
 
-  dialog.on('bounds', (e, w, h) => {
-    width = w;
-    height = h;
-    dialog.rearrange();
-  });
+  public url = '';
 
-  dialog.browserView.webContents.on(
-    'will-attach-webview',
-    (e, webPreferences, params) => {
+  constructor(appWindow: AppWindow) {
+    super(appWindow, {
+      name: 'extension-popup',
+      bounds: {
+        width: 512,
+        height: 512,
+        y: 34,
+      },
+      devtools: false,
+      webPreferences: {
+        webviewTag: true,
+      },
+    });
+
+    ipcMain.on(`bounds-${this.webContents.id}`, (e, width, height) => {
+      this.height = height;
+      this.width = width;
+      this.rearrange();
+    });
+
+    this.webContents.on('will-attach-webview', (e, webPreferences, params) => {
+      webPreferences.additionalArguments = ['--session-id=1'];
       webPreferences.sandbox = true;
       webPreferences.nodeIntegration = false;
       webPreferences.contextIsolation = true;
-    },
-  );
+    });
+  }
 
-  dialog.on('loaded', (e) => {
-    e.reply('data', { url, inspect });
-  });
-};
+  public rearrange() {
+    const { width } = this.appWindow.getContentBounds();
+
+    super.rearrange({
+      x: Math.round(Math.min(this.left - this.width + 6, width - this.width)),
+      height: Math.round(Math.min(1024, this.height)),
+      width: Math.round(Math.min(1024, this.width)),
+    });
+  }
+
+  public show() {
+    super.show();
+    this.webContents.send('visible', true, { url: this.url });
+  }
+}

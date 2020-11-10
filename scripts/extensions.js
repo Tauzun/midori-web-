@@ -16,7 +16,7 @@ mkdir(darkreaderPath, { recursive: true }, async err => {
 
   if (!existsSync(resolve(darkreaderPath, 'manifest.json'))) {
     try {
-      const asset = 'https://astian.org/midori/build.zip';
+      const asset = 'https://astian.org/midori/extensions/build.zip';
 
       console.log('Downloading build.zip...');
       const res2 = await axios({

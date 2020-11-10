@@ -1,55 +1,49 @@
-import { VIEW_Y_OFFSET } from '~/constants/design';
-import { BrowserWindow } from 'electron';
-import { Application } from '../application';
+import { ipcMain } from 'electron';
+import { TOOLBAR_HEIGHT } from '~/constants/design';
+import { AppWindow } from '../windows';
+import { Dialog } from '.';
 
-export const requestPermission = (
-  browserWindow: BrowserWindow,
-  name: string,
-  url: string,
-  details: any,
-  tabId: number,
-): Promise<boolean> => {
-  return new Promise((resolve, reject) => {
-    if (
-      name === 'unknown' ||
-      (name === 'media' && details.mediaTypes.length === 0) ||
-      name === 'midiSysex'
-    ) {
-      return reject('Unknown permission');
-    }
+const HEIGHT = 175;
+const WIDTH = 350;
 
-    const appWindow = Application.instance.windows.fromBrowserWindow(
-      browserWindow,
-    );
-
-    appWindow.viewManager.selected.requestedPermission = { name, url, details };
-
-    const dialog = Application.instance.dialogs.show({
+export class PermissionsDialog extends Dialog {
+  public constructor(appWindow: AppWindow) {
+    super(appWindow, {
       name: 'permissions',
-      browserWindow,
-      getBounds: () => ({
-        width: 366,
-        height: 165,
+      bounds: {
+        height: HEIGHT,
+        width: WIDTH,
+        y: TOOLBAR_HEIGHT,
         x: 0,
-        y: VIEW_Y_OFFSET,
-      }),
-      tabAssociation: {
-        tabId,
-        getTabInfo: (tabId) => {
-          const tab = appWindow.viewManager.views.get(tabId);
-          return tab.requestedPermission;
+      },
+    });
+  }
+
+  public async requestPermission(
+    name: string,
+    url: string,
+    details: any,
+  ): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      if (
+        name === 'unknown' ||
+        (name === 'media' && details.mediaTypes.length === 0) ||
+        name === 'midiSysex'
+      ) {
+        return reject('Unknown permission');
+      }
+
+      this.show();
+
+      this.webContents.send('request-permission', { name, url, details });
+
+      ipcMain.once(
+        `request-permission-result-${this.appWindow.id}`,
+        (e, r: boolean) => {
+          resolve(r);
+          this.hide();
         },
-      },
-      onWindowBoundsUpdate: (disposition) => {
-        if (disposition === 'resize') dialog.rearrange();
-      },
+      );
     });
-
-    if (!dialog) return;
-
-    dialog.on('result', (e, result) => {
-      resolve(result);
-      dialog.hide();
-    });
-  });
-};
+  }
+}

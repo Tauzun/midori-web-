@@ -1,18 +1,21 @@
 import styled, { css } from 'styled-components';
-import { centerIcon, body2 } from '~/renderer/mixins';
+import { centerIcon, shadows } from '~/renderer/mixins';
+import { icons, GREEN_500, GREEN_300 } from '~/renderer/constants';
 import { ITheme } from '~/interfaces';
-import { DialogStyle } from '~/renderer/mixins/dialogs';
-import { TOOLBAR_HEIGHT } from '~/constants/design';
 
-export const StyledApp = styled(DialogStyle)`
-  transition: none;
-  padding-bottom: 4px;
+export const StyledApp = styled.div`
+  margin: 8px;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  transition: 0.15s opacity, 0.15s margin-top;
 
-  ${({ theme }: { theme?: ITheme }) => css`
-    background-color: ${theme['searchBox.backgroundColor']};
-    color: ${theme['searchBox.lightForeground']
-      ? 'rgba(255, 255, 255, 0.87)'
-      : 'black'};
+  ${({ visible, theme }: { visible: boolean; theme?: ITheme }) => css`
+    opacity: ${visible ? 1 : 0};
+    margin-top: ${visible ? 2 : 6}px;
+    box-shadow: 0 0 0 2px
+        ${theme['searchBox.input.lightForeground'] ? GREEN_500 : GREEN_300},
+      ${shadows(4)};
   `}
 `;
 
@@ -32,24 +35,24 @@ export const Buttons = styled.div`
   float: right;
 `;
 
-export const Input = styled.input.attrs(() => ({
-  spellCheck: false,
-}))`
+export const Input = styled.input`
   outline: none;
   border: none;
   width: 100%;
   height: 100%;
-  font-family: inherit;
-  font-size: 14px;
-  padding-left: 12px;
+  font-size: 16px;
+  font-weight: 300;
+  font-family: Roboto;
+  padding-left: 16px;
   padding-right: 8px;
-  padding-top: 1px;
+  height: 42px;
   background-color: transparent;
-  color: inherit;
 
   ${({ theme }: { theme?: ITheme }) => css`
+    color: ${theme['searchBox.input.textColor']};
+
     &::placeholder {
-      color: ${theme['searchBox.lightForeground']
+      color: ${theme['searchBox.input.lightForeground']
         ? 'rgba(255, 255, 255, 0.54)'
         : 'rgba(0, 0, 0, 0.54)'};
     }
@@ -57,18 +60,17 @@ export const Input = styled.input.attrs(() => ({
 `;
 
 export const CurrentIcon = styled.div`
-  width: 16px;
-  height: 16px;
-  min-width: 16px;
+  width: 18px;
+  height: 18px;
   ${centerIcon()};
-  margin-left: 11px;
+  margin-left: 16px;
 `;
 
 export const SearchBox = styled.div`
   display: flex;
   align-items: center;
 
-  ${({ theme }: { theme?: any }) => css`
-    height: ${theme.searchBoxHeight}px;
+  ${({ theme }: { theme?: ITheme }) => css`
+    background-color: ${theme['searchBox.input.backgroundColor']};
   `}
 `;

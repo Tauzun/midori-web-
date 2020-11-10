@@ -18,9 +18,7 @@ interface Props {
   style?: any;
 }
 
-export const onMoreClick = (data: IFormFillData) => (
-  e: React.MouseEvent<HTMLDivElement>,
-) => {
+export const onMoreClick = (data: IFormFillData) => (e: React.MouseEvent) => {
   e.stopPropagation();
 
   const { left, top } = e.currentTarget.getBoundingClientRect();

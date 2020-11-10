@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron';
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
+import { createGlobalStyle } from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 
 import store from '../../store';
@@ -8,9 +9,11 @@ import { Textfield } from '~/renderer/components/Textfield';
 import { PasswordInput } from '~/renderer/components/PasswordInput';
 import { Button } from '~/renderer/components/Button';
 import List from '../List';
-import { BLUE_500 } from '~/renderer/constants';
+import { GREEN_500 } from '~/renderer/constants';
+import { Style } from '../../style';
 import { StyledApp, Title, Buttons, Container } from './style';
-import { UIStyle } from '~/renderer/mixins/default-styles';
+
+const GlobalStyle = createGlobalStyle`${Style}`;
 
 const onSave = () => {
   const username = store.usernameRef.current.value.trim();
@@ -53,7 +56,7 @@ export const App = hot(
 
     return (
       <StyledApp>
-        <UIStyle />
+        <GlobalStyle />
         <Title>{title}</Title>
         <Container>
           <Fields />
@@ -72,7 +75,7 @@ export const App = hot(
           )}
           {store.content === 'list' && (
             <Button
-              foreground={BLUE_500}
+              foreground={GREEN_500}
               background="transparent"
               style={{ marginRight: 'auto', padding: '0px 12px' }}
               onClick={onClose}

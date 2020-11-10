@@ -11,28 +11,19 @@ import {
   Shortcut,
   RightControl,
 } from './style';
+import { icons } from '~/renderer/constants';
 import store from '../../store';
 import { ipcRenderer, remote } from 'electron';
 import { WEBUI_BASE_URL, WEBUI_URL_SUFFIX } from '~/constants/files';
 import { Switch } from '~/renderer/components/Switch';
-import {
-  ICON_FIRE,
-  ICON_TOPMOST,
-  ICON_TAB,
-  ICON_WINDOW,
-  ICON_INCOGNITO,
-  ICON_HISTORY,
-  ICON_BOOKMARKS,
-  ICON_SETTINGS,
-  ICON_EXTENSIONS,
-  ICON_DOWNLOAD,
-  ICON_FIND,
-  ICON_PRINT,
-} from '~/renderer/constants/icons';
+
+const changeContent = () => () => {
+  // store.overlay.currentContent = content;
+};
 
 const onFindClick = () => {
-  /*
-  // TODO(sentialx): get selected tab
+  /*store.overlay.visible = false;
+
   ipcRenderer.send(
     `find-show-${store.windowId}`,
     store.tabs.selectedTab.id,
@@ -45,14 +36,9 @@ const onDarkClick = () => {
   store.save();
 };
 
-const onPrintClick = () => {
-  ipcRenderer.send('Print', null);
-  store.hide();
-};
-
-const onFindInPageClick = () => {
-  ipcRenderer.send(`find-in-page-${store.windowId}`);
-  store.hide();
+const onShieldClick = () => {
+  store.settings.shield = !store.settings.shield;
+  store.save();
 };
 
 const onAlwaysClick = () => {
@@ -68,24 +54,12 @@ const onIncognitoClick = () => {
   ipcRenderer.send('create-window', true);
 };
 
-const addNewTab = (url: string) => {
+const goToWebUIPage = (name: string) => () => {
   ipcRenderer.send(`add-tab-${store.windowId}`, {
-    url,
+    url: `${WEBUI_BASE_URL}${name}${WEBUI_URL_SUFFIX}`,
     active: true,
   });
   store.hide();
-};
-
-const goToWebUIPage = (name: string) => () => {
-  addNewTab(`${WEBUI_BASE_URL}${name}${WEBUI_URL_SUFFIX}`);
-};
-
-const goToURL = (url: string) => () => {
-  addNewTab(url);
-};
-
-const onUpdateClick = () => {
-  ipcRenderer.send('install-update');
 };
 
 export const QuickMenu = observer(() => {
@@ -98,73 +72,66 @@ export const QuickMenu = observer(() => {
     >
       <Content>
         <MenuItems>
-          {store.updateAvailable && (
-            <>
-              <MenuItem onClick={onUpdateClick}>
-                <Icon icon={ICON_FIRE}></Icon>
-                <MenuItemTitle>Update {remote.app.name}</MenuItemTitle>
-              </MenuItem>
-              <Line />
-            </>
-          )}
+          <MenuItem onClick={onDarkClick}>
+            <Icon icon={icons.night} />
+            <MenuItemTitle>Night mode</MenuItemTitle>
+            <RightControl>
+              <Switch value={store.settings.darkContents}></Switch>
+            </RightControl>
+          </MenuItem>
           <MenuItem onClick={onAlwaysClick}>
-            <Icon icon={ICON_TOPMOST} />
+            <Icon icon={icons.topMost} />
             <MenuItemTitle>Always on top</MenuItemTitle>
             <RightControl>
-              <Switch dense value={store.alwaysOnTop}></Switch>
+              <Switch value={store.alwaysOnTop}></Switch>
             </RightControl>
           </MenuItem>
           <Line />
           <MenuItem onClick={goToWebUIPage('newtab')}>
-            <Icon icon={ICON_TAB} />
+            <Icon icon={icons.tab} />
             <MenuItemTitle>New tab</MenuItemTitle>
             <Shortcut>Ctrl+T</Shortcut>
           </MenuItem>
           <MenuItem onClick={onNewWindowClick}>
-            <Icon icon={ICON_WINDOW} />
+            <Icon icon={icons.window} />
             <MenuItemTitle>New window</MenuItemTitle>
             <Shortcut>Ctrl+N</Shortcut>
           </MenuItem>
           <MenuItem onClick={onIncognitoClick}>
-            <Icon icon={ICON_INCOGNITO} />
+            <Icon icon={icons.incognito} />
             <MenuItemTitle>New incognito window</MenuItemTitle>
             <Shortcut>Ctrl+Shift+N</Shortcut>
           </MenuItem>
           <Line />
           <MenuItem onClick={goToWebUIPage('history')} arrow>
-            <Icon icon={ICON_HISTORY} />
+            <Icon icon={icons.history} />
             <MenuItemTitle>History</MenuItemTitle>
           </MenuItem>
           <MenuItem onClick={goToWebUIPage('bookmarks')} arrow>
-            <Icon icon={ICON_BOOKMARKS} />
+            <Icon icon={icons.bookmarks} />
             <MenuItemTitle>Bookmarks</MenuItemTitle>
           </MenuItem>
-          <MenuItem disabled onClick={goToWebUIPage('downloads')}>
-            <Icon icon={ICON_DOWNLOAD} />
+          <MenuItem onClick={goToWebUIPage('downloads')}>
+            <Icon icon={icons.download} />
             <MenuItemTitle>Downloads</MenuItemTitle>
           </MenuItem>
           <Line />
           <MenuItem onClick={goToWebUIPage('settings')}>
-            <Icon icon={ICON_SETTINGS} />
+            <Icon icon={icons.settings} />
             <MenuItemTitle>Settings</MenuItemTitle>
           </MenuItem>
-          {/* TODO: <MenuItem onClick={goToWebUIPage('extensions')}> */}
-          <MenuItem
-            onClick={goToURL(
-              'https://chrome.google.com/webstore/category/extensions',
-            )}
-          >
-            <Icon icon={ICON_EXTENSIONS} />
+          <MenuItem onClick={goToWebUIPage('extensions')}>
+            <Icon icon={icons.extensions} />
             <MenuItemTitle>Extensions</MenuItemTitle>
           </MenuItem>
           <Line />
-          <MenuItem onClick={onFindInPageClick}>
-            <Icon icon={ICON_FIND} />
+          <MenuItem>
+            <Icon icon={icons.find} />
             <MenuItemTitle>Find in page</MenuItemTitle>
             <Shortcut>Ctrl+F</Shortcut>
           </MenuItem>
-          <MenuItem onClick={onPrintClick}>
-            <Icon icon={ICON_PRINT} />
+          <MenuItem>
+            <Icon icon={icons.print} />
             <MenuItemTitle>Print</MenuItemTitle>
             <Shortcut>Ctrl+P</Shortcut>
           </MenuItem>

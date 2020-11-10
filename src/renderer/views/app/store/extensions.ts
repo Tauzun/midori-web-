@@ -4,7 +4,9 @@ import { observable } from 'mobx';
 import { join } from 'path';
 
 import { IBrowserAction } from '../models';
+import { extensionsRenderer } from 'electron-extensions/renderer';
 import { promises } from 'fs';
+import { IpcExtension } from 'electron-extensions/models/ipc-extension';
 import { ipcRenderer } from 'electron';
 import store from '.';
 
@@ -15,32 +17,38 @@ export class ExtensionsStore {
   @observable
   public defaultBrowserActions: IBrowserAction[] = [];
 
-  @observable
-  public currentlyToggledPopup = '';
-
   public constructor() {
     this.load();
 
-    ipcRenderer.on('load-browserAction', async (e, extension) => {
-      await this.loadExtension(extension);
+    ipcRenderer.on('load-browserAction', (e, extension) => {
+      this.loadExtension(extension);
     });
   }
 
-  public addBrowserActionToTab(tabId: number, browserAction: IBrowserAction) {
-    const tabBrowserAction: IBrowserAction = Object.assign(
-      Object.create(Object.getPrototypeOf(browserAction)),
-      browserAction,
-    );
-    tabBrowserAction.tabId = tabId;
-    this.browserActions.push(tabBrowserAction);
+  public queryBrowserAction(query: any) {
+    const readProperty = (obj: any, prop: string) => obj[prop];
+
+    return this.browserActions.filter(item => {
+      for (const key in query) {
+        const itemProp = readProperty(item, key);
+        const queryInfoProp = readProperty(query, key);
+
+        if (itemProp == null || queryInfoProp !== itemProp) {
+          return false;
+        }
+      }
+
+      return true;
+    });
   }
 
-  public async loadExtension(extension: Electron.Extension) {
-    if (this.defaultBrowserActions.find((x) => x.extensionId === extension.id))
-      return;
+  public async loadExtension(extension: IpcExtension) {
+    const { manifest, path, id, popupPage } = extension;
 
-    if (extension.manifest.browser_action) {
-      const { default_icon, default_title } = extension.manifest.browser_action;
+    if (this.defaultBrowserActions.find(x => x.extensionId === id)) return;
+
+    if (manifest.browser_action) {
+      const { default_icon, default_title } = manifest.browser_action;
 
       let icon1 = default_icon;
 
@@ -50,38 +58,33 @@ export class ExtensionsStore {
         ];
       }
 
-      const data = await promises.readFile(
-        join(extension.path, icon1 as string),
-      );
+      const data = await promises.readFile(join(path, icon1 as string));
 
-      if (
-        this.defaultBrowserActions.find((x) => x.extensionId === extension.id)
-      )
-        return;
+      if (this.defaultBrowserActions.find(x => x.extensionId === id)) return;
 
       const icon = window.URL.createObjectURL(new Blob([data]));
       const browserAction = new IBrowserAction({
-        extensionId: extension.id,
+        extensionId: id,
         icon,
         title: default_title,
-        popup: extension.manifest?.browser_action?.default_popup,
+        popup: popupPage,
       });
 
       this.defaultBrowserActions.push(browserAction);
 
       for (const tab of store.tabs.list) {
-        this.addBrowserActionToTab(tab.id, browserAction);
+        const tabBrowserAction = { ...browserAction };
+        tabBrowserAction.tabId = tab.id;
+        this.browserActions.push(tabBrowserAction);
       }
     }
   }
 
   public async load() {
-    if (!process.env.ENABLE_EXTENSIONS) return;
+    const extensions = extensionsRenderer.getExtensions();
 
-    const extensions: Electron.Extension[] = await ipcRenderer.invoke(
-      'get-extensions',
-    );
-
-    await Promise.all(extensions.map((x) => this.loadExtension(x)));
+    for (const key in extensions) {
+      this.loadExtension(extensions[key]);
+    }
   }
 }
