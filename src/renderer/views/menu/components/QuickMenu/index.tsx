@@ -123,6 +123,7 @@ export const QuickMenu = observer(() => {
           <MenuItem onClick={goToWebUIPage('extensions')}>
             <Icon icon={icons.extensions} />
             <MenuItemTitle>Extensions</MenuItemTitle>
+            
           </MenuItem>
           <Line />
           <MenuItem>
