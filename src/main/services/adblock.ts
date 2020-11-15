@@ -59,12 +59,18 @@ const emitBlockedEvent = (request: Request) => {
 };
 
 let adblockRunning = false;
+let adblockInitialized = false;
 
 export const runAdblockService = async (ses: any) => {
   if (!ses.webRequest.addListener) return;
 
-  if (!engine) {
+  if (!adblockInitialized) {
+    adblockInitialized = true;
     await loadFilters();
+  }
+
+  if (adblockInitialized && !engine) {
+    return;
   }
 
   if (!ses.headersReceivedId) {
@@ -95,25 +101,15 @@ export const runAdblockService = async (ses: any) => {
 
     engine.on('request-blocked', emitBlockedEvent);
     engine.on('request-redirected', emitBlockedEvent);
-
-    adblockRunning = true;
   }
 };
 
 export const stopAdblockService = (ses: any) => {
-  if (!ses.webRequest.removeListener) return;
-
-  if (ses.beforeRequestId) {
-    ses.webRequest.removeListener('onBeforeRequest', ses.beforeRequestId);
-    ses.beforeRequestId = null;
-  }
-
-  if (ses.headersReceivedId) {
-    ses.webRequest.removeListener('onHeadersReceived', ses.headersReceivedId);
-    ses.headersReceivedId = null;
-  }
-
-  ses.setPreloads(ses.getPreloads().filter((p: string) => p !== PRELOAD_PATH));
+  if (!adblockRunning) return;
 
   adblockRunning = false;
+
+  if (engine) {
+    engine.disableBlockingInSession(ses);
+  }
 };
