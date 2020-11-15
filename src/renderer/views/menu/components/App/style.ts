@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { DialogStyle } from '~/renderer/mixins/dialogs';
+import { ITheme } from '~/interfaces';
 
 export const StyledApp = styled.div`
   margin: 8px;
