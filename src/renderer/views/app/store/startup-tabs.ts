@@ -103,9 +103,11 @@ export class StartupTabsStore {
   }
 
   public async addStartupTabItem(item: IStartupTab) {
-    const itemToReplace = this.list.find(x => x.id === item.id);
+    const itemToReplace = this.list.find(
+      x => x.id === item.id && x.windowId === item.windowId,
+    );
     if (itemToReplace) {
-      this.db.update({ id: item.id }, item);
+      this.db.update(itemToReplace, item);
       this.list[this.list.indexOf(itemToReplace)] = {
         ...itemToReplace,
         ...item,
@@ -116,11 +118,15 @@ export class StartupTabsStore {
     }
   }
 
-  public removeStartupTabItem(tabId: number) {
-    const itemToDelete = this.list.find(x => x.id === tabId);
+  public removeStartupTabItem(tabId: number, windowId: number) {
+    const itemToDelete = this.list.find(
+      x => x.id === tabId && x.windowId === windowId,
+    );
     if (itemToDelete) {
-      this.list = this.list.filter(x => x.id !== tabId);
-      this.db.remove({ id: tabId });
+      this.list = this.list.filter(
+        x => x.id !== tabId || x.windowId !== windowId,
+      );
+      this.db.remove(itemToDelete);
     }
   }
 
