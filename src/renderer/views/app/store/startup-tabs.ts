@@ -29,18 +29,25 @@ export class StartupTabsStore {
     let tabsToLoad: IStartupTab[] = [];
     if (this.store.settings.object.startupBehavior.type === 'continue') {
       tabsToLoad = await this.db.get({ windowId: this.store.windowId });
-    } else if (this.store.settings.object.startupBehavior.type === 'urls') {
-      tabsToLoad = await this.db.get({});
-      tabsToLoad = tabsToLoad.filter(x => x.isUserDefined || x.pinned);
-      this.list = tabsToLoad.filter(x => x.isUserDefined);
-    } else {
-      tabsToLoad = await this.db.get({ pinned: true });
+    } else if (this.store.windowId === 1) {
+      if (this.store.settings.object.startupBehavior.type === 'urls') {
+        tabsToLoad = await this.db.get({
+          $or: [{ isUserDefined: true }, { pinned: true }],
+        } as any);
+        this.list = tabsToLoad.filter(x => x.isUserDefined);
+      } else if (this.store.settings.object.startupBehavior.type === 'empty') {
+        tabsToLoad = await this.db.get({ pinned: true });
+      }
+    }
+
+    if (this.store.settings.object.startupBehavior.type !== 'continue') {
+      this.clearStartupTabs(false, false);
     }
 
     const args = remote.process.argv;
     let needsNewTabPage = false;
     // If we have tabs saved, load them
-    if (tabsToLoad && tabsToLoad.length > 0 && this.store.windowId === 1) {
+    if (tabsToLoad && tabsToLoad.length > 0) {
       this.clearStartupTabs(true, false);
 
       let i = 0;
