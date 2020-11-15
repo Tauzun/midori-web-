@@ -1,6 +1,8 @@
 import { ISettings } from '~/interfaces';
 import { remote, app } from 'electron';
 
+const pkg = require('../../package.json');
+
 export const DEFAULT_SETTINGS: ISettings = {
   theme: 'midori-light',
   darkContents: false,
@@ -16,7 +18,7 @@ export const DEFAULT_SETTINGS: ISettings = {
     type: 'empty',
   },
   warnOnQuit: true,
-  version: 1,
+  version: pkg.version,
   downloadsDialog: false,
   downloadsPath: remote
     ? remote.app.getPath('downloads')
