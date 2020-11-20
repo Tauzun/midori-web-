@@ -1,6 +1,6 @@
 {
   "appId": "org.midoribrowser.midori",
-  "productName": "Midori Next",
+  "productName": "Midori Next Generation",
   "nsis": {
     "include": "static/installer.nsh"
   },
@@ -21,7 +21,16 @@
       {
         "target": "deb",
         "arch": ["ia32", "x64"]
+      },
+      {
+        "target": "pacman",
+        "arch": ["ia32", "x64"]
+      },
+      {
+        "target": "rpm",
+        "arch": ["ia32", "x64"]
       }
+
     ]
   },
   "win": {
