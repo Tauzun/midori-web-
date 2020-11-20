@@ -1,6 +1,6 @@
-<p align="center">
+<div align="center">
   <a href="https://astian.org/midori-browser/"><img src="static/icons/icon.png" width="256"></a>
-</p>
+</div>
 
 <div align="center">
   <h1>Midori Browser</h1> 
