@@ -6,7 +6,7 @@ import { Textfield } from '~/renderer/components/Textfield';
 import { RadioButton } from '~/renderer/components/RadioButton';
 import { Button } from '~/renderer/components/Button';
 import { IStartupTab } from '~/interfaces/startup-tab';
-import { icons, GREEN_500, GREEN_300 } from '~/renderer/constants';
+import { icons, GREEN_500 } from '~/renderer/constants';
 import store from '../../store';
 
 interface Props {

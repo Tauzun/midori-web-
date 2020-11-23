@@ -33,7 +33,29 @@ export const registerProtocol = (session: Electron.Session) => {
     },
   );
 
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV === 'development') {
+    /*
+    Currently not working due to https://github.com/electron/electron/issues/20932
+    session.protocol.registerHttpProtocol(
+      'midori',
+      (request, callback: any) => {
+        const parsed = parse(request.url);
+
+        const baseUrl = 'http://localhost:4445/';
+
+        if (parsed.path === '/') {
+          return callback({
+            url: `${baseUrl}${parsed.hostname}.html`,
+          });
+        }
+
+        callback({ url: `${baseUrl}${parsed.path}` });
+      },
+      error => {
+        if (error) console.error(error);
+      },
+    );*/
+  } else {
     session.protocol.registerFileProtocol(
       'midori',
       (request, callback: any) => {

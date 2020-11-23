@@ -3,8 +3,7 @@ const { resolve, join } = require('path');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
-const createStyledComponentsTransformer = require('typescript-plugin-styled-components')
-  .default;
+const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 /* eslint-enable */
@@ -59,13 +58,13 @@ const config = {
 
         include: INCLUDE,
       },
-      /*{
+      {
         test: /\.node$/,
         loader: 'awesome-node-loader',
         options: {
           name: '[contenthash].[ext]',
         },
-      },*/
+      },
     ],
   },
 
@@ -85,10 +84,6 @@ const config = {
   plugins: [
     // new BundleAnalyzerPlugin()
   ],
-
-  externals: {
-    keytar: `require('keytar')`,
-  },
 };
 
 function getConfig(...cfg) {
@@ -97,7 +92,7 @@ function getConfig(...cfg) {
 
 const getHtml = (scope, name) => {
   return new HtmlWebpackPlugin({
-    title: 'Midori Next',
+    title: 'Midori Browser',
     template: 'static/pages/app.html',
     filename: `${name}.html`,
     chunks: [`vendor.${scope}`, name],
@@ -117,7 +112,7 @@ const applyEntries = (scope, config, entries) => {
 
 const getBaseConfig = name => {
   const config = {
-    plugins: [],
+    plugins: [new HardSourceWebpackPlugin()],
 
     output: {},
     entry: {},
@@ -137,7 +132,6 @@ const getBaseConfig = name => {
 
   if (dev) {
     config.plugins.push(new ForkTsCheckerWebpackPlugin());
-    config.plugins.push(new HardSourceWebpackPlugin());
   }
 
   return config;

@@ -235,7 +235,7 @@ const Close = observer(({ tab }: { tab: ITab }) => {
 
 const Overlay = observer(({ tab }: { tab: ITab }) => {
   const defaultHoverColor = store.theme['toolbar.lightForeground']
-    ? 'rgba(255, 255, 255, 0.8)'
+    ? 'rgba(255, 255, 255, 0.5)'
     : 'rgba(0, 0, 0, 0.5)';
 
   return (
@@ -253,7 +253,7 @@ const Overlay = observer(({ tab }: { tab: ITab }) => {
 
 export default observer(({ tab }: { tab: ITab }) => {
   const defaultColor = store.theme['toolbar.lightForeground']
-    ? 'rgba(255, 255, 255, 0.4)'
+    ? 'rgba(255, 255, 255, 0.3)'
     : 'rgba(0, 0, 0, 0.25)';
 
   return (

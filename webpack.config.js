@@ -17,23 +17,23 @@ const mainConfig = getConfig({
   },
 
   plugins: [
-    new CopyPlugin(
-      [
-        {
-          from:
-            'node_modules/@cliqz/adblocker-electron-preload/dist/preload.cjs.js',
-          to: 'preload.js',
-          transform: (fileContent, path) => {
-            return terser.minify(fileContent.toString()).code.toString();
-          },
+    new CopyPlugin([
+      {
+        from: 'node_modules/@cliqz/adblocker-electron/dist/cjs/preload.js',
+        to: 'preload.js',
+        transform: (fileContent, path) => {
+          return terser.minify(fileContent.toString()).code.toString();
         },
-        {
-          from: 'node_modules/electron-extensions/preload.js',
-          to: 'extensions-preload.js',
-        },
-      ],
-      { copyUnmodified: true },
-    ),
+      },
+      {
+        from: 'node_modules/electron-extensions/background-preload.js',
+        to: 'extensions-background-preload.js',
+      },
+      {
+        from: 'node_modules/electron-extensions/content-preload.js',
+        to: 'extensions-content-preload.js',
+      },
+    ]),
   ],
 });
 
@@ -44,7 +44,6 @@ const preloadConfig = getConfig({
 
   entry: {
     'view-preload': './src/preloads/view-preload',
-    'popup-preload': './src/preloads/popup-preload',
   },
 
   plugins: [],

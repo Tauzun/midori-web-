@@ -7,9 +7,8 @@ import { GREEN_500 } from '~/renderer/constants';
 import { Preloader } from '~/renderer/components/Preloader';
 
 interface Props {
-  onClick?: (e?: React.MouseEvent<HTMLDivElement>) => void;
-  onMouseDown?: (e?: React.MouseEvent<HTMLDivElement>) => void;
-  onContextMenu?: (e?: React.MouseEvent<HTMLDivElement>) => void;
+  onClick?: (e?: React.SyntheticEvent<HTMLDivElement>) => void;
+  onMouseDown?: (e?: React.SyntheticEvent<HTMLDivElement>) => void;
   size?: number;
   style?: any;
   icon: string;
@@ -50,14 +49,12 @@ export const ToolbarButton = observer(
     badgeRight,
     value,
     preloader,
-    onContextMenu,
   }: Props) => {
     style = { ...style };
 
     return (
       <Button
         onClick={onClick}
-        onContextMenu={onContextMenu}
         onMouseDown={onMouseDown}
         className={className}
         style={style}

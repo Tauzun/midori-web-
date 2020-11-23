@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observable, action } from 'mobx';
 
-import { LIGHT_BLUE_500 } from '~/renderer/constants';
+import { LIGHT_GREEN_500 } from '~/renderer/constants';
 import { Store } from '../store';
 import { TabGroupsStore } from '../store/tab-groups';
 
@@ -15,7 +15,7 @@ export class ITabGroup {
   public name = '';
 
   @observable
-  public color: string = LIGHT_BLUE_500;
+  public color: string = LIGHT_GREEN_500;
 
   @observable
   public editMode = false;

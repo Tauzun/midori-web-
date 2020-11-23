@@ -121,11 +121,11 @@ function getPublicKeyFromProtoBuf(
   }
   if (!publicKeys.length) {
     console.warn('proto: Did not find any public key');
-    return null;
+    return;
   }
   if (!crxIdBin) {
     console.warn('proto: Did not find crx_id');
-    return null;
+    return;
   }
   const crxIdHex = latin1.parse(getBinaryString(crxIdBin, 0, 16)).toString();
 
@@ -136,8 +136,6 @@ function getPublicKeyFromProtoBuf(
     }
   }
   console.warn('proto: None of the public keys matched with crx_id');
-
-  return null;
 }
 
 export const parseCrx = (buf: Buffer) => {

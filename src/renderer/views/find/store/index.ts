@@ -1,10 +1,9 @@
 import * as React from 'react';
 
 import { observable } from 'mobx';
-import { ipcRenderer } from 'electron';
-import { DialogStore } from '~/models/dialog-store';
+import { ipcRenderer, remote } from 'electron';
 
-export class Store extends DialogStore {
+export class Store {
   @observable
   public occurrences = '0/0';
 
@@ -15,9 +14,13 @@ export class Store extends DialogStore {
 
   public findInputRef = React.createRef<HTMLInputElement>();
 
-  public constructor() {
-    super({ hideOnBlur: false });
+  public visible = false;
 
+  public windowId = remote.getCurrentWindow().id;
+
+  public id = remote.getCurrentWebContents().id;
+
+  public constructor() {
     ipcRenderer.on(
       'found-in-page',
       (e, { activeMatchOrdinal, matches }: Electron.FoundInPageResult) => {
@@ -47,6 +50,10 @@ export class Store extends DialogStore {
         this.updateTabInfo();
       },
     );
+  }
+
+  public hide() {
+    ipcRenderer.send(`hide-${this.id}`);
   }
 
   public updateTabInfo() {

@@ -34,6 +34,10 @@ export class View extends BrowserView {
         enableRemoteModule: false,
         partition: incognito ? 'view_incognito' : 'persist:view',
         plugins: true,
+        additionalArguments: [
+          `--window-id=${window.id}`,
+          `--blacklist=["${WEBUI_BASE_URL}", "midori-error://"]`,
+        ],
         nativeWindowOpen: true,
         webSecurity: true,
         javascript: true,
@@ -46,7 +50,7 @@ export class View extends BrowserView {
     this.webContents.userAgent = this.webContents.userAgent
       .replace(/ Midori\\?.([^\s]+)/g, '')
       .replace(/ Electron\\?.([^\s]+)/g, '')
-      .replace(/Chrome\\?.([^\s]+)/g, 'Chrome/79.0.3945.88');
+      .replace(/Chrome\\?.([^\s]+)/g, 'Chrome/78.0.3904.97');
 
     this.window = window;
     this.homeUrl = url;
@@ -61,7 +65,7 @@ export class View extends BrowserView {
     });
 
     this.webContents.addListener('found-in-page', (e, result) => {
-      this.window.dialogs.findDialog.webContents.send('found-in-page', result);
+      this.window.findDialog.webContents.send('found-in-page', result);
     });
 
     this.webContents.addListener('page-title-updated', (e, title) => {
@@ -208,20 +212,6 @@ export class View extends BrowserView {
         `browserview-theme-color-updated-${this.webContents.id}`,
         color,
       );
-    });
-
-    this.webContents.addListener('zoom-changed', (e, zoomDirection) => {
-      var newZoomFactor = this.webContents.zoomFactor + (zoomDirection === 'in' ? .2 : -.2);
-      if (newZoomFactor <= 5 && newZoomFactor >= .20) {
-        this.webContents.zoomFactor = newZoomFactor;
-        this.window.webContents.send(
-          `browserview-zoom-updated-${this.webContents.id}`,
-          this.webContents.zoomFactor,
-        );
-      }
-      else {
-        e.preventDefault();
-      }
     });
 
     this.webContents.addListener(

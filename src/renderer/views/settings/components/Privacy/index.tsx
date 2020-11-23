@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Header } from '../App/style';
 import { Button } from '~/renderer/components/Button';
 import store from '../../store';
-import { GREEN_500, GREEN_300 } from '~/renderer/constants';
+import { GREEN_500 } from '~/renderer/constants';
 
 const onClearBrowsingData = () => {
   store.dialogContent = 'privacy';

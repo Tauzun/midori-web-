@@ -20,7 +20,6 @@ export class SearchDialog extends Dialog {
         y: 48,
       },
       hideTimeout: 300,
-      devtools: false,
     });
 
     ipcMain.on(`height-${this.webContents.id}`, (e, height) => {
@@ -63,7 +62,7 @@ export class SearchDialog extends Dialog {
   }
 
   public show() {
-    this.appWindow.dialogs.previewDialog.hide(false);
+    this.appWindow.previewDialog.hide(false);
 
     super.show();
 

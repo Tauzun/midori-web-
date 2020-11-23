@@ -2,7 +2,6 @@ export interface ISearchEngine {
   name: string;
   url: string;
   keywordsUrl: string;
-  icon: string;
 }
 
 export interface IStartupBehavior {
@@ -21,7 +20,7 @@ export interface ISettings {
   searchEngines: ISearchEngine[];
   startupBehavior: IStartupBehavior;
   warnOnQuit: boolean;
-  version: number;
+  version: string;
   darkContents: boolean;
   downloadsDialog: boolean;
   downloadsPath: string;

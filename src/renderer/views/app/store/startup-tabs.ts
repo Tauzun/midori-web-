@@ -29,25 +29,18 @@ export class StartupTabsStore {
     let tabsToLoad: IStartupTab[] = [];
     if (this.store.settings.object.startupBehavior.type === 'continue') {
       tabsToLoad = await this.db.get({ windowId: this.store.windowId });
-    } else if (this.store.windowId === 1) {
-      if (this.store.settings.object.startupBehavior.type === 'urls') {
-        tabsToLoad = await this.db.get({
-          $or: [{ isUserDefined: true }, { pinned: true }],
-        } as any);
-        this.list = tabsToLoad.filter(x => x.isUserDefined);
-      } else if (this.store.settings.object.startupBehavior.type === 'empty') {
-        tabsToLoad = await this.db.get({ pinned: true });
-      }
-    }
-
-    if (this.store.settings.object.startupBehavior.type !== 'continue') {
-      this.clearStartupTabs(false, false);
+    } else if (this.store.settings.object.startupBehavior.type === 'urls') {
+      tabsToLoad = await this.db.get({});
+      tabsToLoad = tabsToLoad.filter(x => x.isUserDefined || x.pinned);
+      this.list = tabsToLoad.filter(x => x.isUserDefined);
+    } else {
+      tabsToLoad = await this.db.get({ pinned: true });
     }
 
     const args = remote.process.argv;
     let needsNewTabPage = false;
     // If we have tabs saved, load them
-    if (tabsToLoad && tabsToLoad.length > 0) {
+    if (tabsToLoad && tabsToLoad.length > 0 && this.store.windowId === 1) {
       this.clearStartupTabs(true, false);
 
       let i = 0;
@@ -103,9 +96,11 @@ export class StartupTabsStore {
   }
 
   public async addStartupTabItem(item: IStartupTab) {
-    const itemToReplace = this.list.find(x => x.id === item.id);
+    const itemToReplace = this.list.find(
+      x => x.id === item.id && x.windowId === item.windowId,
+    );
     if (itemToReplace) {
-      this.db.update({ id: item.id }, item);
+      this.db.update(itemToReplace, item);
       this.list[this.list.indexOf(itemToReplace)] = {
         ...itemToReplace,
         ...item,
@@ -116,11 +111,15 @@ export class StartupTabsStore {
     }
   }
 
-  public removeStartupTabItem(tabId: number) {
-    const itemToDelete = this.list.find(x => x.id === tabId);
+  public removeStartupTabItem(tabId: number, windowId: number) {
+    const itemToDelete = this.list.find(
+      x => x.id === tabId && x.windowId === windowId,
+    );
     if (itemToDelete) {
-      this.list = this.list.filter(x => x.id !== tabId);
-      this.db.remove({ id: tabId });
+      this.list = this.list.filter(
+        x => x.id !== tabId || x.windowId !== windowId,
+      );
+      this.db.remove(itemToDelete);
     }
   }
 

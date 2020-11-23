@@ -1,7 +1,7 @@
 /* eslint @typescript-eslint/camelcase: 0 */
 
 import { observable } from 'mobx';
-import { join } from 'path';
+import { resolve } from 'path';
 
 import { IBrowserAction } from '../models';
 import { extensionsRenderer } from 'electron-extensions/renderer';
@@ -43,12 +43,14 @@ export class ExtensionsStore {
   }
 
   public async loadExtension(extension: IpcExtension) {
-    const { manifest, path, id, popupPage } = extension;
-
-    if (this.defaultBrowserActions.find(x => x.extensionId === id)) return;
+    const { manifest, path, id } = extension;
 
     if (manifest.browser_action) {
-      const { default_icon, default_title } = manifest.browser_action;
+      const {
+        default_icon,
+        default_title,
+        default_popup,
+      } = manifest.browser_action;
 
       let icon1 = default_icon;
 
@@ -58,16 +60,13 @@ export class ExtensionsStore {
         ];
       }
 
-      const data = await promises.readFile(join(path, icon1 as string));
-
-      if (this.defaultBrowserActions.find(x => x.extensionId === id)) return;
-
+      const data = await promises.readFile(resolve(path, icon1 as string));
       const icon = window.URL.createObjectURL(new Blob([data]));
       const browserAction = new IBrowserAction({
         extensionId: id,
         icon,
         title: default_title,
-        popup: popupPage,
+        popup: default_popup,
       });
 
       this.defaultBrowserActions.push(browserAction);

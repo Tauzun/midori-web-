@@ -1,4 +1,5 @@
-const { existsSync, createWriteStream, unlinkSync, mkdir } = require('fs');
+const { existsSync, createWriteStream, unlinkSync } = require('fs');
+const mkdirp = require('mkdirp');
 const axios = require('axios');
 const { promisify } = require('util');
 const extractZip = require('extract-zip');
@@ -11,7 +12,7 @@ const darkreaderPath = resolve(
   '../build/extensions/midori-darkreader',
 );
 
-mkdir(darkreaderPath, { recursive: true }, async err => {
+mkdirp(darkreaderPath, async err => {
   if (err) return console.error(err);
 
   if (!existsSync(resolve(darkreaderPath, 'manifest.json'))) {

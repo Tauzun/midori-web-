@@ -33,7 +33,9 @@ export const addImported = async (
 
       if (item.nsRoot === 'toolbar') {
         folder = store.list.find(x => x.static === 'main');
-      } else {
+      } else if (item.nsRoot === 'menu') {
+        folder = store.list.find(x => x.static === 'mobile');
+      } else if (item.nsRoot === 'unsorted') {
         folder = store.list.find(x => x.static === 'other');
       }
 

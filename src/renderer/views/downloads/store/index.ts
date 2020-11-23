@@ -1,9 +1,27 @@
-import { ipcRenderer } from 'electron';
-import { observable } from 'mobx';
-import { IDownloadItem } from '~/interfaces';
-import { DialogStore } from '~/models/dialog-store';
+import { ipcRenderer, remote } from 'electron';
+import { observable, computed } from 'mobx';
+import { getTheme } from '~/utils/themes';
+import { ISettings, IDownloadItem } from '~/interfaces';
+import { DEFAULT_SETTINGS } from '~/constants';
 
-export class Store extends DialogStore {
+export class Store {
+  @observable
+  public settings: ISettings = DEFAULT_SETTINGS;
+
+  @computed
+  public get theme() {
+    return getTheme(this.settings.theme);
+  }
+
+  @observable
+  public visible = false;
+
+  @observable
+  public id = remote.getCurrentWebContents().id;
+
+  @observable
+  public windowId = remote.getCurrentWindow().id;
+
   @observable
   public downloads: IDownloadItem[] = [];
 
@@ -11,10 +29,22 @@ export class Store extends DialogStore {
   public maxHeight = 0;
 
   public constructor() {
-    super();
-
     ipcRenderer.on('visible', (e, flag) => {
       this.visible = flag;
+    });
+
+    window.addEventListener('blur', () => {
+      if (this.visible) {
+        setTimeout(() => {
+          this.hide();
+        });
+      }
+    });
+
+    ipcRenderer.send('get-settings');
+
+    ipcRenderer.on('update-settings', (e, settings: ISettings) => {
+      this.settings = { ...this.settings, ...settings };
     });
 
     ipcRenderer.on('download-started', (e, item) => {
@@ -22,14 +52,8 @@ export class Store extends DialogStore {
     });
 
     ipcRenderer.on('download-progress', (e, item: IDownloadItem) => {
-      const index = this.downloads.indexOf(
-        this.downloads.find(x => x.id === item.id),
-      );
-      
-      this.downloads[index] = {
-        ...this.downloads[index],
-        ...item,
-      };
+      const i = this.downloads.find(x => x.id === item.id);
+      i.receivedBytes = item.receivedBytes;
     });
 
     ipcRenderer.on('download-completed', (e, id: string) => {
@@ -40,6 +64,10 @@ export class Store extends DialogStore {
     ipcRenderer.on('max-height', (e, height) => {
       this.maxHeight = height;
     });
+  }
+
+  public hide() {
+    ipcRenderer.send(`hide-${this.id}`);
   }
 }
 

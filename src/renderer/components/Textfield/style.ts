@@ -35,7 +35,7 @@ interface InputProps {
 
 export const Input = styled.input`
   width: 100%;
-  height: 55px;
+  height: 48px;
   font-size: 16px;
   padding-left: 12px;
   border: none;
@@ -69,7 +69,6 @@ interface LabelProps {
   activated: boolean;
   focused: boolean;
   color: string;
-  dark: boolean;
 }
 
 export const Label = styled.div`
@@ -80,14 +79,10 @@ export const Label = styled.div`
   -webkit-font-smoothing: antialiased;
   ${centerVertical()};
 
-  ${({ activated, focused, color, dark }: LabelProps) => css`
+  ${({ activated, focused, color }: LabelProps) => css`
     font-size: ${activated ? 12 : 16}px;
     margin-top: ${activated ? -12 : 0}px;
-    color: ${focused
-      ? color
-      : dark
-      ? `rgba(255, 255, 255, ${transparency.text.medium})`
-      : `rgba(0, 0, 0, ${transparency.text.medium})`};
+    color: ${focused ? color : `rgba(0, 0, 0, ${transparency.text.medium})`};
     ${activated ? robotoMedium() : robotoRegular()};
   `}
 `;
@@ -121,9 +116,8 @@ export const Icon = styled.div`
   ${centerVertical()};
   ${centerIcon(24)};
 
-  ${({ src, dark }: { src: string; dark: boolean }) => css`
+  ${({ src }: { src: string }) => css`
     background-image: url(${src});
-    filter: ${dark ? 'invert(100%)' : 'none'};
   `}
 
   &:hover {

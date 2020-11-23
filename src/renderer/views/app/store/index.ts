@@ -6,6 +6,7 @@ import { AddTabStore } from './add-tab';
 import { ipcRenderer } from 'electron';
 import { ExtensionsStore } from './extensions';
 import { SettingsStore } from './settings';
+import { extensionsRenderer } from 'electron-extensions/renderer';
 import { getCurrentWindow } from '../utils/windows';
 import { StartupTabsStore } from './startup-tabs';
 import { getTheme } from '~/utils/themes';
@@ -38,7 +39,10 @@ export class Store {
   public isHTMLFullscreen = false;
 
   @observable
-  public updateAvailable = false;
+  public updateInfo = {
+    available: false,
+    version: '',
+  };
 
   @observable
   public navigationState = {
@@ -100,8 +104,9 @@ export class Store {
       this.isHTMLFullscreen = fullscreen;
     });
 
-    ipcRenderer.on('update-available', () => {
-      this.updateAvailable = true;
+    ipcRenderer.on('update-available', (e, version: string) => {
+      this.updateInfo.version = version;
+      this.updateInfo.available = true;
     });
 
     ipcRenderer.on('download-started', (e, item) => {
@@ -134,13 +139,9 @@ export class Store {
       },
     );
 
-    ipcRenderer.on(
+    extensionsRenderer.on(
       'set-badge-text',
-      (
-        e,
-        extensionId: string,
-        details: chrome.browserAction.BadgeTextDetails,
-      ) => {
+      (extensionId: string, details: chrome.browserAction.BadgeTextDetails) => {
         if (details.tabId) {
           const browserAction = this.extensions.queryBrowserAction({
             extensionId,

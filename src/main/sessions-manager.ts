@@ -1,4 +1,4 @@
-import { session, ipcMain } from 'electron';
+import { session, app, ipcMain } from 'electron';
 import { ExtensibleSession } from 'electron-extensions/main';
 import { getPath, makeId } from '~/utils';
 import { promises, existsSync } from 'fs';
@@ -11,11 +11,10 @@ import { IDownloadItem } from '~/interfaces';
 import { parseCrx } from '~/utils/crx';
 import { pathExists } from '~/utils/files';
 import { extractZip } from '~/utils/zip';
-import { WEBUI_BASE_URL } from '~/constants/files';
 
 const extensibleSessionOptions = {
-  preloadPath: resolve(__dirname, 'extensions-preload.js'),
-  blacklist: [`${WEBUI_BASE_URL}*`, 'midori-error://*', 'chrome-extension://*'],
+  backgroundPreloadPath: resolve(__dirname, 'extensions-background-preload.js'),
+  contentPreloadPath: resolve(__dirname, 'extensions-content-preload.js'),
 };
 
 // TODO: move windows list to the corresponding sessions
@@ -23,14 +22,14 @@ export class SessionsManager {
   public view = session.fromPartition('persist:view');
   public viewIncognito = session.fromPartition('view_incognito');
 
-  public extensions = new ExtensibleSession({
-    ...extensibleSessionOptions,
-    partition: 'persist:view',
-  });
-  public extensionsIncognito = new ExtensibleSession({
-    ...extensibleSessionOptions,
-    partition: 'view_incognito',
-  });
+  public extensions = new ExtensibleSession(
+    this.view,
+    extensibleSessionOptions,
+  );
+  public extensionsIncognito = new ExtensibleSession(
+    this.viewIncognito,
+    extensibleSessionOptions,
+  );
 
   public incognitoExtensionsLoaded = false;
 
@@ -39,31 +38,12 @@ export class SessionsManager {
   public constructor(windowsManager: WindowsManager) {
     this.windowsManager = windowsManager;
 
-    this.extensions.on('create-tab', (details, callback) => {
-      const view = windowsManager.list
-        .find(x => x.id === details.windowId)
-        .viewManager.create(details, false, true);
-
-      callback(view.webContents.id);
-    });
-
-    this.extensions.on('set-badge-text', (extensionId, details) => {
-      windowsManager.list.forEach(w => {
-        w.webContents.send('set-badge-text', extensionId, details);
-      });
-    });
-
     this.loadExtensions('normal');
 
     registerProtocol(this.view);
     registerProtocol(this.viewIncognito);
 
     this.clearCache('incognito');
-
-    ipcMain.handle(`inspect-extension`, (e, incognito, id) => {
-      const context = incognito ? this.extensionsIncognito : this.extensions;
-      context.extensions[id].backgroundPage.webContents.openDevTools();
-    });
 
     this.view.setPermissionRequestHandler(
       async (webContents, permission, callback, details) => {
@@ -86,7 +66,7 @@ export class SessionsManager {
             });
 
             if (!perm) {
-              const response = await window.dialogs.permissionsDialog.requestPermission(
+              const response = await window.permissionsDialog.requestPermission(
                 permission,
                 webContents.getURL(),
                 details,
@@ -113,18 +93,6 @@ export class SessionsManager {
       },
     );
 
-    const getDownloadItem = (
-      item: Electron.DownloadItem,
-      id: string,
-    ): IDownloadItem => ({
-      fileName: basename(item.savePath),
-      receivedBytes: item.getReceivedBytes(),
-      totalBytes: item.getTotalBytes(),
-      savePath: item.savePath,
-      id,
-    });
-
-    // TODO(sentialx): clean up the download listeners
     this.view.on('will-download', (event, item, webContents) => {
       const fileName = item.getFilename();
       const id = makeId(32);
@@ -144,12 +112,15 @@ export class SessionsManager {
         item.savePath = savePath;
       }
 
-      const downloadItem = getDownloadItem(item, id);
+      const downloadItem: IDownloadItem = {
+        fileName: basename(item.savePath),
+        receivedBytes: 0,
+        totalBytes: item.getTotalBytes(),
+        savePath: item.savePath,
+        id,
+      };
 
-      window.dialogs.downloadsDialog.webContents.send(
-        'download-started',
-        downloadItem,
-      );
+      window.downloadsDialog.webContents.send('download-started', downloadItem);
       window.webContents.send('download-started', downloadItem);
 
       item.on('updated', (event, state) => {
@@ -158,27 +129,24 @@ export class SessionsManager {
         } else if (state === 'progressing') {
           if (item.isPaused()) {
             console.log('Download is paused');
+          } else {
+            const data = {
+              id,
+              receivedBytes: item.getReceivedBytes(),
+            };
+
+            window.downloadsDialog.webContents.send('download-progress', data);
+            window.webContents.send('download-progress', data);
           }
         }
-
-        const data = getDownloadItem(item, id);
-
-        window.dialogs.downloadsDialog.webContents.send(
-          'download-progress',
-          data,
-        );
-        window.webContents.send('download-progress', data);
       });
       item.once('done', async (event, state) => {
         if (state === 'completed') {
-          window.dialogs.downloadsDialog.webContents.send(
-            'download-completed',
-            id,
-          );
+          window.downloadsDialog.webContents.send('download-completed', id);
           window.webContents.send(
             'download-completed',
             id,
-            !window.dialogs.downloadsDialog.visible,
+            !window.downloadsDialog.visible,
           );
 
           if (extname(fileName) === '.crx') {
@@ -221,54 +189,6 @@ export class SessionsManager {
 
             window.webContents.send('load-browserAction', extension);
           }
-        } else {
-          console.log(`Download failed: ${state}`);
-        }
-      });
-    });
-
-    session.defaultSession.on('will-download', (event, item, webContents) => {
-      const id = makeId(32);
-      const window = windowsManager.list.find(
-        x => x && x.webContents.id === webContents.id,
-      );
-
-      const downloadItem = getDownloadItem(item, id);
-
-      window.dialogs.downloadsDialog.webContents.send(
-        'download-started',
-        downloadItem,
-      );
-      window.webContents.send('download-started', downloadItem);
-
-      item.on('updated', (event, state) => {
-        if (state === 'interrupted') {
-          console.log('Download is interrupted but can be resumed');
-        } else if (state === 'progressing') {
-          if (item.isPaused()) {
-            console.log('Download is paused');
-          }
-        }
-
-        const data = getDownloadItem(item, id);
-
-        window.dialogs.downloadsDialog.webContents.send(
-          'download-progress',
-          data,
-        );
-        window.webContents.send('download-progress', data);
-      });
-      item.once('done', async (event, state) => {
-        if (state === 'completed') {
-          window.dialogs.downloadsDialog.webContents.send(
-            'download-completed',
-            id,
-          );
-          window.webContents.send(
-            'download-completed',
-            id,
-            !window.dialogs.downloadsDialog.visible,
-          );
         } else {
           console.log(`Download failed: ${state}`);
         }
@@ -318,23 +238,15 @@ export class SessionsManager {
     const dirs = await promises.readdir(extensionsPath);
 
     for (const dir of dirs) {
-      try {
-        const extension = await context.loadExtension(
-          resolve(extensionsPath, dir),
-        );
-
-        // extension.backgroundPage.webContents.openDevTools();
-        for (const window of context.windows) {
-          window.webContents.send('load-browserAction', extension);
-        }
-      } catch (e) {
-        console.error(e);
+      const extension = await context.loadExtension(
+        resolve(extensionsPath, dir),
+      );
+      for (const windowWc of context.webContents) {
+        windowWc.send('load-browserAction', extension);
       }
     }
 
-    await context.loadExtension(
-      resolve(__dirname, 'extensions/midori-darkreader'),
-    );
+    context.loadExtension(resolve(__dirname, 'extensions/midori-darkreader'));
 
     if (session === 'incognito') {
       this.incognitoExtensionsLoaded = true;

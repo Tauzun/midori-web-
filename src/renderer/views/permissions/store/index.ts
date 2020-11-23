@@ -2,18 +2,18 @@ import { observable } from 'mobx';
 import { ipcRenderer } from 'electron';
 
 import { getDomain } from '~/utils';
-import { DialogStore } from '~/models/dialog-store';
+import { getCurrentWindow } from '../../app/utils/windows';
 
-export class Store extends DialogStore {
+export class Store {
   @observable
   public permissions: string[] = [];
 
   @observable
   public domain: string;
 
-  public constructor() {
-    super();
+  public windowId = getCurrentWindow().id;
 
+  public constructor() {
     ipcRenderer.on('request-permission', (e, { url, name, details }) => {
       this.domain = getDomain(url);
       this.permissions = [];

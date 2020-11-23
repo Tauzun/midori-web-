@@ -1,15 +1,12 @@
 import { existsSync, promises as fs } from 'fs';
-import { resolve, join } from 'path';
+import { resolve } from 'path';
 import fetch from 'node-fetch';
 
 import { windowsManager } from '..';
 import { ElectronBlocker, Request } from '@cliqz/adblocker-electron';
 import { getPath } from '~/utils';
-import { ipcMain } from 'electron';
 
 export let engine: ElectronBlocker;
-
-const PRELOAD_PATH = join(__dirname, './preload.js');
 
 const loadFilters = async () => {
   const path = resolve(getPath('adblock/cache.dat'));
@@ -52,64 +49,53 @@ const loadFilters = async () => {
   }
 };
 
-const emitBlockedEvent = (request: Request) => {
-  for (const window of windowsManager.list) {
-    window.webContents.send(`blocked-ad-${request.tabId}`);
-  }
-};
+export const runAdblockService = (ses: any) => {
+  if (!ses.webRequest.listeners || ses.id1) return;
 
-let adblockRunning = false;
-let adblockInitialized = false;
+  ses.id1 = '';
 
-export const runAdblockService = async (ses: any) => {
-  if (!ses.webRequest.addListener) return;
+  const emitBlockedEvent = (request: Request) => {
+    for (const window of windowsManager.list) {
+      window.webContents.send(`blocked-ad-${request.tabId}`);
+    }
+  };
 
-  if (!adblockInitialized) {
-    adblockInitialized = true;
-    await loadFilters();
-  }
+  loadFilters().then(() => {
+    engine.enableBlockingInSession(ses);
 
-  if (adblockInitialized && !engine) {
-    return;
-  }
+    const item: any = Array.from(
+      ses.webRequest.listeners.get('onBeforeRequest'),
+    ).pop();
 
-  if (!ses.headersReceivedId) {
-    ses.headersReceivedId = ses.webRequest.addListener(
-      'onHeadersReceived',
-      { urls: ['<all_urls>'] },
-      (engine as any).onHeadersReceived,
-      { order: 0 },
-    ).id;
-  }
+    const item2: any = Array.from(
+      ses.webRequest.listeners.get('onHeadersReceived'),
+    ).pop();
 
-  if (!ses.beforeRequestId) {
-    ses.beforeRequestId = ses.webRequest.addListener(
-      'onBeforeRequest',
-      { urls: ['<all_urls>'] },
-      (engine as any).onBeforeRequest,
-      { order: 0 },
-    ).id;
-  }
-
-  if (!adblockRunning) {
-    ipcMain.on('get-cosmetic-filters', (engine as any).onGetCosmeticFilters);
-    ipcMain.on(
-      'is-mutation-observer-enabled',
-      (engine as any).onIsMutationObserverEnabled,
-    );
-    ses.setPreloads(ses.getPreloads().concat([PRELOAD_PATH]));
+    if (item && item2) {
+      ses.id1 = item[1];
+      ses.id2 = item2[1];
+    }
 
     engine.on('request-blocked', emitBlockedEvent);
     engine.on('request-redirected', emitBlockedEvent);
-  }
+  });
 };
 
 export const stopAdblockService = (ses: any) => {
-  if (!adblockRunning) return;
+  if (!ses.webRequest.listeners) return;
+  try {
+    if (engine) {
+      engine.disableBlockingInSession(ses);
+    }
+  } catch (e) {
+    if (ses.id1) {
+      ses.webRequest.removeListener('onBeforeRequest', ses.id1.id);
+      delete ses.id1;
+    }
 
-  adblockRunning = false;
-
-  if (engine) {
-    engine.disableBlockingInSession(ses);
+    if (ses.id2) {
+      ses.webRequest.removeListener('onHeadersReceived', ses.id2.id);
+      delete ses.id2;
+    }
   }
 };

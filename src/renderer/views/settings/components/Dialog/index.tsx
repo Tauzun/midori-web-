@@ -28,10 +28,11 @@ export const Dialog = styled.div`
   padding-bottom: 8px;
   transition: 0.15s transform ${EASING_FUNCTION};
   ${robotoRegular()};
+
   ${({ visible }: { visible: boolean }) => css`
     pointer-events: ${visible ? 'auto' : 'none'};
     opacity: ${visible ? 1 : 0};
-    transform: ${visible ? 'translate3d(0, 0, 0)' : 'translate3d(0, -24px, 0)'};
+    transform: ${visible ? 'translateY(0)' : 'translateY(-24px)'};
   `}
 `;
 
@@ -53,6 +54,7 @@ export const Buttons = styled.div`
   justify-content: flex-end;
   margin-top: 12px;
   padding-right: 8px;
+
   & > * {
     margin-right: 4px;
   }

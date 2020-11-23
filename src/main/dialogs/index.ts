@@ -10,4 +10,3 @@ export * from './preview';
 export * from './downloads';
 export * from './tabgroup';
 export * from './add-bookmark';
-export * from './extension-popup';

@@ -1,6 +1,6 @@
 import { ipcMain, dialog } from 'electron';
 import * as Datastore from 'nedb';
-import { fromBuffer } from 'file-type';
+import * as fileType from 'file-type';
 import * as icojs from 'icojs';
 import parse = require('node-bookmarks-parser');
 
@@ -26,20 +26,6 @@ interface Databases {
 const convertIcoToPng = async (icoData: Buffer): Promise<ArrayBuffer> => {
   return (await icojs.parse(icoData, 'image/png'))[0].buffer;
 };
-
-const encodeHref = (str: string) => {
-  return (str || '').replace(/"/g, '&quot;');
-};
-
-const encodeTitle = (str: string) => {
-  return (str || '')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-};
-
-const indentLength = 4;
-const indentType = ' ';
 
 export class StorageService {
   public databases: Databases = {
@@ -107,10 +93,6 @@ export class StorageService {
       return b;
     });
 
-    ipcMain.handle('export-bookmarks', async () => {
-      await this.exportBookmarks();
-    });
-
     ipcMain.handle('bookmarks-get', e => {
       return this.bookmarks;
     });
@@ -150,9 +132,7 @@ export class StorageService {
     });
 
     ipcMain.handle('topsites-get', (e, count) => {
-      return this.historyVisited
-        .filter(x => x.title && x.title !== '')
-        .slice(0, count);
+      return this.historyVisited.slice(0, count);
     });
   }
 
@@ -399,15 +379,15 @@ export class StorageService {
 
           let data = Buffer.from(res.data, 'binary');
 
-          const type = await fromBuffer(data);
+          const type = fileType(data);
 
           if (type && type.ext === 'ico') {
             data = Buffer.from(new Uint8Array(await convertIcoToPng(data)));
           }
 
-          const str = `data:${
-            (await fromBuffer(data)).ext
-          };base64,${data.toString('base64')}`;
+          const str = `data:${fileType(data).ext};base64,${data.toString(
+            'base64',
+          )}`;
 
           this.insert({
             scope: 'favicons',
@@ -430,9 +410,12 @@ export class StorageService {
   };
 
   public importBookmarks = async () => {
-    const dialogRes = await dialog.showOpenDialog({
-      filters: [{ name: 'Bookmark file', extensions: ['html'] }],
-    });
+    const dialogRes = await dialog.showOpenDialog(
+      windowsManager.currentWindow,
+      {
+        filters: [{ name: 'Bookmark file', extensions: ['html'] }],
+      },
+    );
 
     try {
       const file = await promises.readFile(dialogRes.filePaths[0], 'utf8');
@@ -442,87 +425,6 @@ export class StorageService {
     }
 
     return [];
-  };
-
-  private createBookmarkArray = (
-    parentFolderId: string = null,
-    first = true,
-    depth = 1,
-  ): string[] => {
-    let payload: string[] = [];
-    let title;
-    const bookmarks = this.bookmarks.filter(x => x.parent === parentFolderId);
-    const indentFirst = indentType.repeat(depth * indentLength);
-    const indentNext = !first
-      ? indentFirst
-      : indentType.repeat((depth + 1) * indentLength);
-
-    if (first) payload.push(`${indentFirst}<DL><p>`);
-
-    for (const bookmark of bookmarks) {
-      if (!bookmark.isFolder && bookmark.url) {
-        title = encodeTitle(bookmark.title);
-        const href = encodeHref(bookmark.url);
-        let icon = bookmark.favicon;
-
-        if (!icon.startsWith('data:')) {
-          icon = this.favicons.get(icon);
-        }
-
-        payload.push(
-          `${indentNext}<DT><A HREF="${href}" ICON="${icon}">${title}</A>`,
-        );
-      } else if (bookmark.isFolder) {
-        title = encodeTitle(bookmark.title);
-        payload.push(`${indentNext}<DT><H3>${title}</H3>`);
-        payload = payload.concat(
-          this.createBookmarkArray(bookmark._id, true, depth + 1),
-        );
-      }
-    }
-
-    if (first) payload.push(`${indentFirst}</DL><p>`);
-
-    return payload;
-  };
-
-  public exportBookmarks = async () => {
-    const { filePath, canceled } = await dialog.showSaveDialog({
-      filters: [{ name: 'Bookmark file', extensions: ['html'] }],
-    });
-
-    if (canceled) return;
-
-    const breakTag = process.platform === 'win32' ? '\r\n' : '\n';
-    const documentTitle = 'Bookmarks';
-
-    const bar = this.createBookmarkArray(
-      this.bookmarks.find(x => x.static === 'main')._id,
-    );
-
-    const other = this.createBookmarkArray(
-      this.bookmarks.find(x => x.static === 'other')._id,
-      false,
-    );
-
-    const html = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
-<!-- This is an automatically generated file.
-    It will be read and overwritten.
-    DO NOT EDIT! -->
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<TITLE>${documentTitle}</TITLE>
-<H1>${documentTitle}</H1>
-<DL><p>
-    <DT><H3 PERSONAL_TOOLBAR_FOLDER="true">Bookmarks bar</H3>
-${bar.join(breakTag)}
-${other.join(breakTag)}
-</DL><p>`;
-
-    try {
-      await promises.writeFile(filePath, html, 'utf8');
-    } catch (err) {
-      console.error(err);
-    }
   };
 }
 

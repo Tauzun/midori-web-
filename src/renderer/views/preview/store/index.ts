@@ -1,10 +1,29 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import { observable, computed } from 'mobx';
+import { getTheme } from '~/utils/themes';
+import { ISettings } from '~/interfaces';
+import { DEFAULT_SETTINGS } from '~/constants';
 import { parse } from 'url';
 import { WEBUI_BASE_URL, WEBUI_PROTOCOL } from '~/constants/files';
-import { DialogStore } from '~/models/dialog-store';
 
-export class Store extends DialogStore {
+export class Store {
+  @observable
+  public settings: ISettings = DEFAULT_SETTINGS;
+
+  @computed
+  public get theme() {
+    return getTheme(this.settings.theme);
+  }
+
+  @observable
+  public visible = false;
+
+  @observable
+  public id = remote.getCurrentWebContents().id;
+
+  @observable
+  public windowId = remote.getCurrentWindow().id;
+
   @observable
   public title = '';
 
@@ -38,8 +57,6 @@ export class Store extends DialogStore {
   }
 
   public constructor() {
-    super();
-
     ipcRenderer.on('visible', (e, flag, tab) => {
       clearTimeout(this.timeout);
       clearTimeout(this.timeout1);
@@ -68,6 +85,16 @@ export class Store extends DialogStore {
         }
       }
     });
+
+    ipcRenderer.send('get-settings');
+
+    ipcRenderer.on('update-settings', (e, settings: ISettings) => {
+      this.settings = { ...this.settings, ...settings };
+    });
+  }
+
+  public hide() {
+    ipcRenderer.send(`hide-${this.id}`);
   }
 }
 

@@ -7,18 +7,18 @@ import { ToolbarButton } from '../ToolbarButton';
 import { icons } from '~/renderer/constants';
 
 const onBackClick = () => {
-  store.tabs.selectedTab.callViewMethod('goBack');
+  store.tabs.selectedTab.callViewMethod('webContents.goBack');
 };
 
 const onForwardClick = () => {
-  store.tabs.selectedTab.callViewMethod('goForward');
+  store.tabs.selectedTab.callViewMethod('webContents.goForward');
 };
 
 const onRefreshClick = () => {
   if (store.tabs.selectedTab && store.tabs.selectedTab.loading) {
-    store.tabs.selectedTab.callViewMethod('stop');
+    store.tabs.selectedTab.callViewMethod('webContents.stop');
   } else {
-    store.tabs.selectedTab.callViewMethod('reload');
+    store.tabs.selectedTab.callViewMethod('webContents.reload');
   }
 };
 
@@ -32,7 +32,7 @@ export const NavigationButtons = observer(() => {
   }
 
   return (
-    <StyledContainer>
+    <StyledContainer isFullscreen={store.isFullscreen}>
       <ToolbarButton
         disabled={!store.navigationState.canGoBack}
         size={20}

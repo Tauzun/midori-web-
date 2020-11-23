@@ -3,7 +3,6 @@ import { TOOLBAR_HEIGHT } from '~/constants/design';
 import { View } from './view';
 import { AppWindow } from './windows';
 import { WEBUI_BASE_URL } from '~/constants/files';
-import { windowsManager } from '.';
 
 export class ViewManager {
   public views = new Map<number, View>();
@@ -46,6 +45,31 @@ export class ViewManager {
       this.destroy(id);
     });
 
+    ipcMain.on(`browserview-call-${id}`, async (e, data) => {
+      const view = this.views.get(data.tabId);
+      let scope: any = view;
+
+      if (data.scope && data.scope.trim() !== '') {
+        const scopes = data.scope.split('.');
+        for (const s of scopes) {
+          scope = scope[s];
+        }
+      }
+
+      let result = scope.apply(view.webContents, data.args);
+
+      if (result instanceof Promise) {
+        result = await result;
+      }
+
+      if (data.callId) {
+        this.window.webContents.send(
+          `browserview-call-result-${data.callId}`,
+          result,
+        );
+      }
+    });
+
     ipcMain.on(`mute-view-${id}`, (e, tabId: number) => {
       const view = this.views.get(tabId);
       view.webContents.setAudioMuted(true);
@@ -79,6 +103,11 @@ export class ViewManager {
     const view = new View(this.window, details.url, this.incognito);
     const { id } = view.webContents;
 
+    view.setAutoResize({
+      width: true,
+      height: true,
+    } as any);
+
     view.webContents.once('destroyed', () => {
       this.views.delete(id);
     });
@@ -87,7 +116,7 @@ export class ViewManager {
 
     if (sendMessage) {
       this.window.webContents.send(
-        'create-tab',
+        'api-tabs-create',
         { ...details },
         isNext,
         view.webContents.id,
@@ -118,15 +147,9 @@ export class ViewManager {
     this.window.removeBrowserView(selected);
     this.window.addBrowserView(view);
 
-    this.window.dialogs.searchDialog.hideVisually();
-    this.window.dialogs.previewDialog.hideVisually();
-    this.window.dialogs.tabGroupDialog.hideVisually();
-
-    if (this.incognito) {
-      windowsManager.sessionsManager.extensionsIncognito.activeTab = id;
-    } else {
-      windowsManager.sessionsManager.extensions.activeTab = id;
-    }
+    this.window.searchDialog.hideVisually();
+    this.window.previewDialog.hideVisually();
+    this.window.tabGroupDialog.hideVisually();
 
     // Also fixes switching tabs with Ctrl + Tab
     view.webContents.focus();

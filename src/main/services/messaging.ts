@@ -40,63 +40,44 @@ export const runMessagingService = (appWindow: AppWindow) => {
   );
 
   ipcMain.on(`update-find-info-${id}`, (e, tabId, data) => {
-    if (appWindow.dialogs.findDialog.visible) {
-      appWindow.dialogs.findDialog.updateInfo(tabId, data);
+    if (appWindow.findDialog.visible) {
+      appWindow.findDialog.updateInfo(tabId, data);
     }
   });
 
   ipcMain.on(`find-show-${id}`, (e, tabId, data) => {
-    appWindow.dialogs.findDialog.find(tabId, data);
+    appWindow.findDialog.find(tabId, data);
   });
 
   ipcMain.on(`menu-show-${id}`, e => {
-    appWindow.dialogs.menuDialog.toggle();
+    appWindow.menuDialog.toggle();
   });
 
   ipcMain.on(`search-show-${id}`, e => {
-    appWindow.dialogs.searchDialog.toggle();
+    appWindow.searchDialog.toggle();
   });
 
   ipcMain.on(`show-tab-preview-${id}`, (e, tab) => {
-    appWindow.dialogs.previewDialog.tab = tab;
-    appWindow.dialogs.previewDialog.show();
+    appWindow.previewDialog.tab = tab;
+    appWindow.previewDialog.show();
   });
 
   ipcMain.on(`hide-tab-preview-${id}`, (e, tab) => {
-    appWindow.dialogs.previewDialog.hide(
-      appWindow.dialogs.previewDialog.visible,
-    );
+    appWindow.previewDialog.hide(appWindow.previewDialog.visible);
   });
 
   ipcMain.on(`show-tabgroup-dialog-${id}`, (e, tabGroup) => {
-    appWindow.dialogs.tabGroupDialog.edit(tabGroup);
+    appWindow.tabGroupDialog.edit(tabGroup);
   });
 
   ipcMain.on(`show-downloads-dialog-${id}`, (e, left) => {
-    appWindow.dialogs.downloadsDialog.left = left;
-    appWindow.dialogs.downloadsDialog.show();
-  });
-
-  ipcMain.on(`show-extension-popup-${id}`, (e, left, url) => {
-    appWindow.dialogs.extensionPopup.left = left;
-    appWindow.dialogs.extensionPopup.url = url;
-    appWindow.dialogs.extensionPopup.show();
-  });
-
-  ipcMain.on(`inspect-extension-popup-${id}`, (e, left, url) => {
-    appWindow.dialogs.extensionPopup.left = left;
-    appWindow.dialogs.extensionPopup.url = url;
-    appWindow.dialogs.extensionPopup.show();
-    appWindow.dialogs.extensionPopup.webContents.send('inspect');
-  });
-
-  ipcMain.on(`hide-extension-popup-${id}`, e => {
-    appWindow.dialogs.extensionPopup.hide();
+    appWindow.downloadsDialog.left = left;
+    appWindow.downloadsDialog.show();
   });
 
   ipcMain.on(`show-add-bookmark-dialog-${id}`, (e, left) => {
-    appWindow.dialogs.addBookmarkDialog.left = left;
-    appWindow.dialogs.addBookmarkDialog.show();
+    appWindow.addBookmarkDialog.left = left;
+    appWindow.addBookmarkDialog.show();
   });
 
   ipcMain.on(`edit-tabgroup-${id}`, (e, tabGroup) => {
@@ -111,25 +92,22 @@ export const runMessagingService = (appWindow: AppWindow) => {
     const items = await getFormFillMenuItems(name, value);
 
     if (items.length) {
-      appWindow.dialogs.formFillDialog.webContents.send(
-        `formfill-get-items`,
-        items,
-      );
-      appWindow.dialogs.formFillDialog.inputRect = rect;
+      appWindow.formFillDialog.webContents.send(`formfill-get-items`, items);
+      appWindow.formFillDialog.inputRect = rect;
 
-      appWindow.dialogs.formFillDialog.resize(
+      appWindow.formFillDialog.resize(
         items.length,
         items.find(r => r.subtext) != null,
       );
-      appWindow.dialogs.formFillDialog.rearrange();
-      appWindow.dialogs.formFillDialog.show(false);
+      appWindow.formFillDialog.rearrange();
+      appWindow.formFillDialog.show(false);
     } else {
-      appWindow.dialogs.formFillDialog.hide();
+      appWindow.formFillDialog.hide();
     }
   });
 
   ipcMain.on(`form-fill-hide-${id}`, () => {
-    appWindow.dialogs.formFillDialog.hide();
+    appWindow.formFillDialog.hide();
   });
 
   ipcMain.on(
@@ -161,16 +139,13 @@ export const runMessagingService = (appWindow: AppWindow) => {
   );
 
   ipcMain.on(`credentials-show-${id}`, (e, data) => {
-    appWindow.dialogs.credentialsDialog.webContents.send(
-      'credentials-update',
-      data,
-    );
-    appWindow.dialogs.credentialsDialog.rearrange();
-    appWindow.dialogs.credentialsDialog.show();
+    appWindow.credentialsDialog.webContents.send('credentials-update', data);
+    appWindow.credentialsDialog.rearrange();
+    appWindow.credentialsDialog.show();
   });
 
   ipcMain.on(`credentials-hide-${id}`, () => {
-    appWindow.dialogs.credentialsDialog.hide();
+    appWindow.credentialsDialog.hide();
   });
 
   ipcMain.on(`credentials-save-${id}`, async (e, data) => {

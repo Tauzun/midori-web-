@@ -1,5 +1,5 @@
 {
-  "appId": "org.midoribrowser.midori",
+  "appId": "org.midoribrowser.midori-ng",
   "productName": "Midori Next Generation",
   "nsis": {
     "include": "static/installer.nsh"
@@ -9,39 +9,46 @@
     "output": "dist",
     "buildResources": "static/icons"
   },
-  "files": ["build/**/*", "package.json", "static/**/*"],
+  "files": [
+    "build/**/*",
+    "package.json",
+    "static/**/*"
+  ],
   "publish": "github",
   "linux": {
     "category": "Network",
     "target": [
       {
         "target": "AppImage",
-        "arch": ["ia32", "x64"]
+        "arch": [
+          "ia32",
+          "x64"
+        ]
       },
       {
         "target": "deb",
-        "arch": ["ia32", "x64"]
-      },
-      {
-        "target": "pacman",
-        "arch": ["ia32", "x64"]
-      },
-      {
-        "target": "rpm",
-        "arch": ["ia32", "x64"]
+        "arch": [
+          "ia32",
+          "x64"
+        ]
       }
-
     ]
   },
   "win": {
     "target": [
       {
-        "target": "nsis-web",
-        "arch": ["x64", "ia32"]
+        "target": "nsis",
+        "arch": [
+          "x64",
+          "ia32"
+        ]
       },
       {
         "target": "zip",
-        "arch": ["x64", "ia32"]
+        "arch": [
+          "x64",
+          "ia32"
+        ]
       }
     ]
   },
@@ -51,7 +58,7 @@
   "fileAssociations": [
     {
       "name": "Document",
-      "description": "Midori Next",
+      "description": "Midori",
       "role": "Viewer",
       "ext": "html"
     }

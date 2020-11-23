@@ -10,10 +10,9 @@ import {
   TAB_MAX_WIDTH,
   TAB_PINNED_WIDTH,
 } from '../constants';
-import { getColorBrightness } from '~/utils';
+import { getColorBrightness, callViewMethod } from '~/utils';
 import { NEWTAB_URL } from '~/constants/tabs';
 import { closeWindow } from '../utils/windows';
-import { callViewMethod } from '~/utils/view';
 
 const isColorAcceptable = (color: string) => {
   if (store.theme['tab.allowLightBackground']) {
@@ -229,7 +228,7 @@ export class ITab {
         windowId: store.windowId,
         url: this.url,
         favicon: this.favicon,
-        pinned: !!this.isPinned,
+        pinned: this.isPinned,
         title: this.title,
         isUserDefined: false,
         order: store.tabs.list.indexOf(this),
@@ -341,7 +340,7 @@ export class ITab {
 
     const selected = store.tabs.selectedTabId === this.id;
 
-    store.startupTabs.removeStartupTabItem(this.id);
+    store.startupTabs.removeStartupTabItem(this.id, store.windowId);
 
     ipcRenderer.send(`view-destroy-${store.windowId}`, this.id);
 
@@ -391,6 +390,6 @@ export class ITab {
   }
 
   public callViewMethod = (scope: string, ...args: any[]): Promise<any> => {
-    return callViewMethod(this.id, scope, ...args);
+    return callViewMethod(store.windowId, this.id, scope, ...args);
   };
 }

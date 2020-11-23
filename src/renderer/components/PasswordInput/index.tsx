@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { Textfield, TextFieldProps } from '../Textfield';
+import { Textfield } from '../Textfield';
 import { icons } from '~/renderer/constants';
 
-interface Props extends TextFieldProps {
+interface Props {
   style?: any;
 }
 
@@ -40,13 +40,12 @@ export class PasswordInput extends React.PureComponent<Props, State> {
   }
 
   public render() {
-    const { style, dark } = this.props;
+    const { style } = this.props;
     const { visible } = this.state;
 
     return (
       <Textfield
         ref={this.ref}
-        dark={dark}
         label="Password"
         inputType={visible ? 'text' : 'password'}
         icon={visible ? icons.invisible : icons.visible}

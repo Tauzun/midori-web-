@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components';
-import { platform } from 'os';
 
 import { ToolbarButton } from '../ToolbarButton';
 import { TOOLBAR_BUTTON_WIDTH } from '~/constants/design';
@@ -14,9 +13,6 @@ export const StyledTabbar = styled.div`
   margin-left: 8px;
   margin-right: 32px;
   display: flex;
-  ${({ isFullscreen }: { isFullscreen: boolean }) => css`
-    margin-left: ${platform() === 'darwin' && !isFullscreen ? 78 : 0}px;
-  `};
 `;
 
 export const TabsContainer = styled.div`
@@ -30,14 +26,12 @@ export const TabsContainer = styled.div`
   align-items: center;
 
   &::-webkit-scrollbar {
-    height: 0px;
-    display: none;
+    height: 3px;
     -webkit-app-region: no-drag;
     background-color: transparent;
-    opacity: 0;
   }
 
-  /* &:hover {
+  &:hover {
     ${({ theme }: { theme?: ITheme }) => css`
       &::-webkit-scrollbar-thumb {
         background-color: ${theme['toolbar.lightForeground']
@@ -51,7 +45,7 @@ export const TabsContainer = styled.div`
         }
       }
     `};
-  } */
+  }
 `;
 
 export const AddTab = styled(ToolbarButton)`

@@ -71,3 +71,4 @@ Choosing Electron was the best option to build the browser. We can build the UI 
 </div>
 
 This Midori renovation uses Wexond as a base but little by little it will be integrating many new innovations, thanks to Mert Gör. 
+ 

@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { parse } from 'url';
 
 import store from '../../store';
@@ -63,7 +63,7 @@ const BrowserActions = observer(() => {
 const onCloseClick = () => ipcRenderer.send(`window-close-${store.windowId}`);
 
 const onMouseEnter = () => {
-  // ipcRenderer.send(`window-fix-dragging-${store.windowId}`);
+  ipcRenderer.send(`window-fix-dragging-${store.windowId}`);
 };
 
 const onMaximizeClick = () =>
@@ -71,22 +71,6 @@ const onMaximizeClick = () =>
 
 const onMinimizeClick = () =>
   ipcRenderer.send(`window-minimize-${store.windowId}`);
-
-const onShieldContextMenu = (e: React.MouseEvent) => {
-  const menu = remote.Menu.buildFromTemplate([
-    {
-      checked: store.settings.object.shield,
-      label: 'Enabled',
-      type: 'checkbox',
-      click: () => {
-        store.settings.object.shield = !store.settings.object.shield;
-        store.settings.save();
-      },
-    },
-  ]);
-
-  menu.popup();
-};
 
 const RightButtons = observer(() => {
   const { selectedTab } = store.tabs;
@@ -111,15 +95,14 @@ const RightButtons = observer(() => {
       {hasCredentials && (
         <ToolbarButton icon={icons.key} size={16} onClick={onKeyClick} />
       )}
-
-      <ToolbarButton
-        size={16}
-        badge={store.settings.object.shield && blockedAds > 0}
-        badgeText={blockedAds.toString()}
-        icon={icons.shield}
-        opacity={store.settings.object.shield ? 0.87 : 0.54}
-        onContextMenu={onShieldContextMenu}
-      ></ToolbarButton>
+      {store.settings.object.shield == true && (
+        <ToolbarButton
+          size={16}
+          badge={blockedAds > 0}
+          badgeText={blockedAds.toString()}
+          icon={icons.shield}
+        ></ToolbarButton>
+      )}
 
       {store.downloadsButtonVisible && (
         <ToolbarButton
@@ -135,14 +118,7 @@ const RightButtons = observer(() => {
       )}
       <Separator />
       {store.isIncognito && <ToolbarButton icon={icons.incognito} size={18} />}
-      <ToolbarButton
-        badge={store.updateAvailable}
-        badgeRight={10}
-        badgeTop={8}
-        onMouseDown={onMenuClick}
-        icon={icons.more}
-        size={18}
-      />
+      <ToolbarButton onMouseDown={onMenuClick} icon={icons.more} size={18} />
     </Buttons>
   );
 });

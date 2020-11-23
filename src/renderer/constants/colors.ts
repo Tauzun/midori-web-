@@ -18,8 +18,7 @@ export const LIGHT_BLUE_500 = '#03A9F4';
 export const TEAL_500 = '#009688';
 
 export const GREEN_500 = '#4CAF50';
-
-export const GREEN_300 = '#65f687';
+export const GREEN_300 = '#58cd34';
 
 export const LIGHT_GREEN_500 = '#8BC34A';
 
