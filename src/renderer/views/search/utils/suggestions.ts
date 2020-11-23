@@ -35,11 +35,7 @@ export const getHistorySuggestions = (filter: string) => {
       url: urlPart,
     };
 
-    if (
-      urlPart.indexOf(
-        store.searchEngine.url.replace('%s', '').replace(regex, ''),
-      ) !== -1
-    ) {
+    if (urlPart.indexOf('search?') !== -1) {
       const query = urlPart
         .split('q=')[1]
         .split('&')[0]

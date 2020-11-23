@@ -46,7 +46,7 @@ export class Store {
       this.visible = flag;
 
       if (flag) {
-        const { bookmark, title, url, favicon } = data;
+        const { bookmark, title, url } = data;
 
         this.bookmark = bookmark;
         this.folders = await ipcRenderer.invoke('bookmarks-get-folders');
@@ -55,7 +55,6 @@ export class Store {
           this.bookmark = await ipcRenderer.invoke('bookmarks-add', {
             title,
             url,
-            favicon,
             parent: this.folders[0]._id,
           });
           this.dialogTitle = 'Bookmark added';

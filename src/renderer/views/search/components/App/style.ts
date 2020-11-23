@@ -44,7 +44,6 @@ export const Input = styled.input`
   font-weight: 300;
   font-family: Roboto;
   padding-left: 16px;
-  padding-right: 8px;
   height: 42px;
   background-color: transparent;
 
@@ -59,11 +58,19 @@ export const Input = styled.input`
   `}
 `;
 
-export const CurrentIcon = styled.div`
+export const SearchIcon = styled.div`
   width: 18px;
   height: 18px;
   ${centerIcon()};
+  background-image: url(${icons.search});
   margin-left: 16px;
+  opacity: 0.54;
+
+  ${({ theme }: { theme?: ITheme }) => css`
+    filter: ${theme['searchBox.input.lightForeground']
+      ? 'invert(100%)'
+      : 'none'};
+  `}
 `;
 
 export const SearchBox = styled.div`

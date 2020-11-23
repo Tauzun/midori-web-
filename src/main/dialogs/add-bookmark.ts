@@ -24,7 +24,7 @@ export class AddBookmarkDialog extends Dialog {
     const { width } = this.appWindow.getContentBounds();
 
     super.rearrange({
-      x: Math.round(Math.min(this.left - WIDTH / 2, width - WIDTH)),
+      x: Math.min(this.left - WIDTH / 2, width - WIDTH),
     });
   }
 
@@ -36,7 +36,6 @@ export class AddBookmarkDialog extends Dialog {
       url: view.webContents.getURL(),
       title: view.webContents.getTitle(),
       bookmark: view.bookmark,
-      favicon: view.favicon,
     });
   }
 }

@@ -32,25 +32,13 @@ const onDoubleClick = (item: IBookmark) => () => {
 };
 
 const onMoreClick = (data: IBookmark) => (e: any) => {
-  onClick(data)(e);
+  e.stopPropagation();
 
   const { left, top } = e.currentTarget.getBoundingClientRect();
 
   store.menuVisible = true;
   store.menuLeft = left;
   store.menuTop = top;
-  store.currentBookmark = data;
-};
-
-const onContextMenu = (data: IBookmark) => (e: any) => {
-  e.preventDefault();
-  e.stopPropagation();
-
-  const { pageX, pageY } = e;
-
-  store.menuVisible = true;
-  store.menuLeft = pageX;
-  store.menuTop = pageY;
   store.currentBookmark = data;
 };
 
@@ -65,7 +53,7 @@ export const Bookmark = observer(({ data }: { data: IBookmark }) => {
     customFavicon = true;
   } else {
     if (favicon) {
-      if (favicon.startsWith('data:')) {
+      if (favicon.startsWith('data:image')) {
         favicon = data.favicon;
       } else {
         favicon = store.favicons.get(data.favicon);
@@ -78,7 +66,6 @@ export const Bookmark = observer(({ data }: { data: IBookmark }) => {
 
   return (
     <ListItem
-      onContextMenu={onContextMenu(data)}
       onDoubleClick={onDoubleClick(data)}
       key={data._id}
       onClick={onClick(data)}

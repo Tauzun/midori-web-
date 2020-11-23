@@ -72,10 +72,6 @@ const onImportClick = async () => {
   addImported(res);
 };
 
-const onExportClick = async () => {
-  ipcRenderer.invoke('export-bookmarks');
-};
-
 const onContextMenuMouseDown = (e: React.MouseEvent) => {
   e.stopPropagation();
 };
@@ -131,9 +127,6 @@ export default hot(
               onClick={onImportClick}
             >
               Import
-            </NavigationDrawer.Item>
-            <NavigationDrawer.Item icon={icons.save} onClick={onExportClick}>
-              Export
             </NavigationDrawer.Item>
           </NavigationDrawer>
           <ContextMenu

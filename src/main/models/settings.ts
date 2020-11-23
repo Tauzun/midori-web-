@@ -78,6 +78,10 @@ export class Settings extends EventEmitter {
   };
 
   public update = () => {
+    const contexts = [
+      this.windowsManager.sessionsManager.extensions,
+      this.windowsManager.sessionsManager.extensionsIncognito,
+    ];
 
     if (this.object.themeAuto) {
       this.object.theme = nativeTheme.shouldUseDarkColors
@@ -101,11 +105,6 @@ export class Settings extends EventEmitter {
       });
     }
 
-    const contexts = [
-      this.windowsManager.sessionsManager.extensions,
-      this.windowsManager.sessionsManager.extensionsIncognito,
-    ];
-
     contexts.forEach(e => {
       if (e.extensions['midori-darkreader']) {
         e.extensions['midori-darkreader'].backgroundPage.webContents.send(
@@ -120,9 +119,9 @@ export class Settings extends EventEmitter {
       }
 
       if (this.object.shield) {
-        //runAdblockService(e.session);
+        runAdblockService(e.session);
       } else {
-        //stopAdblockService(e.session);
+        stopAdblockService(e.session);
       }
     });
   };
