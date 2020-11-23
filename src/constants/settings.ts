@@ -49,8 +49,24 @@ export const DEFAULT_SEARCH_ENGINES = [
     keywordsUrl: '',
   },
   {
+    name: 'Qwant',
+    url: 'https://www.qwant.com/?q=%s',
+    keywordsUrl: '',
+  },
+  {
     name: 'Yahoo!',
     url: 'https://search.yahoo.com/search?p=%s',
     keywordsUrl: '',
   },
+  {
+    name: 'StartPage',
+    url: 'https://www.startpage.com/search/?q=%s',
+    keywordsUrl: '',
+  },
+  {
+    name: 'Yandex',
+    url: 'https://yandex.com/search/?text=%s',
+    keywordsUrl: '',
+  }
+  
 ];
