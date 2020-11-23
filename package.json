@@ -40,7 +40,7 @@
     "@types/crypto-js": "^3.1.43",
     "@types/extract-zip": "^1.6.2",
     "@types/gsap": "1.20.2",
-    "@types/jszip": "^3.1.6",
+    "@types/jszip": "^3.4.1",
     "@types/mkdirp": "^0.5.2",
     "@types/nedb": "1.8.9",
     "@types/node": "12.12.21",
