@@ -150,7 +150,9 @@ export class StorageService {
     });
 
     ipcMain.handle('topsites-get', (e, count) => {
-      return this.historyVisited.slice(0, count);
+      return this.historyVisited
+        .filter(x => x.title && x.title !== '')
+        .slice(0, count);
     });
   }
 
@@ -461,10 +463,14 @@ export class StorageService {
       if (!bookmark.isFolder && bookmark.url) {
         title = encodeTitle(bookmark.title);
         const href = encodeHref(bookmark.url);
+        const icon = bookmark.favicon;
+
+        if (!icon.startsWith('data:')) {
+          icon = this.favicons.get(icon);
+        }
+
         payload.push(
-          `${indentNext}<DT><A HREF="${href}" ICON="${this.favicons.get(
-            bookmark.favicon,
-          )}">${title}</A>`,
+          `${indentNext}<DT><A HREF="${href}" ICON="${icon}">${title}</A>`,
         );
       } else if (bookmark.isFolder) {
         title = encodeTitle(bookmark.title);
