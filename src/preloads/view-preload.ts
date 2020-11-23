@@ -15,16 +15,16 @@ if (arg) {
 }
 
 const goBack = () => {
-  ipcRenderer.send(`browserview-call-${windowId}`, {
-    tabId,
-    scope: 'webContents.goBack',
+  ipcRenderer.invoke(`web-contents-call`, {
+    webContentsId: tabId,
+    method: 'goBack',
   });
 };
 
 const goForward = () => {
-  ipcRenderer.send(`browserview-call-${windowId}`, {
-    tabId,
-    scope: 'webContents.goForward',
+  ipcRenderer.invoke(`web-contents-call`, {
+    webContentsId: tabId,
+    method: 'goForward',
   });
 };
 

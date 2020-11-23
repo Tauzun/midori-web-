@@ -1,24 +1,14 @@
 import { ipcRenderer } from 'electron';
 
-import { makeId } from '.';
-
-export const callViewMethod = (
+export const callViewMethod = async (
   windowId: number,
   id: number,
-  scope: string,
+  method: string,
   ...args: any[]
 ): Promise<any> => {
-  return new Promise(resolve => {
-    const callId = makeId(32);
-    ipcRenderer.send(`browserview-call-${windowId}`, {
-      args,
-      scope,
-      tabId: id,
-      callId,
-    });
-
-    ipcRenderer.once(`browserview-call-result-${callId}`, (e, result) => {
-      resolve(result);
-    });
+  return await ipcRenderer.invoke(`web-contents-call`, {
+    args,
+    method,
+    webContentsId: id,
   });
 };
