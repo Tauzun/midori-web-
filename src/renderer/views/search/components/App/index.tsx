@@ -139,7 +139,11 @@ export const App = hot(
 
       if (suggestion.isSearch) {
         favicon = store.searchEngine.icon;
-      } else if (favicon == null || favicon.trim() === '') {
+      } else if (
+        favicon == null ||
+        favicon.trim() === '' ||
+        favicon === icons.page
+      ) {
         favicon = icons.page;
         customIcon = true;
       }
