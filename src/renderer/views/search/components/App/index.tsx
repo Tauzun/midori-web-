@@ -9,6 +9,7 @@ import store from '../../store';
 import { callViewMethod } from '~/utils';
 import { ipcRenderer, remote } from 'electron';
 import { Suggestions } from '../Suggestions';
+import { icons } from '~/renderer/constants';
 
 const GlobalStyle = createGlobalStyle`${Style}`;
 
