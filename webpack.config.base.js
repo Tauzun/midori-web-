@@ -92,7 +92,7 @@ function getConfig(...cfg) {
 
 const getHtml = (scope, name) => {
   return new HtmlWebpackPlugin({
-    title: 'Midori Browser',
+    title: 'Midori Next',
     template: 'static/pages/app.html',
     filename: `${name}.html`,
     chunks: [`vendor.${scope}`, name],

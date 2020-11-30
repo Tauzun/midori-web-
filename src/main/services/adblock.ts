@@ -5,6 +5,7 @@ import fetch from 'node-fetch';
 import { windowsManager } from '..';
 import { ElectronBlocker, Request } from '@cliqz/adblocker-electron';
 import { getPath } from '~/utils';
+import { ipcMain } from 'electron';
 
 export let engine: ElectronBlocker;
 

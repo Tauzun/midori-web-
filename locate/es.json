@@ -3,8 +3,8 @@
         {
             "midori": "Midori",
             "midori_with_version": "Midori {appVersion}",
-            "midori_full": "Midori Browser",
-            "midori_full_with_version": "Midori Browser {appVersion}",
+            "midori_full": "Midori Next",
+            "midori_full_with_version": "Midori Next {appVersion}",
             "button_open": "Abierto",
             "button_run": "Ejecutar",
             "button_send": "Enviar",
@@ -35,8 +35,8 @@
             "file_details": "Viendo un archivo {fileType}",
             "active_small_text": "Navegando por una página web",
             "idle_small_text": "Ocioso",
-            "idle_details": "Midori Browser",
-            "large_text": "Midori Browser {version}"
+            "idle_details": "Midori Next",
+            "large_text": "Midori Next {version}"
         }
     ],
     "overlay": [
