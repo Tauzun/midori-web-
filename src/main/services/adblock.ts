@@ -1,5 +1,5 @@
 import { existsSync, promises as fs } from 'fs';
-import { resolve } from 'path';
+import { resolve, join } from 'path';
 import fetch from 'node-fetch';
 
 import { windowsManager } from '..';
@@ -8,6 +8,8 @@ import { getPath } from '~/utils';
 import { ipcMain } from 'electron';
 
 export let engine: ElectronBlocker;
+
+const PRELOAD_PATH = join(__dirname, './preload.js');
 
 const loadFilters = async () => {
   const path = resolve(getPath('adblock/cache.dat'));
@@ -51,9 +53,7 @@ const loadFilters = async () => {
 };
 
 export const runAdblockService = (ses: any) => {
-  if (!ses.webRequest.listeners || ses.id1) return;
-
-  ses.id1 = '';
+  if (!ses.webRequest.addListener) return;
 
   const emitBlockedEvent = (request: Request) => {
     for (const window of windowsManager.list) {
@@ -62,20 +62,23 @@ export const runAdblockService = (ses: any) => {
   };
 
   loadFilters().then(() => {
-    engine.enableBlockingInSession(ses);
+    //engine.enableBlockingInSession(ses);
 
     const item: any = Array.from(
       ses.webRequest.listeners.get('onBeforeRequest'),
     ).pop();
+      
+    ses.headersReceivedId = ses.webRequest.onHeadersReceived(
+        { urls: ['<all_urls>'] },
+        engine.onHeadersReceived,
+      );
 
-    const item2: any = Array.from(
-      ses.webRequest.listeners.get('onHeadersReceived'),
-    ).pop();
-
-    if (item && item2) {
-      ses.id1 = item[1];
-      ses.id2 = item2[1];
-    }
+      ipcMain.on('get-cosmetic-filters', engine.onGetCosmeticFilters);
+      ipcMain.on(
+        'is-mutation-observer-enabled',
+        engine.onIsMutationObserverEnabled,
+      );
+      ses.setPreloads(ses.getPreloads().concat([PRELOAD_PATH]));  
 
     engine.on('request-blocked', emitBlockedEvent);
     engine.on('request-redirected', emitBlockedEvent);
@@ -83,20 +86,19 @@ export const runAdblockService = (ses: any) => {
 };
 
 export const stopAdblockService = (ses: any) => {
-  if (!ses.webRequest.listeners) return;
-  try {
-    if (engine) {
-      engine.disableBlockingInSession(ses);
-    }
-  } catch (e) {
-    if (ses.id1) {
-      ses.webRequest.removeListener('onBeforeRequest', ses.id1.id);
-      delete ses.id1;
-    }
+  if (!ses.webRequest.removeListener) return;
 
-    if (ses.id2) {
-      ses.webRequest.removeListener('onHeadersReceived', ses.id2.id);
-      delete ses.id2;
-    }
+  if (ses.beforeRequestId) {
+    ses.webRequest.removeListener('onBeforeRequest', ses.beforeRequestId);
+  }
+
+  if (ses.headersReceivedId) {
+    ses.webRequest.removeListener('onHeadersReceived', ses.headersReceivedId);
+  }
+
+  if (engine.config.loadCosmeticFilters === true) {
+    ses.setPreloads(
+      ses.getPreloads().filter((p: string) => p !== PRELOAD_PATH),
+    );
   }
 };
