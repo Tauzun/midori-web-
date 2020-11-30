@@ -68,10 +68,11 @@ export const runAdblockService = (ses: any) => {
       ses.webRequest.listeners.get('onBeforeRequest'),
     ).pop();
       
-    ses.headersReceivedId = ses.webRequest.onHeadersReceived(
+    ses.headersReceivedId = ses.webRequest.addListener(
+      'onHeadersReceived',
         { urls: ['<all_urls>'] },
         engine.onHeadersReceived,
-      );
+      ).id;
 
       ipcMain.on('get-cosmetic-filters', engine.onGetCosmeticFilters);
       ipcMain.on(
