@@ -119,7 +119,6 @@ const RightButtons = observer(() => {
         opacity={store.settings.object.shield ? 0.87 : 0.54}
         onContextMenu={onShieldContextMenu}
       ></ToolbarButton>
-      )
 
       {store.downloadsButtonVisible && (
         <ToolbarButton
