@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 
 import { Style } from '../../style';
@@ -38,6 +38,7 @@ const getText = (permission: string) => {
 export const App = hot(
   observer(() => {
     return (
+      <ThemeProvider theme={{ ...store.theme }}>
       <StyledApp>
         <GlobalStyle />
         <Title>{store.domain} wants to:</Title>
@@ -48,15 +49,27 @@ export const App = hot(
         </Permissions>
         <Buttons>
           <Button
-            foreground="black"
-            background="rgba(0, 0, 0, 0.08)"
+            background={
+              store.theme['dialog.lightForeground']
+                ? 'rgba(255, 255, 255, 0.08)'
+                : 'rgba(0, 0, 0, 0.08)'
+            }
+            foreground={
+              store.theme['dialog.lightForeground'] ? 'white' : 'black'
+            }
             onClick={() => sendResult(true)}
           >
             Allow
           </Button>
           <Button
-            foreground="black"
-            background="rgba(0, 0, 0, 0.08)"
+            background={
+              store.theme['dialog.lightForeground']
+                ? 'rgba(255, 255, 255, 0.08)'
+                : 'rgba(0, 0, 0, 0.08)'
+            }
+            foreground={
+              store.theme['dialog.lightForeground'] ? 'white' : 'black'
+            }
             style={{ marginLeft: 8 }}
             onClick={() => sendResult(false)}
           >
@@ -65,6 +78,7 @@ export const App = hot(
         </Buttons>
         <div style={{ clear: 'both' }}></div>
       </StyledApp>
+    </ThemeProvider>
     );
   }),
 );

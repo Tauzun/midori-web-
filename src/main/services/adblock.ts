@@ -62,24 +62,26 @@ export const runAdblockService = (ses: any) => {
   };
 
   loadFilters().then(() => {
-    //engine.enableBlockingInSession(ses);
+    // engine.enableBlockingInSession(ses);
 
-    const item: any = Array.from(
-      ses.webRequest.listeners.get('onBeforeRequest'),
-    ).pop();
-      
     ses.headersReceivedId = ses.webRequest.addListener(
       'onHeadersReceived',
-        { urls: ['<all_urls>'] },
-        engine.onHeadersReceived,
-      ).id;
+      { urls: ['<all_urls>'] },
+      engine.onHeadersReceived,
+    ).id;
 
-      ipcMain.on('get-cosmetic-filters', engine.onGetCosmeticFilters);
-      ipcMain.on(
-        'is-mutation-observer-enabled',
-        engine.onIsMutationObserverEnabled,
-      );
-      ses.setPreloads(ses.getPreloads().concat([PRELOAD_PATH]));  
+    ses.beforeRequestId = ses.webRequest.addListener(
+      'onBeforeRequest',
+      { urls: ['<all_urls>'] },
+      engine.onBeforeRequest,
+    ).id;
+
+    ipcMain.on('get-cosmetic-filters', engine.onGetCosmeticFilters);
+    ipcMain.on(
+      'is-mutation-observer-enabled',
+      engine.onIsMutationObserverEnabled,
+    );
+    ses.setPreloads(ses.getPreloads().concat([PRELOAD_PATH]));
 
     engine.on('request-blocked', emitBlockedEvent);
     engine.on('request-redirected', emitBlockedEvent);
@@ -97,9 +99,5 @@ export const stopAdblockService = (ses: any) => {
     ses.webRequest.removeListener('onHeadersReceived', ses.headersReceivedId);
   }
 
-  if (engine.config.loadCosmeticFilters === true) {
-    ses.setPreloads(
-      ses.getPreloads().filter((p: string) => p !== PRELOAD_PATH),
-    );
-  }
+  ses.setPreloads(ses.getPreloads().filter((p: string) => p !== PRELOAD_PATH));
 };

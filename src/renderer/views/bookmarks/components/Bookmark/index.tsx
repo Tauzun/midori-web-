@@ -37,8 +37,20 @@ const onMoreClick = (data: IBookmark) => (e: any) => {
   const { left, top } = e.currentTarget.getBoundingClientRect();
 
   store.menuVisible = true;
-  store.menuLeft = left;
+  store.menuLeft = left - 130;
   store.menuTop = top;
+  store.currentBookmark = data;
+};
+
+const onContextMenu = (data: IBookmark) => (e: any) => {
+  e.preventDefault();
+  onClick(data)(e);
+
+  const { pageX, pageY } = e;
+
+  store.menuVisible = true;
+  store.menuLeft = pageX;
+  store.menuTop = pageY;
   store.currentBookmark = data;
 };
 
