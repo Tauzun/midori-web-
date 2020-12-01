@@ -9,6 +9,7 @@
 [![PayPal](https://img.shields.io/badge/PayPal-Donate-brightgreen?style=flat&logo=PayPal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UQPXCVUG2CKNG&source=url)
 [![Telegram](https://img.shields.io/badge/Telegram-EN-brightgreen?style=flat&logo=telegram)](https://t.me/midoriweb)
 [![Telegram](https://img.shields.io/badge/Telegram-ES-brightgreen?style=flat&logo=telegram)](https://t.me/midoriwebes)
+<a href="https://osdn.net/"><img src="//osdn.net/sflogo.php?group_id=12434&type=1" width="96" height="31"  border="0" alt="OSDN"></a>
 
 Midori is a lightweight yet powerful web browser which runs just as well on little embedded computers named for delicious pastries as it does on beefy machines with a core temperature exceeding that of planet earth. And it looks good doing that, built on top of <code>Electron</code> and <code>React</code>. It aims to be fast, private, beautiful, extensible and functional.
 </div>
