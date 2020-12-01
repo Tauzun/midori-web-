@@ -1,13 +1,14 @@
 import { observable } from 'mobx';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
+import { DialogStore } from '~/models/dialog-store';
 
-export class Store {
+export class Store extends DialogStore {
   @observable
   public url: string;
 
-  public windowId: number = remote.getCurrentWindow().id;
-
   public constructor() {
+    super({ hideOnBlur: false });
+
     ipcRenderer.on('request-auth', (e, url) => {
       this.url = url;
     });

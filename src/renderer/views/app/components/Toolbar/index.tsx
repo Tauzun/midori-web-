@@ -63,7 +63,7 @@ const BrowserActions = observer(() => {
 const onCloseClick = () => ipcRenderer.send(`window-close-${store.windowId}`);
 
 const onMouseEnter = () => {
-  ipcRenderer.send(`window-fix-dragging-${store.windowId}`);
+  // ipcRenderer.send(`window-fix-dragging-${store.windowId}`);
 };
 
 const onMaximizeClick = () =>
@@ -72,21 +72,21 @@ const onMaximizeClick = () =>
 const onMinimizeClick = () =>
   ipcRenderer.send(`window-minimize-${store.windowId}`);
 
-  const onShieldContextMenu = (e: React.MouseEvent) => {
-    const menu = remote.Menu.buildFromTemplate([
-      {
-        checked: store.settings.object.shield,
-        label: 'Enabled',
-        type: 'checkbox',
-        click: () => {
-          store.settings.object.shield = !store.settings.object.shield;
-          store.settings.save();
-        },
+const onShieldContextMenu = (e: React.MouseEvent) => {
+  const menu = remote.Menu.buildFromTemplate([
+    {
+      checked: store.settings.object.shield,
+      label: 'Enabled',
+      type: 'checkbox',
+      click: () => {
+        store.settings.object.shield = !store.settings.object.shield;
+        store.settings.save();
       },
-    ]);
-  
-    menu.popup();
-  };
+    },
+  ]);
+
+  menu.popup();
+};
 
 const RightButtons = observer(() => {
   const { selectedTab } = store.tabs;
@@ -111,7 +111,8 @@ const RightButtons = observer(() => {
       {hasCredentials && (
         <ToolbarButton icon={icons.key} size={16} onClick={onKeyClick} />
       )}
-            <ToolbarButton
+
+      <ToolbarButton
         size={16}
         badge={store.settings.object.shield && blockedAds > 0}
         badgeText={blockedAds.toString()}

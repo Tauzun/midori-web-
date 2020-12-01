@@ -8,6 +8,7 @@ interface IOptions {
   bounds?: IRectangle;
   hideTimeout?: number;
   customHide?: boolean;
+  webPreferences?: Electron.WebPreferences;
 }
 
 interface IRectangle {
@@ -35,12 +36,14 @@ export class Dialog extends BrowserView {
 
   public constructor(
     appWindow: AppWindow,
-    { bounds, name, devtools, hideTimeout }: IOptions,
+    { bounds, name, devtools, hideTimeout, webPreferences }: IOptions,
   ) {
     super({
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
+        affinity: 'dialog',
+        ...webPreferences,
       },
     });
 
@@ -48,12 +51,6 @@ export class Dialog extends BrowserView {
     this.bounds = { ...this.bounds, ...bounds };
     this.hideTimeout = hideTimeout;
     this.name = name;
-
-    setTimeout(() => {
-      appWindow.addBrowserView(this);
-    });
-
-    this._hide();
 
     ipcMain.on(`hide-${this.webContents.id}`, () => {
       this.hide();

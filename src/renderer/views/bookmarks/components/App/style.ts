@@ -41,6 +41,7 @@ export const Dialog = styled.div`
   box-shadow: ${shadows(8)};
   transition: 0.2s opacity;
   transform: translate(-50%, -50%);
+
   ${({ visible, theme }: { visible: boolean; theme?: ITheme }) => css`
     opacity: ${visible ? 1 : 0};
     pointer-events: ${visible ? 'auto' : 'none'};

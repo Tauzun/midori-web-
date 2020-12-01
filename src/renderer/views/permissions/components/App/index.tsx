@@ -39,46 +39,46 @@ export const App = hot(
   observer(() => {
     return (
       <ThemeProvider theme={{ ...store.theme }}>
-      <StyledApp>
-        <GlobalStyle />
-        <Title>{store.domain} wants to:</Title>
-        <Permissions>
-          {store.permissions.map(item => (
-            <Permission key={item}>{getText(item)}</Permission>
-          ))}
-        </Permissions>
-        <Buttons>
-          <Button
-            background={
-              store.theme['dialog.lightForeground']
-                ? 'rgba(255, 255, 255, 0.08)'
-                : 'rgba(0, 0, 0, 0.08)'
-            }
-            foreground={
-              store.theme['dialog.lightForeground'] ? 'white' : 'black'
-            }
-            onClick={() => sendResult(true)}
-          >
-            Allow
-          </Button>
-          <Button
-            background={
-              store.theme['dialog.lightForeground']
-                ? 'rgba(255, 255, 255, 0.08)'
-                : 'rgba(0, 0, 0, 0.08)'
-            }
-            foreground={
-              store.theme['dialog.lightForeground'] ? 'white' : 'black'
-            }
-            style={{ marginLeft: 8 }}
-            onClick={() => sendResult(false)}
-          >
-            Deny
-          </Button>
-        </Buttons>
-        <div style={{ clear: 'both' }}></div>
-      </StyledApp>
-    </ThemeProvider>
+        <StyledApp>
+          <GlobalStyle />
+          <Title>{store.domain} wants to:</Title>
+          <Permissions>
+            {store.permissions.map(item => (
+              <Permission key={item}>{getText(item)}</Permission>
+            ))}
+          </Permissions>
+          <Buttons>
+            <Button
+              background={
+                store.theme['dialog.lightForeground']
+                  ? 'rgba(255, 255, 255, 0.08)'
+                  : 'rgba(0, 0, 0, 0.08)'
+              }
+              foreground={
+                store.theme['dialog.lightForeground'] ? 'white' : 'black'
+              }
+              onClick={() => sendResult(true)}
+            >
+              Allow
+            </Button>
+            <Button
+              background={
+                store.theme['dialog.lightForeground']
+                  ? 'rgba(255, 255, 255, 0.08)'
+                  : 'rgba(0, 0, 0, 0.08)'
+              }
+              foreground={
+                store.theme['dialog.lightForeground'] ? 'white' : 'black'
+              }
+              style={{ marginLeft: 8 }}
+              onClick={() => sendResult(false)}
+            >
+              Deny
+            </Button>
+          </Buttons>
+          <div style={{ clear: 'both' }}></div>
+        </StyledApp>
+      </ThemeProvider>
     );
   }),
 );

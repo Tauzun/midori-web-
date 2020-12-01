@@ -7,7 +7,7 @@ import { Style } from '../../style';
 import { StyledApp, Input, CurrentIcon, SearchBox } from './style';
 import store from '../../store';
 import { callViewMethod } from '~/utils/view';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { Suggestions } from '../Suggestions';
 import { icons } from '~/renderer/constants';
 
@@ -33,12 +33,7 @@ const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
 
     e.currentTarget.value = url;
 
-    callViewMethod(
-      remote.getCurrentWindow().id,
-      store.tabId,
-      'webContents.loadURL',
-      url,
-    );
+    callViewMethod(store.tabId, 'loadURL', url);
 
     setTimeout(() => {
       ipcRenderer.send(`hide-${store.id}`);
@@ -154,7 +149,7 @@ export const App = hot(
         <StyledApp visible={store.visible}>
           <GlobalStyle />
           <SearchBox>
-          <CurrentIcon
+            <CurrentIcon
               style={{
                 backgroundImage: `url(${favicon})`,
                 filter:

@@ -160,9 +160,10 @@ export default hot(
     } else if (store.dialogContent === 'rename-folder') {
       dialogTitle = 'Rename folder';
     }
+
     return (
       <ThemeProvider theme={{ ...store.theme }}>
-                <Container
+        <Container
           onMouseDown={onContainerMouseDown}
           darken={store.dialogVisible}
         >
@@ -195,7 +196,7 @@ export default hot(
             }}
             visible={store.menuVisible}
           >
-                        {store.currentBookmark && !store.currentBookmark.isFolder && (
+            {store.currentBookmark && !store.currentBookmark.isFolder && (
               <ContextMenuItem onClick={onEditClick} icon={icons.edit}>
                 Edit
               </ContextMenuItem>

@@ -44,21 +44,10 @@ const onMoreClick = (data: IBookmark) => (e: any) => {
 
 const onContextMenu = (data: IBookmark) => (e: any) => {
   e.preventDefault();
+
   onClick(data)(e);
 
   const { pageX, pageY } = e;
-
-  store.menuVisible = true;
-  store.menuLeft = pageX;
-  store.menuTop = pageY;
-  store.currentBookmark = data;
-};
-
-const onContextMenu = (data: IBookmark) => (e: any) => {
-  e.preventDefault();
-  e.stopPropagation();
-
-  const {pageX, pageY } = e;
 
   store.menuVisible = true;
   store.menuLeft = pageX;

@@ -32,7 +32,7 @@ export const SearchIcon = styled.div`
   margin-left: 12px;
   opacity: 0.54;
   background-image: url(${icons.search});
-  
+
   ${({ theme }: { theme?: ITheme }) => css`
     filter: ${theme['dialog.lightForeground'] ? 'invert(100%)' : 'none'};
   `}
@@ -51,15 +51,15 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.div`
-${({
-  size,
-  icon,
-  theme,
-}: {
-  size: number;
-  icon: string;
-  theme?: ITheme;
-}) => css`
+  ${({
+    size,
+    icon,
+    theme,
+  }: {
+    size: number;
+    icon: string;
+    theme?: ITheme;
+  }) => css`
     ${centerIcon(size)};
     background-image: url(${icon});
     filter: ${theme['dialog.lightForeground'] ? 'invert(100%)' : 'none'};

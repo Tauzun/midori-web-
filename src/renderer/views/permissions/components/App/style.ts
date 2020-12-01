@@ -8,6 +8,7 @@ export const StyledApp = styled.div`
   border-radius: 6px;
   overflow: hidden;
   position: relative;
+
   ${({ theme }: { theme?: ITheme }) => css`
     background-color: ${theme['dialog.backgroundColor']};
     color: ${theme['dialog.lightForeground'] ? 'white' : 'black'};
@@ -20,7 +21,6 @@ export const Title = styled.div`
 `;
 
 export const Permissions = styled.div`
-  margin-top: 8px;
   margin-top: 12px;
 `;
 

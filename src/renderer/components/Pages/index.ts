@@ -5,12 +5,14 @@ export const Container = styled.div`
   overflow: auto;
   height: 100vh;
   overflow: hidden;
+
   ${({ darken }: { darken?: boolean }) => css`
     &:after {
       opacity: ${darken ? 0.54 : 0};
       pointer-events: ${darken ? 'auto' : 'none'};
     }
   `}
+
   &:after {
     content: '';
     position: fixed;

@@ -47,6 +47,7 @@ export class SettingsStore {
   public updateSettings(newSettings: ISettings) {
     this.object = { ...this.object, ...newSettings };
   }
+
   public async save() {
     ipcRenderer.send('save-settings', {
       settings: JSON.stringify(this.object),

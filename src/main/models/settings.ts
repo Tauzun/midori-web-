@@ -78,11 +78,6 @@ export class Settings extends EventEmitter {
   };
 
   public update = () => {
-    const contexts = [
-      this.windowsManager.sessionsManager.extensions,
-      this.windowsManager.sessionsManager.extensionsIncognito,
-    ];
-
     if (this.object.themeAuto) {
       this.object.theme = nativeTheme.shouldUseDarkColors
         ? 'midori-dark'
@@ -91,12 +86,10 @@ export class Settings extends EventEmitter {
 
     for (const window of this.windowsManager.list) {
       window.webContents.send('update-settings', this.object);
-      window.searchDialog.webContents.send('update-settings', this.object);
-      window.menuDialog.webContents.send('update-settings', this.object);
-      window.previewDialog.webContents.send('update-settings', this.object);
-      window.tabGroupDialog.webContents.send('update-settings', this.object);
-      window.downloadsDialog.webContents.send('update-settings', this.object);
-      window.addBookmarkDialog.webContents.send('update-settings', this.object);
+
+      Object.values(window.dialogs).forEach(dialog => {
+        dialog.webContents.send('update-settings', this.object);
+      });
 
       window.viewManager.views.forEach(v => {
         if (v.webContents.getURL().startsWith(WEBUI_BASE_URL)) {
@@ -104,6 +97,11 @@ export class Settings extends EventEmitter {
         }
       });
     }
+
+    const contexts = [
+      this.windowsManager.sessionsManager.extensions,
+      this.windowsManager.sessionsManager.extensionsIncognito,
+    ];
 
     contexts.forEach(e => {
       if (e.extensions['midori-darkreader']) {

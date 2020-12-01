@@ -34,10 +34,6 @@ export class View extends BrowserView {
         enableRemoteModule: false,
         partition: incognito ? 'view_incognito' : 'persist:view',
         plugins: true,
-        additionalArguments: [
-          `--window-id=${window.id}`,
-          `--blacklist=["${WEBUI_BASE_URL}", "midori-error://"]`,
-        ],
         nativeWindowOpen: true,
         webSecurity: true,
         javascript: true,
@@ -50,7 +46,7 @@ export class View extends BrowserView {
     this.webContents.userAgent = this.webContents.userAgent
       .replace(/ Midori\\?.([^\s]+)/g, '')
       .replace(/ Electron\\?.([^\s]+)/g, '')
-      .replace(/Chrome\\?.([^\s]+)/g, 'Chrome/87.0.4280.66-1.1');
+      .replace(/Chrome\\?.([^\s]+)/g, 'Chrome/79.0.3945.88');
 
     this.window = window;
     this.homeUrl = url;
@@ -65,7 +61,7 @@ export class View extends BrowserView {
     });
 
     this.webContents.addListener('found-in-page', (e, result) => {
-      this.window.findDialog.webContents.send('found-in-page', result);
+      this.window.dialogs.findDialog.webContents.send('found-in-page', result);
     });
 
     this.webContents.addListener('page-title-updated', (e, title) => {

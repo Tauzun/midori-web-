@@ -12,6 +12,7 @@ import {
 } from '../constants';
 import { getColorBrightness } from '~/utils';
 import { NEWTAB_URL } from '~/constants/tabs';
+import { closeWindow } from '../utils/windows';
 import { callViewMethod } from '~/utils/view';
 
 const isColorAcceptable = (color: string) => {
@@ -390,6 +391,6 @@ export class ITab {
   }
 
   public callViewMethod = (scope: string, ...args: any[]): Promise<any> => {
-    return callViewMethod(store.windowId, this.id, scope, ...args);
+    return callViewMethod(this.id, scope, ...args);
   };
 }
