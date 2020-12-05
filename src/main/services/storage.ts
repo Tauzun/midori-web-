@@ -60,9 +60,8 @@ export class StorageService {
   public favicons: Map<string, string> = new Map();
 
   public constructor() {
-    ipcMain.on('storage-get', async (e, id: string, data: IFindOperation) => {
-      const docs = await this.find(data);
-      e.sender.send(id, docs);
+    ipcMain.handle('storage-get', async (e, data: IFindOperation) => {
+      return await this.find(data);
     });
 
     ipcMain.on(
