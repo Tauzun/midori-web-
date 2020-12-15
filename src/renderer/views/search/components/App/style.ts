@@ -1,13 +1,18 @@
 import styled, { css } from 'styled-components';
 import { centerIcon, shadows } from '~/renderer/mixins';
-import { GREEN_500, GREEN_300 } from '~/renderer/constants';
-import { DialogStyle } from '~/renderer/mixins/dialogs';
+import { icons, GREEN_500, GREEN_300 } from '~/renderer/constants';
 import { ITheme } from '~/interfaces';
 
-export const StyledApp = styled(DialogStyle)`
+export const StyledApp = styled.div`
+  margin: 8px;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  transition: 0.15s opacity, 0.15s margin-top;
 
   ${({ visible, theme }: { visible: boolean; theme?: ITheme }) => css`
-  transform: translateY(${visible ? 0 : -5}px);
+    opacity: ${visible ? 1 : 0};
+    margin-top: ${visible ? 2 : 6}px;
     box-shadow: 0 0 0 2px
         ${theme['searchBox.input.lightForeground'] ? GREEN_500 : GREEN_300},
       ${shadows(4)};

@@ -7,3 +7,5 @@ dist
 .fusebox
 filters
 package-lock.json
+temp-package.json
+chunks-entries-map.json 

@@ -11,12 +11,12 @@ interface CloseProps {
 }
 
 export const StyledClose = styled.div`
-  position: absolute;
-  right: 6px;
-  height: 24px;
-  width: 24px;
+height: 20px;
+width: 20px;
+margin-left: 2px;
+margin-right: 6px;
   background-image: url('${icons.close}');
-  transition: 0.1s opacity;
+  transition: 0.1s background-color;
   z-index: 10;
   ${centerIcon(16)};
 
@@ -27,22 +27,7 @@ export const StyledClose = styled.div`
     `}
 
   &:hover {
-    &:after {
-      opacity: 1;
-    }
-  }
-
-  &:after {
-    content: '';
-    border-radius: 50px;
-    background-color: rgba(0, 0, 0, 0.08);
-    transition: 0.2s opacity;
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -86,12 +71,15 @@ interface TitleProps {
 
 export const StyledTitle = styled.div`
   ${body2()};
-  font-size: 13px;
+  font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   transition: 0.2s margin-left;
   margin-left: 8px;
+  min-width: 0;
+  font-weight: 300;
+  flex: 1;
 
   ${({ isIcon, selected, theme }: TitleProps) => css`
     margin-left: ${!isIcon ? 0 : 12}px;
@@ -112,21 +100,13 @@ export const StyledIcon = styled.div`
   `};
 `;
 
-interface ContentProps {
-  collapsed: boolean;
-  pinned: boolean;
-}
-
 export const StyledContent = styled.div`
-  position: absolute;
   overflow: hidden;
   z-index: 2;
   align-items: center;
   display: flex;
-  margin-left: 12px;
-  ${({ collapsed, pinned }: ContentProps) => css`
-    max-width: calc(100% - ${pinned ? 0 : collapsed ? 48 : 24}px);
-  `};
+  margin-left: 10px;
+  flex: 1;
 `;
 
 export const StyledBorder = styled.div`

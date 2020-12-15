@@ -87,6 +87,7 @@ const config = {
   ],
 
   externals: {
+    keytar: `require('keytar')`,
   },
 };
 

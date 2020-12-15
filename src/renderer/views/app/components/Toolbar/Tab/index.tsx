@@ -197,7 +197,7 @@ const onContextMenu = (tab: ITab) => () => {
 
 const Content = observer(({ tab }: { tab: ITab }) => {
   return (
-    <StyledContent collapsed={tab.isExpanded} pinned={tab.isPinned}>
+    <StyledContent>
       {!tab.loading && tab.favicon !== '' && (
         <StyledIcon
           isIconSet={tab.favicon !== ''}
@@ -219,6 +219,7 @@ const Content = observer(({ tab }: { tab: ITab }) => {
           {tab.title}
         </StyledTitle>
       )}
+             <Close tab={tab} />
     </StyledContent>
   );
 });
@@ -300,8 +301,6 @@ export default observer(({ tab }: { tab: ITab }) => {
             }}
           />
         )}
-        <Close tab={tab} />
-
         <Overlay tab={tab} />
         <Ripple
           rippleTime={0.6}

@@ -6,7 +6,13 @@ import { WEBUI_BASE_URL } from '~/constants/files';
 import { injectChromeWebstoreInstallButton } from './chrome-webstore';
 
 const tabId = ipcRenderer.sendSync('get-webcontents-id');
-export const windowId: number = ipcRenderer.sendSync('get-window-id');
+const arg = process.argv.find(x => x.startsWith('--window-id='));
+
+export let windowId: number = null;
+
+if (arg) {
+  windowId = parseInt(arg.split('--window-id=')[1], 10);
+}
 
 const goBack = () => {
   ipcRenderer.invoke(`web-contents-call`, {
