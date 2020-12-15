@@ -83,7 +83,7 @@ export const QuickMenu = observer(() => {
             <Icon icon={icons.topMost} />
             <MenuItemTitle>Always on top</MenuItemTitle>
             <RightControl>
-              <Switch value={store.alwaysOnTop}></Switch>
+            <Switch dense value={store.alwaysOnTop}></Switch>
             </RightControl>
           </MenuItem>
           <Line />
