@@ -146,11 +146,7 @@ export class AppWindow extends BrowserWindow {
 
     const resize = () => {
       setTimeout(() => {
-        if (process.platform === 'linux') {
-          this.viewManager.select(this.viewManager.selectedId, false);
-        } else {
-          this.viewManager.fixBounds();
-        }
+        this.viewManager.fixBounds();
       });
 
       setTimeout(() => {
