@@ -1,4 +1,4 @@
-; Falkon Windows Installer NSIS Script
+; Midori Windows Installer NSIS Script
 ; Copyright (C) 2010-2017  David Rosca <nowrep@gmail.com>
 ;               2012-2017  S. Razi Alavizadeh <s.r.alavizadeh@gmail.com>
 ;
@@ -42,7 +42,7 @@ RequestExecutionLevel admin
 !include "wininstall\AllAssociation.nsh"
 SetCompressor /SOLID /FINAL lzma
 
-!define PRODUCT_NAME "Midori Browser"
+!define PRODUCT_NAME "Midori"
 !define /date PRODUCT_VERSION "${VERSION}"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\midori.exe"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -105,8 +105,8 @@ notRunning:
 
   SetOutPath "$INSTDIR"
   File "${MIDORI_BIN_DIR}\COPYRIGHT.txt"
-  File "${MIDORI_BIN_DIR}\falkon.exe"
-  File "${MIDORI_BIN_DIR}\falkonprivate.dll"
+  File "${MIDORI_BIN_DIR}\midori.exe"
+  File "${MIDORI_BIN_DIR}\midoriprivate.dll"
   File "${MIDORI_BIN_DIR}\qt.conf"
   File "${OPENSSL_BIN_DIR}\libeay32.dll"
   File "${OPENSSL_BIN_DIR}\ssleay32.dll"
@@ -167,7 +167,7 @@ notRunning:
   call RegisterCapabilities
 
   StrCmp $installAsPortable "YES" 0 skipPortableMode
-  FileOpen $0 $INSTDIR\falkon.conf w
+  FileOpen $0 $INSTDIR\midori.conf w
   FileWrite $0 "[Config]$\r$\n"
   FileWrite $0 "Portable=true$\r$\n"
 
@@ -232,17 +232,17 @@ SectionGroup "${TITLE_SecSetASDefault}" SecSetASDefault
     Section "${TITLE_SecExtensions}" SecExtensions
       StrCmp $installAsPortable "NO" 0 skipSetExtentions
       SetOutPath "$INSTDIR"
-      ${RegisterAssociation} ".htm" "$INSTDIR\falkon.exe" "FalkonHTML" "Falkon HTML Document" "$INSTDIR\falkon.exe,1" "file"
-      ${RegisterAssociation} ".html" "$INSTDIR\falkon.exe" "FalkonHTML" "Falkon HTML Document" "$INSTDIR\falkon.exe,1" "file"
+      ${RegisterAssociation} ".htm" "$INSTDIR\midori.exe" "MidoriHTML" "Midori HTML Document" "$INSTDIR\midori.exe,1" "file"
+      ${RegisterAssociation} ".html" "$INSTDIR\midori.exe" "MidoriHTML" "Midori HTML Document" "$INSTDIR\midori.exe,1" "file"
       ${UpdateSystemIcons}
       skipSetExtentions:
     SectionEnd
 
     Section "${TITLE_SecProtocols}" SecProtocols
       StrCmp $installAsPortable "NO" 0 skipSecProtocols
-      ${RegisterAssociation} "http" "$INSTDIR\falkon.exe" "FalkonURL" "Falkon URL" "$INSTDIR\falkon.exe,0" "protocol"
-      ${RegisterAssociation} "https" "$INSTDIR\falkon.exe" "FalkonURL" "Falkon URL" "$INSTDIR\falkon.exe,0" "protocol"
-      ${RegisterAssociation} "ftp" "$INSTDIR\falkon.exe" "FalkonURL" "Falkon URL" "$INSTDIR\falkon.exe,0" "protocol"
+      ${RegisterAssociation} "http" "$INSTDIR\midori.exe" "MidoriURL" "Midori URL" "$INSTDIR\midori.exe,0" "protocol"
+      ${RegisterAssociation} "https" "$INSTDIR\midori.exe" "MidoriURL" "Midori URL" "$INSTDIR\midori.exe,0" "protocol"
+      ${RegisterAssociation} "ftp" "$INSTDIR\midori.exe" "MidoriURL" "Midori URL" "$INSTDIR\midori.exe,0" "protocol"
       ${UpdateSystemIcons}
       skipSecProtocols:
     SectionEnd
@@ -252,17 +252,17 @@ Section -StartMenu
   StrCmp $installAsPortable "NO" 0 skipStartMenu
   SetOutPath "$INSTDIR"
   SetShellVarContext all
-  CreateDirectory "$SMPROGRAMS\Falkon"
-  CreateShortCut "$SMPROGRAMS\Falkon\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
-  CreateShortCut "$SMPROGRAMS\Falkon\Falkon.lnk" "$INSTDIR\falkon.exe"
-  CreateShortCut "$SMPROGRAMS\Falkon\License.lnk" "$INSTDIR\COPYRIGHT.txt"
+  CreateDirectory "$SMPROGRAMS\Midori"
+  CreateShortCut "$SMPROGRAMS\Midori\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
+  CreateShortCut "$SMPROGRAMS\Midori\Midori.lnk" "$INSTDIR\midori.exe"
+  CreateShortCut "$SMPROGRAMS\Midori\License.lnk" "$INSTDIR\COPYRIGHT.txt"
   skipStartMenu:
 SectionEnd
 
 Section "${TITLE_SecDesktop}" SecDesktop
   StrCmp $installAsPortable "NO" 0 skipDesktopIcon
   SetOutPath "$INSTDIR"
-  CreateShortCut "$DESKTOP\Falkon.lnk" "$INSTDIR\falkon.exe" ""
+  CreateShortCut "$DESKTOP\Midori.lnk" "$INSTDIR\midori.exe" ""
   skipDesktopIcon:
 SectionEnd
 
@@ -282,26 +282,26 @@ SectionEnd
 Section -Uninstaller
   StrCmp $installAsPortable "NO" 0 skipUninstaller
   WriteUninstaller "$INSTDIR\uninstall.exe"
-  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\falkon.exe"
+  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\midori.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\Uninstall.exe"
-  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\falkon.exe"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\midori.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
-  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "Falkon Team"
-  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "HelpLink" "https://userbase.kde.org/Falkon"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "TW3"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "HelpLink" "https://gitlab.com/TW3/midori"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "InstallLocation" "$INSTDIR"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "InstallSource" "$EXEDIR"
-  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "https://falkon.org"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "https://tw3.gitlab.io/midori/"
   ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
   WriteRegDWORD ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "EstimatedSize" "$0"
   skipUninstaller:
 SectionEnd
 
 Section Uninstall
-  FindProcDLL::FindProc "falkon.exe"
+  FindProcDLL::FindProc "midori.exe"
   IntCmp $R0 1 0 notRunning
   MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION "${MSG_RunningInstance}" /SD IDOK IDCANCEL AbortInstallation
-    KillProcDLL::KillProc "falkon.exe"
+    KillProcDLL::KillProc "midori.exe"
     Sleep 100
     Goto notRunning
 AbortInstallation:
@@ -309,10 +309,10 @@ AbortInstallation:
 
 notRunning:
   SetShellVarContext all
-  Delete "$DESKTOP\Falkon.lnk"
+  Delete "$DESKTOP\Midori.lnk"
 
-  Delete "$INSTDIR\falkon.exe"
-  Delete "$INSTDIR\falkonprivate.dll"
+  Delete "$INSTDIR\midori.exe"
+  Delete "$INSTDIR\midoriprivate.dll"
   Delete "$INSTDIR\uninstall.exe"
   Delete "$INSTDIR\COPYRIGHT.txt"
   Delete "$INSTDIR\qt.conf"
@@ -358,18 +358,18 @@ notRunning:
   DeleteRegKey HKLM "Software\${PRODUCT_NAME}"
   DeleteRegValue HKLM "SOFTWARE\RegisteredApplications" "${PRODUCT_NAME}"
 
-  ${UnRegisterAssociation} ".htm" "FalkonHTML" "$INSTDIR\falkon.exe" "file"
-  ${UnRegisterAssociation} ".html" "FalkonHTML" "$INSTDIR\falkon.exe" "file"
-  ${UnRegisterAssociation} "http" "FalkonURL" "$INSTDIR\falkon.exe" "protocol"
-  ${UnRegisterAssociation} "https" "FalkonURL" "$INSTDIR\falkon.exe" "protocol"
-  ${UnRegisterAssociation} "ftp" "FalkonURL" "$INSTDIR\falkon.exe" "protocol"
+  ${UnRegisterAssociation} ".htm" "MidoriHTML" "$INSTDIR\midori.exe" "file"
+  ${UnRegisterAssociation} ".html" "MidoriHTML" "$INSTDIR\midori.exe" "file"
+  ${UnRegisterAssociation} "http" "MidoriURL" "$INSTDIR\midori.exe" "protocol"
+  ${UnRegisterAssociation} "https" "MidoriURL" "$INSTDIR\midori.exe" "protocol"
+  ${UnRegisterAssociation} "ftp" "MidoriURL" "$INSTDIR\midori.exe" "protocol"
   ${UpdateSystemIcons}
 SectionEnd
 
 BrandingText "${PRODUCT_NAME} ${PRODUCT_VERSION} Installer"
 
 Function .onInit
-        ;Prevent running installer of 64-bit Falkon on 32-bit Windows
+        ;Prevent running installer of 64-bit Midori on 32-bit Windows
         ${If} ${RunningX64}
           ${If} ${ARCH} == "x64"
             StrCpy $InstDir "$PROGRAMFILES64\${PRODUCT_NAME}\"
@@ -393,12 +393,12 @@ Function .onInit
 
 
         ;Prevent Multiple Instances
-        System::Call 'kernel32::CreateMutexA(i 0, i 0, t "FalkonInstaller-4ECB4694-2C39-4f93-9122-A986344C4E7B") i .r1 ?e'
+        System::Call 'kernel32::CreateMutexA(i 0, i 0, t "MidoriInstaller-4ECB4694-2C39-4f93-9122-A986344C4E7B") i .r1 ?e'
         Pop $R0
         StrCmp $R0 0 skip
           ;Return when running silent instalation
           IfSilent doAbort 0
-            MessageBox MB_OK|MB_ICONEXCLAMATION "Falkon installer is already running!" /SD IDOK
+            MessageBox MB_OK|MB_ICONEXCLAMATION "Midori installer is already running!" /SD IDOK
         doAbort:
             Abort
     skip:
@@ -409,30 +409,30 @@ Function RegisterCapabilities
     StrCmp $installAsPortable "NO" 0 skipRegisterCapabilities
     !ifdef ___WINVER__NSH___
         ${If} ${AtLeastWinVista}
-            ; even if we don't associate Falkon as default for ".htm" and ".html"
+            ; even if we don't associate Midori as default for ".htm" and ".html"
             ; we need to write these ProgIds for future use!
-            ;(e.g.: user uses "Default Programs" on Win7 or Vista to set Falkon as default.)
-            ${CreateProgId} "FalkonHTML" "$INSTDIR\falkon.exe" "Falkon HTML Document" "$INSTDIR\falkon.exe,1"
-            ${CreateProgId} "FalkonURL" "$INSTDIR\falkon.exe" "Falkon URL" "$INSTDIR\falkon.exe,0"
+            ;(e.g.: user uses "Default Programs" on Win7 or Vista to set Midori as default.)
+            ${CreateProgId} "MidoriHTML" "$INSTDIR\midori.exe" "Midori HTML Document" "$INSTDIR\midori.exe,1"
+            ${CreateProgId} "MidoriURL" "$INSTDIR\midori.exe" "Midori URL" "$INSTDIR\midori.exe,0"
 
-            ; note: these lines just introduce capabilities of Falkon to OS and don't change defaults!
+            ; note: these lines just introduce capabilities of Midori to OS and don't change defaults!
             WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}" "ApplicationDescription" "${PRODUCT_DESC}"
-            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}" "ApplicationIcon" "$INSTDIR\falkon.exe,0"
+            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}" "ApplicationIcon" "$INSTDIR\midori.exe,0"
             WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}" "ApplicationName" "${PRODUCT_NAME}"
-            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}\FileAssociations" ".htm" "FalkonHTML"
-            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}\FileAssociations" ".html" "FalkonHTML"
-            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}\URLAssociations" "http" "FalkonURL"
-            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}\URLAssociations" "https" "FalkonURL"
-            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}\URLAssociations" "ftp" "FalkonURL"
-            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}\Startmenu" "StartMenuInternet" "$INSTDIR\falkon.exe"
+            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}\FileAssociations" ".htm" "MidoriHTML"
+            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}\FileAssociations" ".html" "MidoriHTML"
+            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}\URLAssociations" "http" "MidoriURL"
+            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}\URLAssociations" "https" "MidoriURL"
+            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}\URLAssociations" "ftp" "MidoriURL"
+            WriteRegStr HKLM "${PRODUCT_CAPABILITIES_KEY}\Startmenu" "StartMenuInternet" "$INSTDIR\midori.exe"
             WriteRegStr HKLM "SOFTWARE\RegisteredApplications" "${PRODUCT_NAME}" "${PRODUCT_CAPABILITIES_KEY}"
         ${EndIf}
     !endif
 skipRegisterCapabilities:
 FunctionEnd
 
-Function RunFalkonAsUser
-    ${StdUtils.ExecShellAsUser} $0 "$INSTDIR\falkon.exe" "open" ""
+Function RunMidoriAsUser
+    ${StdUtils.ExecShellAsUser} $0 "$INSTDIR\midori.exe" "open" ""
 FunctionEnd
 
 Function un.onInit
@@ -440,7 +440,7 @@ Function un.onInit
     IfErrors +2 0
         StrCpy $INSTDIR "$R0"
 
-    IfFileExists "$INSTDIR\falkon.exe" found
+    IfFileExists "$INSTDIR\midori.exe" found
         MessageBox MB_OK|MB_ICONSTOP "${MSG_InvalidInstallPath}"
         Abort
     found:
