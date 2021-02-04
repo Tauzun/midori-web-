@@ -1,0 +1,50 @@
+
+# Windows 10 64 bit build of the application
+
+compile:
+
+  extends:
+  - .shared_windows_runners
+
+  stage: build
+
+  variables:
+    GIT_DEPTH: "3"
+
+  script:
+  - echo "Build started by ${GITLAB_USER_NAME}"
+  - echo "Build prep starting..."
+  - Install-Module VSSetup -Scope CurrentUser -Force
+  - Get-VSSetupInstance
+  - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.Component.MSBuild
+  - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.Windows10SDK
+  - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.VC.Tools.x86.x64
+  - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.Git
+  - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.VC.ATL
+  - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.VC.ATLMFC
+  - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.VC.Runtimes.x86.x64.Spectre
+#  - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.VC.CMake.Project
+  - echo "Build prep complete!"
+  - echo "Building %CI_PROJECT_NAME%..."
+  - '& C:\GitLab-Runner\builds\ponchale1\midori\windows\build\gitlab-ci.cmd'
+  - echo "Build complete!"
+
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web" && $GITLAB_USER_NAME == "ponchale1" && $CI_COMMIT_REF_NAME == "dev"'
+      when: always
+
+  cache:
+    paths:
+      - C:\GitLab-Runner\builds\ponchale1\midori\qt\
+      - C:\GitLab-Runner\builds\ponchale1\midori\vcpkg\packages\
+      - C:\GitLab-Runner\builds\ponchale1\midori\vcpkg\installed\x64-windows\
+      - C:\GitLab-Runner\builds\ponchale1\midori\cmake-3.19.2-win64-x64\bin\
+      - C:\GitLab-Runner\builds\ponchale1\midori\cmake-3.19.2-win64-x64\share\
+
+  allow_failure: false
+
+  artifacts:
+    expire_in: 1 day
+    name: "$CI_PROJECT_NAME-$CI_BUILD_REF_NAME-$CI_JOB_ID"
+    paths:
+      - C:\GitLab-Runner\builds\ponchale1\midori\midori.zip
