@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Noir
+Comment=A dark coloured theme. Incorporates some style elements from QDarkStylesheet.
+
+Icon=theme.png
+Type=Service
+
+X-Bhawk-Author=TW3
+X-Bhawk-License=GPLv3
