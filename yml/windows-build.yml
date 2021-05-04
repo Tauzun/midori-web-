@@ -1,0 +1,50 @@
+
+# Windows 10 64 bit build of the application
+
+windows_build:
+
+  extends:
+  - .shared_windows_runners
+
+  stage: builds
+
+  variables:
+    GIT_DEPTH: "3"
+
+  script:
+  - Write-Host "Build started by ${GITLAB_USER_NAME}"
+  - Write-Host "Building ${CI_PROJECT_TITLE}..."
+  - '& C:\GitLab-Runner\builds\tw3\b\windows-build.ps1 -labbuild 1'
+  - Write-Host "${CI_PROJECT_TITLE} build completed."
+
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web" && $GITLAB_USER_NAME == "TW3" && $CI_COMMIT_REF_NAME == "staging"'
+      when: always
+
+  cache:
+    paths:
+      - C:\GitLab-Runner\builds\tw3\b\7z\
+      - C:\GitLab-Runner\builds\tw3\b\qt\
+      - C:\GitLab-Runner\builds\tw3\b\vcpkg\packages\
+      - C:\GitLab-Runner\builds\tw3\b\vcpkg\scripts\
+      - C:\GitLab-Runner\builds\tw3\b\vcpkg\installed\
+      - C:\GitLab-Runner\builds\tw3\b\vcpkg\ports\
+      - C:\GitLab-Runner\builds\tw3\b\vcpkg\toolsrc\
+      - C:\GitLab-Runner\builds\tw3\b\vcpkg\triplets\
+      - C:\GitLab-Runner\builds\tw3\b\vcpkg\versions\
+      - C:\GitLab-Runner\builds\tw3\b\vcpkg\.vcpkg-root
+      - C:\GitLab-Runner\builds\tw3\b\vcpkg\vcpkg.disable-metrics
+      - C:\GitLab-Runner\builds\tw3\b\vcpkg\vcpkg.exe
+      - C:\GitLab-Runner\builds\tw3\b\cmake-3.19.6-win64-x64\bin\cmake.exe
+      - C:\GitLab-Runner\builds\tw3\b\cmake-3.19.6-win64-x64\bin\cmcldeps.exe
+      - C:\GitLab-Runner\builds\tw3\b\cmake-3.19.6-win64-x64\bin\cpack.exe
+      - C:\GitLab-Runner\builds\tw3\b\cmake-3.19.6-win64-x64\bin\ctest.exe
+      - C:\GitLab-Runner\builds\tw3\b\cmake-3.19.6-win64-x64\share\
+
+  allow_failure: false
+
+  artifacts:
+    expire_in: 1 day
+    name: "$CI_PROJECT_NAME-$CI_BUILD_REF_NAME-$CI_JOB_ID"
+    paths:
+      - C:\GitLab-Runner\builds\tw3\b\midori.zip

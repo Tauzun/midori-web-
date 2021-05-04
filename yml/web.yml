@@ -1,0 +1,84 @@
+
+# The web content construction job
+
+katana_build:
+
+  stage: webpages
+
+  image: php:7-cli-alpine
+
+  variables:
+    GIT_DEPTH: "3"
+
+  script:
+    - echo "Building $CI_PAGES_URL $CI_BUILD_REF_NAME"
+    - echo "Creating $CI_PAGES_URL version $CI_COMMIT_SHORT_SHA"
+    - cd web/
+    - COMPOSER_ARCHIVE="Yes"
+    - if [ ! -f composer.phar ]; then COMPOSER_ARCHIVE="No"; fi
+    - if [ "${COMPOSER_ARCHIVE}" == "No" ]; then php -r "copy('https://getcomposer.org/download/1.10.5/composer.phar', 'composer.phar');" && ACTUAL_SIGNATURE="$(php -r "echo hash_file('sha256', 'composer.phar');")" && EXPECTED_SIGNATURE="d5f3fddd0be28a5fc9bf2634a06f51bc9bd581fabda93fee7ca8ca781ae43129"; fi
+    - if [ "${COMPOSER_ARCHIVE}" == "No" ]; then if [ "${EXPECTED_SIGNATURE}" != "${ACTUAL_SIGNATURE}" ]; then echo 'Invalid composer signature' && exit 1; fi; fi
+    - if [ "${COMPOSER_ARCHIVE}" == "No" ]; then apk update && apk add --no-cache --update libzip-dev && docker-php-ext-install zip; fi
+    - if [ "${COMPOSER_ARCHIVE}" == "No" ]; then if [ -d "${CI_PROJECT_NAME}" ]; then mv "${CI_PROJECT_NAME}/" katana-old; fi; fi
+    - if [ "${COMPOSER_ARCHIVE}" == "No" ]; then php composer.phar create-project themsaid/katana $CI_PROJECT_NAME && mv $CI_PROJECT_NAME/config.php ../config.old && mv $CI_PROJECT_NAME/content/ ../content-old/; fi
+    - if [ ! -d "${CI_PROJECT_NAME}" ]; then mkdir "${CI_PROJECT_NAME}"; fi
+    - mv "content/" "$CI_PROJECT_NAME/content/" && mv "config.php" "$CI_PROJECT_NAME/config.php"
+    - sed -i -- 's#'"placeholder"'#'"$CI_PROJECT_NAME"'#g' "$CI_PROJECT_NAME/config.php"
+    - cd $CI_PROJECT_NAME && php katana build
+    - if [ -f "../../midori.zip" ]; then MIDORI_ZIP_SIG="$(php -r "echo hash_file('sha256', \"../../midori.zip\");")"; fi
+    - if [ -f "../../midori.zip" ]; then mkdir public/assets/dl && echo $MIDORI_ZIP_SIG > public/assets/dl/midori.zip.sha256 && mv ../../midori.zip public/assets/dl/midori.zip; fi
+    - if [ -f "public/assets/dl/midori.zip" ]; then MIDORI_ZIP_SIG="$(php -r "echo hash_file('sha256', \"public/assets/dl/midori.zip\");")"; fi
+    - if [ -f "public/assets/dl/midori.zip" ]; then APP_ARCHIVE_SIG="$(cat public/assets/dl/midori.zip.sha256 | head -c 64)"; fi
+    - if [ -f "public/assets/dl/midori.zip" ]; then sed -i -- 's#'"app-checksum"'#'"$APP_ARCHIVE_SIG"'#g' "public/index.html"; fi
+    - if [ -f "public/assets/dl/midori.zip" ]; then sed -i -- 's#'"app-checksum"'#'"$APP_ARCHIVE_SIG"'#g' "public/about/index.html"; fi
+
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web" && $GITLAB_USER_NAME == "TW3" && $CI_COMMIT_REF_NAME == "staging"'
+      when: on_success
+
+  cache:
+    paths:
+      - web/composer.phar
+      - web/$CI_PROJECT_NAME/vendor/
+      - web/$CI_PROJECT_NAME/composer.json
+      - web/$CI_PROJECT_NAME/composer.lock
+      - web/$CI_PROJECT_NAME/gulpfile.js
+      - web/$CI_PROJECT_NAME/katana
+      - web/$CI_PROJECT_NAME/package.json
+
+  allow_failure: false
+
+  artifacts:
+    expire_in: 1 day
+    name: "$CI_PROJECT_NAME-$CI_BUILD_REF_NAME-$CI_COMMIT_SHORT_SHA"
+    paths:
+      - web/$CI_PROJECT_NAME/public/
+
+  dependencies:
+    - windows_build
+
+# The web pages deployment job
+
+pages:
+  stage: deployment
+
+  variables:
+    GIT_STRATEGY: none
+
+  script:
+    - echo "Deploying $CI_PAGES_URL $CI_BUILD_REF_NAME"
+    - mv web/$CI_PROJECT_NAME/public/ public/
+
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web" && $GITLAB_USER_NAME == "TW3" && $CI_COMMIT_REF_NAME == "staging"'
+      when: on_success
+
+  allow_failure: false
+
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - public
+
+  dependencies:
+    - katana_build
