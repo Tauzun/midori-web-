@@ -230,7 +230,7 @@ if ($labbuild -eq 0) {
 			Write-Host "Found vs_installer.exe `n"
 			Write-Host "Please install the workload presented in the Visual Studio installer (if required) `n"
 			# This can't just be done silently because it needs privilege escalation (to be run as admin) to do so
-			Start-Process -FilePath $VSINSTBINARY -ArgumentList "modify", "--installPath", "$MSVSDIR", "--config", "$SRCROOTDIR\vsconfig\bhawk.vsconfig" -Wait -PassThru
+			Start-Process -FilePath $VSINSTBINARY -ArgumentList "modify", "--installPath", "$MSVSDIR", "--config", "$SRCROOTDIR\vsconfig\midori.vsconfig" -Wait -PassThru
 			if (!(Test-Path "$MSVSDIR\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt", $MSBUILDBIN)) {
 				# This check that the required components have been installed could be made to a little more comprehensive...
 				Throw "ERROR - Please re-run this script and install the workload presented by the Visual Studio installer"
@@ -1128,8 +1128,8 @@ if (Test-Path "$INSTDIR") {
 	remove-item -path "$INSTDIR" -Force -Recurse
 }
 
-if (Test-Path "$SRCROOTDIR\Blue Hawk") {
-	remove-item -path "$SRCROOTDIR\Blue Hawk" -Force -Recurse
+if (Test-Path "$SRCROOTDIR\Midori Browser") {
+	remove-item -path "$SRCROOTDIR\Midori Browser" -Force -Recurse
 }
 
 if (Test-Path "$SRCROOTDIR\build") {
@@ -1224,9 +1224,9 @@ if ($labbuild -eq 1) {
 # MSBUILD
 # --------------------------------------------------------------------------------
 
-if (Test-Path "$SRCROOTDIR\build\Bhawk.sln") {
+if (Test-Path "$SRCROOTDIR\build\Midori.sln") {
 	Write-Host "`nAttempting to build the application...`n"
-	& $MSBUILDBIN /m ".\Bhawk.sln" /p:CharacterSet=Unicode /p:configuration=$CONFIGURATION /p:platform=x64 /p:PlatformToolset=$TOOLSET /p:RunCodeAnalysis=$ANALYSIS /p:PreferredToolArchitecture=x64 /p:UseEnv=true
+	& $MSBUILDBIN /m ".\Midori.sln" /p:CharacterSet=Unicode /p:configuration=$CONFIGURATION /p:platform=x64 /p:PlatformToolset=$TOOLSET /p:RunCodeAnalysis=$ANALYSIS /p:PreferredToolArchitecture=x64 /p:UseEnv=true
 } else {
 	CD $SRCROOTDIR
 	Throw "ERROR - cmake failed to configure the project. Please correct the errors presented in the console output and try again."
@@ -1245,8 +1245,8 @@ if ($debugbuild -eq 1) {
 	COPY "$SRCROOTDIR\build\bin\$CONFIGURATION\*.*" $INSTDIR
 	XCOPY /Y /E /I $SRCROOTDIR\build\bin\plugins\$CONFIGURATION $INSTDIR\plug-ins
 } else {
-	COPY $SRCROOTDIR\build\bin\$CONFIGURATION\BhawkPrivate.dll $INSTDIR
-	COPY $SRCROOTDIR\build\bin\$CONFIGURATION\bhawk.exe $INSTDIR
+	COPY $SRCROOTDIR\build\bin\$CONFIGURATION\MidoriPrivate.dll $INSTDIR
+	COPY $SRCROOTDIR\build\bin\$CONFIGURATION\midori.exe $INSTDIR
 }
 COPY $SRCROOTDIR\COPYING $INSTDIR
 XCOPY /Y /E /I $SRCROOTDIR\themes $INSTDIR\themes
@@ -1271,8 +1271,8 @@ Rename-Item $INSTDIR\COPYING LICENSE.TXT
 
 # --------------------------------------------------------------------------------
 
-'[Config]' | Out-File -FilePath $INSTDIR\bhawk.conf -encoding utf8
-'Portable=true' | Out-File -FilePath $INSTDIR\bhawk.conf -Append -encoding utf8
+'[Config]' | Out-File -FilePath $INSTDIR\midori.conf -encoding utf8
+'Portable=true' | Out-File -FilePath $INSTDIR\midori.conf -Append -encoding utf8
 
 '[Paths]' | Out-File -FilePath $INSTDIR\qt.conf -encoding utf8
 'Plugins = "."' | Out-File -FilePath $INSTDIR\qt.conf -Append -encoding utf8
@@ -1509,20 +1509,20 @@ Write-Host "Spelling dictionaries added.`n"
 # Finish up
 # --------------------------------------------------------------------------------
 
-Rename-Item $INSTDIR "Blue Hawk"
-#Rename-Item $INSTDIR\bhawk.exe "Blue Hawk.exe" # Not currently doing this
-if (Test-Path "$SRCROOTDIR\Blue Hawk\bhawk.exe") {
+Rename-Item $INSTDIR "Midori Browser"
+#Rename-Item $INSTDIR\midori.exe "Midori Browser.exe" # Not currently doing this
+if (Test-Path "$SRCROOTDIR\Midori Browser\midori.exe") {
 	$TIMESTAMPEND="{0:HH:mm:ss} {0:dd/MM/yyyy}" -f (Get-Date)
 	Write-Host "--------------------------------------------------------------------------------`n"
 	Write-Host "- Build success!`n"
-	Write-Host "- The folder `"$SRCROOTDIR\Blue Hawk`" contains the output from this build.`n"
+	Write-Host "- The folder `"$SRCROOTDIR\Midori Browser`" contains the output from this build.`n"
 	Write-Host "- Build started at $TIMESTAMPBEGIN and completed at $TIMESTAMPEND`n"
 	Write-Host "--------------------------------------------------------------------------------`n"
 	if ($buildandrun -eq 1) {
-		& "$SRCROOTDIR\Blue Hawk\bhawk.exe"
+		& "$SRCROOTDIR\Midori Browser\midori.exe"
 	}
 	if ($labbuild -eq 1) {
-		Compress-Archive -Path "$SRCROOTDIR\Blue Hawk" -DestinationPath "$SRCROOTDIR\bhawk.zip"
+		Compress-Archive -Path "$SRCROOTDIR\Midori Browser" -DestinationPath "$SRCROOTDIR\midori.zip"
 	}
 } else {
 	Write-Host "--------------------------------------------------------------------------------`n"
