@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/disablejs">
-        <file>data/icon.svg</file>
-        <file>data/icon-red.svg</file>
-        <file>data/icon-green.svg</file>
-    </qresource>
-</RCC>
