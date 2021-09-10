@@ -1,0 +1,225 @@
+body {
+    color: #D5D2CC;
+	background-color: #181A1B;
+    padding-top: 40px;
+    padding-bottom: 20px;
+    padding-left: 4%;
+    padding-right: 4%;
+}
+
+a {
+  color: #8EC1D2;
+}
+
+a:focus,
+a:hover,
+a:active,
+a.active {
+  color: #69D8FF;
+}
+
+a:visited {
+  color: #74C1D2;
+}
+
+hr {
+	border-color: #00A4DE;
+}
+
+h1, h2, h3, h4 {
+	color: white;
+}
+
+pre {
+	white-space: pre-line;
+}
+
+code {
+    background: #303742;
+	color: #BCC3CE;
+}
+
+blockquote {
+    quotes: "\201C" "\201D" "\2018" "\2019";
+    border-left: 10px solid #BCC3CE;
+    background: #303742;
+    padding: 0.5em 10px;
+    margin: 1.5em 10px;
+	color: #BCC3CE;
+	 font-size: small;
+}
+
+blockquote:before {
+    vertical-align: -0.4em;
+    margin-right: 0.25em;
+    content: open-quote;
+    line-height: 0.1em;
+    font-size: 4em;
+    color: white;
+}
+
+blockquote p {
+    display: inline;
+}
+
+#footer {
+	text-align: center;
+	color: #bcc3ce;
+    line-height: 35px;
+    font-size: 0.6rem;
+	margin-top: 1.8%;
+}
+
+.right-side {
+    padding-top: 1.8%;
+    padding-bottom: 40px;
+    padding-left: 12%;
+    padding-right: 0;
+}
+
+.breadcrumb .breadcrumb-item:not(:last-child) a {
+	color: white;
+}
+
+.width-128 {
+	min-width: 128px;
+	max-width: 128px;
+}
+
+.width-256 {
+	min-width: 256px;
+	max-width: 256px;
+}
+
+.width-512 {
+	min-width: 512px;
+	max-width: 512px;
+}
+
+.height-128 {
+	min-height: 128px;
+	max-height: 128px;
+}
+
+.height-256 {
+	min-height: 256px;
+	max-height: 256px;
+}
+
+.height-512 {
+	min-height: 512px;
+	max-height: 512px;
+}
+
+#card-support-gl {
+	min-height: 200px;
+	max-height: 200px;
+	min-width: 200px;
+	max-width: 200px;
+	padding: 2px;
+	background-color: #181A1B;
+	border-color: #343B47;
+}
+
+#card-support-av {
+	min-height: 150px;
+	max-height: 150px;
+	min-width: 150px;
+	max-width: 150px;
+	padding: 2px;
+	background-color: #181A1B;
+	border-color: #343B47;
+}
+
+#check-sum {
+	padding: 12px;
+	overflow: visible;
+	word-wrap: break-word;
+}
+
+/* For mobile devices */
+
+@media only screen and (max-width: 800px) {
+  html {font-size: 16px !important}
+  body {font-size: 16px !important; padding-left: auto !important; padding-right: 0 !important}
+  .columns {display:inline !important}
+  div.popover-container{width: 220px !important}
+  main > p > img {max-width:300px !important}
+}
+
+@media only screen and (max-width: 325px) {
+  html {font-size: 16px !important}
+  body {font-size: 16px !important; padding-left: auto !important; padding-right: 0 !important}
+  .columns {display:inline !important}
+  div.popover-container{width: 220px !important}
+  main > p > img {max-width:200px !important}
+}
+
+/* Light mode */
+
+@media (prefers-color-scheme: light) {
+
+	body {
+    	color: #2A2D33;
+		background-color: #E7E5E4;
+	}
+
+	a {
+  		color: #713E2D;
+	}
+
+	a:focus,
+	a:hover,
+	a:active,
+	a.active {
+  		color: #962700;
+	}
+
+	a:visited {
+  		color: #8B3E2D;
+	}
+
+	hr {
+		border-color: #FF5B21;
+	}
+
+	h1, h2, h3, h4 {
+		color: #000000;
+	}
+
+	code {
+    	background: #CFC8BD;
+		color: #433C31;
+	}
+
+	blockquote {
+    	border-left: 10px solid #433C31;
+    	background: #CFC8BD;
+    	color: #433C31;
+	}
+
+	blockquote:before {
+    	color: #000000;
+	}
+
+	#footer {
+		color: #433C31;
+	}
+
+	.breadcrumb .breadcrumb-item:not(:last-child) a {
+		color: #000000;
+	}
+
+	#card-support-gl {
+		background-color: #E7E5E4;
+		border-color: #CBC4B8;
+	}
+
+	#card-support-av {
+		background-color: #E7E5E4;
+		border-color: #CBC4B8;
+	}
+
+}
+
+/*# sourceMappingURL=all.css.map */

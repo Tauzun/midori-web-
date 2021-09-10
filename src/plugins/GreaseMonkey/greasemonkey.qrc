@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/gm">
+        <file>data/gm.js</file>
+        <file>data/gmapi.js</file>
+        <file>data/icon.svg</file>
+    </qresource>
+</RCC>

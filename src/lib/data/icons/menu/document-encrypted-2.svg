@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 16 16"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="document-encrypted-2.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata10">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="14.75"
+     inkscape:cx="17.669471"
+     inkscape:cy="16.884324"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg6" />
+  <defs
+     id="defs3051">
+    <style
+       type="text/css"
+       id="current-color-scheme">
+      .ColorScheme-Text {
+        color:#4d4d4d;
+      }
+      </style>
+  </defs>
+  <path
+     style="color:#4d4d4d;fill:currentColor;fill-opacity:1;stroke:none"
+     d="M 2 2 L 2 14 L 14 14 L 14 2 L 12 2 L 12 4 L 10 4 L 10 2 L 6 2 L 6 4 L 4 4 L 4 2 L 2 2 z M 8 5.1328125 C 8.9964726 5.1328125 9.8066406 5.9429805 9.8066406 6.9394531 L 9.8066406 7.9003906 L 10.839844 7.9003906 L 10.839844 12.03125 L 5.1601562 12.03125 L 5.1601562 7.9003906 L 6.1933594 7.9003906 L 6.1933594 7.4550781 L 6.1933594 6.9394531 C 6.1933594 5.9429805 7.0035275 5.1328125 8 5.1328125 z M 8 6.1640625 C 7.7159433 6.1640625 7.5311641 6.2254262 7.4179688 6.3300781 C 7.3047784 6.4347301 7.2265625 6.6086945 7.2265625 6.9394531 L 7.2265625 7.4550781 L 7.2265625 7.9003906 L 8.7734375 7.9003906 L 8.7734375 6.9394531 C 8.7734375 6.6086945 8.6952215 6.4347301 8.5820312 6.3300781 C 8.468841 6.2254257 8.2840568 6.1640625 8 6.1640625 z "
+     id="path39" />
+</svg>

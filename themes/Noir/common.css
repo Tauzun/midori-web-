@@ -1,37 +1,25 @@
 /*************************************
  * Common theme styles shared by Noir and Vivid themes
  * https://doc.qt.io/qt-5/stylesheet-reference.html | https://doc.qt.io/qt-5/stylesheet-examples.html
- * 1em = 14px
+ * 1em = 15px
  *************************************/
 
-QToolTip {
-padding:.2em;
-border-style:none;
-border-width:0
-}
-
 QListWidget,QListWidget::item,QTableView,QTableView::item {
-border-radius:.23em;
+border-radius:.37em;
 outline-style:none;
 border-style:solid;
 border-width:.1em;
-margin:0;
-padding:.1em
+margin:0;padding:.2em
 }
 
 QRadioButton,QCheckBox {
-margin-left:.1em;
-margin-right:.1em;
-padding:.11em
-}
-
-QRadioButton::indicator,QCheckBox::indicator {
-height:.85em;
-width:.85em;
+margin-left:.2em;
+margin-right:.2em;
+padding:.15em
 }
 
 QRadioButton::indicator:unchecked,QRadioButton::indicator:unchecked:hover,QRadioButton::indicator:unchecked:pressed,QRadioButton::indicator:checked {
-border-radius:.5em;
+border-radius:.4em;
 border-style:solid;
 border-width:.1em
 }
@@ -48,76 +36,76 @@ padding:0
 QMenuBar {
 border-style:solid;
 border-width:.1em;
-padding:.11em
+padding:.15em
 }
 
 QMenuBar::item:selected {
 border-style:solid;
 border-width:0;
-padding:.23em
+padding:.37em
 }
 
 QMenuBar::item:pressed {
 margin-bottom:0;
 border-style:solid;
 border-width:0;
-padding:.23em .23em 0
+padding:.37em .37em 0
 }
 
 QMenu::separator {
-height:.11em;
-padding-left:.23em;
-margin-left:.11em;
-margin-right:.11em
+height:.15em;
+padding-left:.37em;
+margin-left:.15em;
+margin-right:.15em
 }
 
 QMenu::icon {
-padding-left:.23em;
+padding-left:.37em;
 margin:0
 }
 
 QMenu::indicator {
-width:1.11em;
-height:1.11em;
+width:1.15em;
+height:1.15em;
 padding-left:.4em
 }
 
 QAbstractItemView QLineEdit {
-padding:.1em
+padding:.15em
 }
 
 QAbstractScrollArea {
-border-radius:.23em;
+border-radius:.37em;
 border-style:solid;
 border-width:.1em;
-padding:.23em
+padding:.37em
 }
 
 QScrollBar:horizontal {
 height:1.4em;
-border-radius:.23em;
+border-radius:.37em;
 border-style:solid;
 border-width:.1em;
-margin:.11em 1.4em
+margin:.15em 1.4em
 }
 
 QScrollBar:vertical {
 width:1.4em;
-border-radius:.23em;
+border-radius:.37em;
 border-style:solid;
 border-width:.1em;
-margin:1.4em .11em
+margin:1.4em .15em
 }
 
 QScrollBar::handle:vertical {
 min-height:.53em;
-border-radius:.23em;
+border-radius:.37em;
 border-style:solid;
 border-width:.1em
 }
 
 QScrollBar::handle:vertical:hover {
-border-radius:.23em;
+border-radius:.37em;
 min-height:.53em;
 border-style:solid;
 border-width:.1em
@@ -152,98 +140,109 @@ margin:.2em 0
 }
 
 QSizeGrip {
-width:1.11em;
-height:1.11em
+width:1.15em;
+height:1.15em
 }
 
 QAbstractSpinBox {
-border-radius:.23em;
+border-radius:.37em;
 border-style:solid;
 border-width:.1em;
-padding:.11em .23em
+padding:.15em .37em
 }
 
 QLabel {
+border-style:none;
 margin:0;
-padding:.11em
+padding:.15em
 }
 
-QPushButton,MacToolButton {
+QPushButton {
 font-weight:bold;
-border-radius:.23em;
+border-radius:.37em;
 outline-style:none;
-min-height:2em;
-max-width:10em;
-max-height:2em;
+min-width:7.9em;
+min-height:2.9em;
+max-width:8em;
+max-height:2.9em;
 word-break:break-word;
 overflow:hidden;
 text-overflow:ellipsis;
 border-style:solid;
 border-width:.1em;
-margin:1em;
-padding:.06em
+margin:0;
+padding:.2em
 }
 
-QPushButton:hover,MacToolButton:hover {
-border-style:solid;
-border-width:.1em
-}
-
-QPushButton {
-min-width:9.7em
-}
-
-MacToolButton,QDialogButtonBox QPushButton {
-min-width:5.7em
-}
-
-QPushButton:disabled,MacToolButton:disabled {
-border-radius:.23em;
+QPushButton:disabled {
+border-radius:.37em;
 border-style:solid;
 border-width:.1em;
 padding:.2em
 }
 
 QPushButton::menu-indicator {
-bottom:.23em
+bottom:.37em
 }
 
 QToolButton {
-border-radius:.23em;
+border-radius:.37em;
 border-style:solid;
 border-width:.1em;
 margin:0;
-padding:.11em
+padding:.15em
 }
 
 QToolButton::menu-button {
-border-radius:.23em;
-border-top-right-radius:.23em;
-border-bottom-right-radius:.23em;
+border-radius:.37em;
+border-top-right-radius:.37em;
+border-bottom-right-radius:.37em;
 width:1.4em;
 outline-style:none;
 border-style:solid;
 border-width:.1em;
-padding:.11em
+padding:.15em
 }
 
 QToolButton::menu-indicator {
 top:-.53em;
-left:-.23em
+left:-.37em
 }
 
 QCommandLinkButton {
-border-radius:.23em;
+border-radius:.37em;
 border-style:solid;
 border-width:.1em;
 margin:0;
 padding:0
 }
 
+QComboBox {
+border-radius:.3em;
+padding:0;
+margin:.0;
+min-height:1.5em;
+min-width:3em;
+border-style:none;
+border-width:.1em
+}
+
+QComboBox:hover {
+border-radius:.3em;
+padding:0;
+margin:.0;
+min-height:1.5em;
+min-width:3em;
+border-style:none;
+border-width:.1em
+}
+
 QComboBox QAbstractItemView {
 border-radius:.3em;
-border-style:solid;
-border-width:.11em
+padding-left:0;
+margin-left:0;
+border-style:none;
+border-width:.1em
 }
 
 QComboBox::item:selected, QComboBox::item:checked {
@@ -251,7 +250,8 @@ font-weight:bold
 }
 
 QComboBox::indicator:alternate,QComboBox::item:alternate,QComboBox::down-arrow,QSlider:disabled {
-border-width:.11em;
+border-style:solid;
+border-width:.15em;
 border-radius:.3em
 }
 
@@ -264,7 +264,7 @@ border-width:.1em
 QSlider::handle:horizontal {
 width:.53em;
 height:.53em;
-border-radius:.23em;
+border-radius:.37em;
 border-style:solid;
 border-width:.1em;
 margin:-.53em 0
@@ -273,14 +273,123 @@ margin:-.53em 0
 QSlider::handle:vertical {
 width:.53em;
 height:.53em;
-border-radius:.23em;
+border-radius:.37em;
 border-style:solid;
 border-width:.1em;
 margin:0 -.53em
 }
 
+QLineEdit {
+border-radius:.37em;
+border-style:solid;
+border-width:.1em;
+padding:.15em .37em
+}
+
+QTabWidget::pane {
+border-radius:.37em;
+border-style:solid;
+border-width:.1em;
+margin:0;
+padding:0
+}
+
+QTabBar::close-button {
+border-style:none;
+padding:0
+}
+
+QTabBar::tab:top:selected:disabled {
+border-bottom-style:solid;
+border-bottom-width:.2em
+}
+
+QTabBar::tab:bottom:selected:disabled {
+border-top-style:solid;
+border-top-width:.2em
+}
+
+QTabBar::tab:left:selected:disabled {
+border-left-style:solid;
+border-left-width:.2em
+}
+
+QTabBar::tab:right:selected:disabled {
+border-right-style:solid;
+border-right-width:.2em
+}
+
+QTabBar::tab:top {
+margin-left:.15em;
+min-width:.33em;
+border-bottom-style:solid;
+border-bottom-width:.2em;
+border-top-left-radius:.2em;
+border-top-right-radius:.2em;
+padding:.15em .37em
+}
+
+QTabBar::tab:top:selected {
+border-bottom-style:solid;
+border-bottom-width:.2em;
+border-top-left-radius:.2em;
+border-top-right-radius:.2em
+}
+
+QTabBar::tab:bottom {
+border-top-style:solid;
+border-top-width:.2em;
+margin-left:.15em;
+border-bottom-left-radius:.2em;
+border-bottom-right-radius:.2em;
+min-width:.33em;
+padding:.15em .37em
+}
+
+QTabBar::tab:bottom:selected {
+border-top-style:solid;
+border-top-width:.2em;
+border-bottom-left-radius:.2em;
+border-bottom-right-radius:.2em
+}
+
+QTabBar::tab:left {
+margin-top:.15em;
+border-top-right-radius:.2em;
+border-bottom-right-radius:.2em;
+min-height:.33em;
+padding:.37em .15em
+}
+
+QTabBar::tab:left:selected {
+border-left-style:solid;
+border-left-width:.2em;
+border-top-right-radius:.2em;
+border-bottom-right-radius:.2em
+}
+
+QTabBar::tab:right {
+margin-top:.15em;
+border-top-left-radius:.2em;
+border-bottom-left-radius:.2em;
+min-height:.33em;
+padding:.37em .15em
+}
+
+QTabBar::tab:right:selected {
+border-right-style:solid;
+border-right-width:.2em;
+border-top-left-radius:.2em;
+border-bottom-left-radius:.2em
+}
+
+QTabBar QToolButton {
+width:1.4em;
+height:1.4em
+}
+
 QDockWidget {
-border-radius:.23em;
+border-radius:.37em;
 outline-style:solid;
 outline-width:.1em;
 border-style:solid;
@@ -300,19 +409,19 @@ border-width:.1em
 QHeaderView:disabled {
 border-style:solid;
 border-width:.1em;
-padding:.11em
+padding:.15em
 }
 
 QHeaderView::section {
 border-radius:0;
 text-align:left;
-padding:.11em
+padding:.15em
 }
 
 QSpinBox {
 min-width:4.53em;
-min-height:1.61em;
-max-height:1.61em;
+min-height:2.15em;
+max-height:2.15em;
 border-style:solid;
 border-width:.1em
 }
@@ -325,13 +434,13 @@ padding:0
 
 QToolBox::selected {
 border-style:solid;
-border-width:.11em;
+border-width:.15em;
 padding:0
 }
 
 QToolBox::tab {
-border-top-left-radius:.23em;
-border-top-right-radius:.23em;
+border-top-left-radius:.37em;
+border-top-right-radius:.37em;
 border-style:solid;
 border-width:.1em
 }
@@ -345,11 +454,11 @@ height:.33em
 }
 
 QDateEdit {
-border-radius:.23em;
+border-radius:.37em;
 min-width:.66em;
 border-style:solid;
 border-width:.1em;
-padding:.11em .23em
+padding:.15em .37em
 }
 
 QDateEdit::drop-down {
@@ -360,6 +469,199 @@ border-bottom-right-radius:.2em
 
 [html-link-look="true"] {
 text-decoration:underline
+}
+
+#navigationbar {
+min-height:2.6em;
+max-height:2.6em;
+padding-bottom:2.3em;
+border-style:none
+}
+
+#navigationbar QSplitter {
+min-width:.3em;
+max-width:.3em
+}
+
+#navigation-toolbutton-badge {
+margin:0 .1em
+}
+
+#navigation-button-tools,#navigation-button-supermenu,#navigationbar ToolButton,#navigationbar ToolButton[button-id="adblock-icon"] {
+border-style:none;
+margin-left:0;
+margin-right:.3em;
+padding:0
+}
+
+#navigationbar ToolButton:hover {
+border-style:none;
+margin-left:0;
+margin-right:.3em;
+padding:0
+}
+
+#tabwidget-button-addtab {
+max-width:1.7em;
+max-height:1.7em;
+min-width:1.7em;
+min-height:1.7em;
+margin-bottom:.7em;
+margin-left:.1em;
+margin-right:.1em;
+margin-top:0;
+padding:.1em
+}
+
+#tab-icon {
+max-width:1em;
+max-height:1em;
+min-width:1em;
+min-height:1em
+}
+
+#combotabbar_tabs_close_button {
+max-width:.7em;
+max-height:.7em;
+min-width:.7em;
+min-height:.7em;
+padding-right:.46em;
+margin-right:.3em
+}
+
+#tabbar::tab {
+height:2em;
+text-align:justify;
+text-overflow:ellipsis;
+white-space: pre;
+border-top-style:none;
+padding-bottom:1em;
+padding-top:.9em;
+border-bottom-right-radius:1.15em;
+border-bottom-left-radius:1.15em;
+margin-bottom:.66em;
+margin-top:-.3em
+}
+
+#tabbar::tab:selected {
+border-left-style:solid;
+border-left-width:.2em;
+border-right-style:solid;
+border-right-width:.2em;
+border-bottom-style:solid;
+border-bottom-width:.2em;
+font-weight:bold
+}
+
+#locationbar {
+min-height:1.1em;
+max-height:1.1em;
+border-radius:.7em;
+margin-top:.1em;
+margin-bottom:.1em;
+margin-left:0;
+margin-right:.15em;
+border-style:solid;
+border-width:.1em;
+padding:.37em
+}
+
+#locationbar ToolButton {
+border-top-left-radius:.7em;
+border-top-right-radius:0;
+border-bottom-right-radius:0;
+border-bottom-left-radius:.7em;
+border-left-width:.5em;
+border-right-width:.3em;
+border-top-width:.1em;
+border-bottom-width:.1em;
+border-style:solid none solid solid;
+min-height:1.5em;
+max-height:1.5em;
+min-width:1.5em;
+max-width:1.5em
+}
+
+#locationbar ToolButton:hover {
+border-top-left-radius:.7em;
+border-top-right-radius:0;
+border-bottom-right-radius:0;
+border-bottom-left-radius:.7em;
+border-left-width:.5em;
+border-right-width:.3em;
+border-top-width:.1em;
+border-bottom-width:.1em;
+border-style:solid none solid solid;
+min-height:1.5em;
+max-height:1.5em;
+min-width:1.5em;
+max-width:1.5em
+}
+
+#locationbar-siteicon {
+min-height:2em;
+max-height:2em;
+min-width:2em;
+max-width:2em;
+padding:0;
+margin:.0
+}
+
+#locationbar-down-icon {
+margin-right:.66em
+}
+
+#locationbar-goicon, #locationbar-down-icon {
+min-height:1em;
+max-height:1em;
+min-width:1em;
+max-width:1em
+}
+
+#locationbar-bookmarkicon {
+min-height:1.1em;
+max-height:1.1em;
+min-width:1.1em;
+max-width:1.1em
+}
+
+#bookmarksbar QToolButton {
+height:1.33em;
+border-width:0
+}
+
+#websearchbar {
+border-radius:.7em;
+max-width:31.3em;
+max-height:1.1em;
+min-height:1.1em;
+border-style:solid;
+border-width:.1em;
+margin-top:.1em;
+margin-right:.1em;
+margin-bottom:0;
+padding-left:.37em;
+padding-right:.37em;
+padding-top:.37em;
+padding-bottom:.37em
+}
+
+#websearchbar QToolButton {
+margin-left:.5em;
+margin-top:.2em
+}
+
+#websearchbar QToolButton:hover {
+margin-left:.5em;
+margin-top:.2em
+}
+
+#websearchbar-searchbutton {
+margin-right:.66em;
+min-height:1em;
+max-height:1em;
+min-width:1em;
+max-width:1em
 }
 
 DesktopNotification #frame {
@@ -385,7 +687,7 @@ border-style:none solid solid
 }
 
 QWidget {
-font-family:Candara, Corbel, Calibri, Liberation Sans, Sans-serif;
+font-family:Candara, Corbel, Calibri, Sans-serif;
 border-radius:.2em;
 margin:0;
 padding:0
@@ -393,33 +695,34 @@ padding:0
 
 QMainWindow::separator:horizontal {
 width:.33em;
-margin-top:.11em;
-margin-bottom:.11em
+margin-top:.15em;
+margin-bottom:.15em
 }
 
 QMainWindow::separator:vertical {
 height:.33em;
-margin-left:.11em;
-margin-right:.11em
+margin-left:.15em;
+margin-right:.15em
 }
 
 QCheckBox::indicator:unchecked,QCheckBox::indicator:unchecked:hover,QCheckBox::indicator:unchecked:pressed,QCheckBox::indicator:checked {
-border-radius:.5em;
+border-radius:.4em;
 border-style:solid;
-border-width:.11em
+border-width:.15em
 }
 
-QMenuBar:focus,QPushButton:pressed:hover,MacToolButton:hover,QToolButton:checked:hover,QToolButton:pressed:hover,QToolButton:hover,QToolButton::menu-button:hover,QToolButton::menu-button:checked:hover {
+QCheckBox::indicator:unchecked:disabled,QMenuBar:focus,QTextEdit,QTextEdit:hover,QPlainTextEdit:hover,QAbstractSpinBox:hover,QPushButton:checked:hover,QPushButton:pressed,QPushButton:pressed:hover,QPushButton:hover,QToolButton:checked,QToolButton:checked:hover,QToolButton:pressed,QToolButton:pressed:hover,QToolButton:disabled,QToolButton:hover,QToolButton::menu-button:hover,QToolButton::menu-button:checked:hover,QToolButton::menu-arrow:open,QSlider::handle:horizontal:hover,QSlider::handle:vertical:hover,QLineEdit:hover,QTabWidget::pane:selected,QDockWidget::close-button:hover,QDockWidget::close-button:pressed,QDockWidget::float-button:hover,QDockWidget::float-button:pressed {
+border-style:solid;
+border-width:.1em
+}
+
+QMenuBar:focus,QPushButton:pressed:hover,QToolButton:checked:hover,QToolButton:pressed:hover,QToolButton:hover,QToolButton::menu-button:hover,QToolButton::menu-button:checked:hover {
 border-style:solid;
 border-width:.1em
 }
 
 QMenuBar::item,QMenu {
-padding:.23em
-}
-
-QMenu::item {
-padding:.25em
+padding:.37em
 }
 
 QStackedWidget {
@@ -427,13 +730,13 @@ padding:0
 }
 
 QAbstractItemView,QTextBrowser,QTextBrowser:disabled,QGraphicsView,QGraphicsView:disabled,QCalendarWidget,QTreeView,QListView,QColumnView {
-border-radius:.23em;
+border-radius:.37em;
 border-style:solid;
 border-width:.1em
 }
 
 QScrollBar::handle:horizontal,QScrollBar::handle:horizontal:hover {
-border-radius:.23em;
+border-radius:.37em;
 min-width:.53em;
 border-style:solid;
 border-width:.1em
@@ -445,12 +748,12 @@ width:.66em
 }
 
 QPlainTextEdit,QDateEdit QAbstractItemView {
-border-radius:.23em;
+border-radius:.37em;
 border-style:solid;
 border-width:.1em
 }
 
-QToolButton#qt_toolbar_ext_button,QLabel::disabled,QFrame,QFrame[frameShape="0"],QSplitter::separator,#websearchbar ToolButton:hover,#websearchbar ToolButton {
+QToolButton#qt_toolbar_ext_button,QLabel::disabled,QTabWidget QWidget,QFrame,QFrame[frameShape="0"],QSplitter::separator,#websearchbar ToolButton:hover,#websearchbar ToolButton {
 border-style:none
 }
 
@@ -464,18 +767,18 @@ height:.6em
 }
 
 QProgressBar,QProgressBar:disabled {
-border-radius:.23em;
+border-radius:.37em;
 text-align:center;
 border-style:solid;
 border-width:.1em
 }
 
 QProgressBar::chunk,QProgressBar::chunk:disabled,QDockWidget::close-button,QDockWidget::float-button {
-border-radius:.23em
+border-radius:.37em
 }
 
-QPushButton:checked,QPushButton:checked:disabled,MacToolButton:checked,MacToolButton:checked:disabled {
-border-radius:.23em;
+QPushButton:checked,QPushButton:checked:disabled {
+border-radius:.37em;
 outline-style:none;
 border-style:solid;
 border-width:.1em;
@@ -483,22 +786,22 @@ padding:.2em
 }
 
 QSlider::groove:horizontal,QSlider::sub-page:horizontal {
-height:.23em;
-border-radius:.23em;
+height:.37em;
+border-radius:.37em;
 border-style:solid;
 border-width:.1em;
 margin:0
 }
 
 QSlider::groove:vertical,QSlider::add-page:vertical {
-width:.23em;
-border-radius:.23em;
+width:.37em;
+border-radius:.37em;
 border-style:solid;
 border-width:.1em;
 margin:0
 }
 
-QHeaderView {
+QHeaderView,#tabbar {
 border-radius:0;
 border-style:none;
 margin:0;
@@ -529,253 +832,84 @@ background-position:center
 
 QToolBox::tab:selected,QToolBox::tab:selected:disabled,QToolBox::tab:hover {
 border-bottom-style:solid;
-border-bottom-width:.11em
+border-bottom-width:.15em
 }
 
-QComboBox {
-border-radius:.3em;
-padding-top:.2em;
-padding-bottom:.2em;
-padding-left:.5em;
-padding-right:.2em;
-margin:0;
-min-height:1.5em;
-min-width:3em;
-border-style:solid;
-border-width:.1em
-}
-
-QComboBox:hover {
-border-radius:.3em;
-margin:0;
-min-height:1.5em;
-min-width:3em;
-border-style:solid;
-border-width:.1em
-}
-
-QLineEdit {
-border-radius:.23em;
-border-style:solid;
-border-width:.1em;
-padding:.11em .23em;
-min-height:2em;
-padding-left: .5em
-}
-
-QTabWidget::pane {
-border-radius:.23em;
-border-style:solid;
-border-width:.1em;
-margin:0;
-padding:0
-}
-
-QTabBar::tab {
-border-bottom-width:.2em;
-padding-top:.5em;
-padding-bottom:.3em;
-border-top-left-radius:.23em;
-border-top-right-radius:.23em;
-border-left-style:solid;
-border-right-style:solid;
-border-left-width:.1em;
-border-right-width:.1em;
-word-break:break-word;
-white-space: pre;
-overflow: hidden;
-text-overflow: ellipsis
-}
-
-QTabBar::tab:top:selected:disabled,QTabBar::tab:bottom:selected:disabled,QTabBar::tab:left:selected:disabled,QTabBar::tab:right:selected:disabled {
-border-bottom-style:solid
-}
-
-QTabBar::tab:top,QTabBar::tab:bottom {
-min-width:11em;
-max-width:11em;
-border-bottom-style:solid;
-padding-left:1.1em;
-padding-right:1.1em
-}
-
-QTabBar::tab:left,QTabBar::tab:right {
-    min-height:.33em
-}
-
-QTabBar::tab:top:selected {
-border-bottom-style:solid
-}
-
-QTabBar::tab:bottom:selected {
-border-top-style:solid
-}
-
-QTabBar::tab:left:selected {
-border-left-style:solid
-}
-
-QTabBar::tab:right:selected {
-border-right-style:solid
-}
-
-QTabBar QToolButton {
-width:1.4em;
-height:1.4em
-}
-
-QTabBar::close-button {
-border-style:none;
-padding:0
-}
-
-#navigationbar {
-min-height:.9em;
-max-height:.9em;
-padding-bottom:2.1em;
-border-style:none
-}
-
-#navigationbar QSplitter {
-min-width:.3em;
-max-width:.3em
-}
-
-#navigation-toolbutton-badge {
-margin:0 .1em
-}
-
-#navigationbar ToolButton {
-border-style:none;
-margin-left:0;
-margin-right:.3em;
-padding:0
-}
-
-#navigationbar ToolButton:hover {
-border-style:none;
-margin-left:0;
-margin-right:.3em;
-padding:0
-}
-
-#navigationbar QLineEdit {
-padding-left: 0
-}
-
-#locationbar {
-min-height:1.1em;
-max-height:1.1em;
-border-radius:.7em;
-border-style:solid;
-border-width:.1em;
-padding-top:.27em;
-padding-bottom:.27em
-}
-    
-#locationbar ToolButton {
-margin-left:.5em
-}
-
-#locationbar ToolButton:hover {
-margin-left:.5em
-}
-/*
-#locationbar-siteicon {
-    
-}
-*/
-#locationbar-down-icon {
-margin-right:.66em
-}
-
-#locationbar-goicon, #locationbar-down-icon, #locationbar-bookmarkicon, #locationbar-autofillicon {
-min-height:1.1em;
-max-height:1.1em;
-min-width:1.1em;
-max-width:1.1em
-}
-
-#bookmarksbar QToolButton {
-height:1.33em;
-border-width:0
-}
-
-#websearchbar {
-border-radius:.7em;
-max-width:51.3em;
-min-width:19.3em;
-max-height:1em;
-min-height:1em;
-border-style:solid;
-border-width:.1em;
-margin-top:.1em;
-margin-right:.1em;
-margin-bottom:0;
-padding-left:.23em;
-padding-right:.23em;
-padding-top:.17em;
-padding-bottom:.17em
-}
-
-#websearchbar QToolButton {
-margin-left:.5em;
-margin-top:.2em
-}
-
-#websearchbar QToolButton:hover {
-margin-left:.5em;
-margin-top:.2em
-}
-
-#websearchbar-searchbutton {
-margin-right:.66em;
-min-height:1em;
-max-height:1em;
-min-width:1em;
-max-width:1em
-}
-
-#tabwidget-button-addtab {
-max-width:1em;
-max-height:1em;
-min-width:1em;
-min-height:1em;
-margin:.3em;
-padding:.1em
-}
-
-#combotabbar_tabs_close_button {
-max-width:.7em;
-max-height:.7em;
-min-width:.7em;
-min-height:.7em
-}
-
-#tabbar::tab {
-word-break:break-word;
-white-space: pre;
-overflow: hidden;
-text-overflow: ellipsis
-}
-
-/*
 #tabbar::tab:selected:first,#tabbar::tab:selected:only-one {
-
-}
-
-#tabwidget-button-closedtabs {
-
-}
-*/
-
-QWidget#PluginsList QListWidget#list::item:hover {
-border-radius:0
+margin-left:0
 }
 
 /*************************************
  * Non-standard Qt specific selectors - https://doc.qt.io/qt-5/stylesheet-reference.html#list-of-properties
  *************************************/
+
+QTabBar::tab:top:!selected:disabled {
+border-bottom-style:solid;
+border-bottom-width:.2em
+}
+
+QTabBar::tab:bottom:!selected:disabled {
+border-top-style:solid;
+border-top-width:.2em
+}
+
+QTabBar::tab:left:!selected:disabled {
+border-right-style:solid;
+border-right-width:.2em
+}
+
+QTabBar::tab:right:!selected:disabled {
+border-left-style:solid;
+border-left-width:.2em
+}
+
+QTabBar::tab:top:!selected {
+border-bottom-style:solid;
+border-bottom-width:.15em;
+margin-top:.15em
+}
+
+QTabBar::tab:bottom:!selected {
+border-top-style:solid;
+border-top-width:.15em;
+margin-bottom:.2em
+}
+
+QTabBar::tab:left:!selected {
+border-left-style:solid;
+border-left-width:.15em;
+margin-right:.15em
+}
+
+QTabBar::tab:right:!selected {
+border-right-style:solid;
+border-right-width:.15em;
+margin-left:.15em
+}
+
+QTabBar::tab:top:!selected:hover {
+border-style:solid;
+border-width:.1em .1em .2em;
+padding:0
+}
+
+QTabBar::tab:bottom:!selected:hover {
+border-style:solid;
+border-width:.2em .1em .1em;
+padding:0
+}
+
+QTabBar::tab:left:!selected:hover {
+border-style:solid;
+border-width:.1em .1em .1em .2em;
+padding:0
+}
+
+QTabBar::tab:right:!selected:hover {
+border-style:solid;
+border-width:.1em .2em .1em .1em;
+padding:0
+}
 
 QTreeView::item:!selected:hover,QListView::item:!selected:hover,QColumnView::item:!selected:hover {
 outline-style:none
@@ -783,7 +917,28 @@ outline-style:none
 
 QToolBox::tab:!selected {
 border-bottom-style:solid;
-border-bottom-width:.11em
+border-bottom-width:.15em
+}
+
+#tabbar::tab:!selected {
+border-bottom-width:.1em;
+border-left-width:.1em;
+border-right-width:.1em;
+border-bottom-right-radius:1.15em;
+border-bottom-left-radius:1.15em;
+border-style:none solid solid
+}
+
+#tabbar::tab:!selected:hover {
+border-left-width:.2em;
+border-right-width:.2em;
+border-bottom-width:.2em;
+text-decoration:underline;
+background-repeat:no-repeat;
+background-position:top center;
+margin-top:0;
+padding-top:.6em;
+border-style:none solid solid
 }
 
 QTextBrowser:hover,QTextBrowser:!hover,QTextBrowser::selected,QTextBrowser::pressed,QGraphicsView:hover,QGraphicsView:!hover,QGraphicsView::selected,QGraphicsView::pressed {
@@ -791,16 +946,10 @@ border-style:solid;
 border-width:.1em
 }
 
-/*
 #tabbar::tab:selected:!first,#tabbar::tab:!selected:!first,#tabbar::tab:!selected:!first:hover {
-
+margin-left:-.1em
 }
 
 #tabbar::tab:!selected:first,#tabbar::tab:!selected:only-one,#tabbar::tab:!selected:hover:only-one {
-
+margin-left:0
 }
-
-QTabBar::tab:!selected:hover {
-
-}
-*/

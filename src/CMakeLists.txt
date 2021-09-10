@@ -1,0 +1,6 @@
+add_subdirectory(lib)
+add_subdirectory(main)
+if (NOT NO_PLUGINS)
+    add_subdirectory(plugins)
+endif()
+add_subdirectory(scripts)

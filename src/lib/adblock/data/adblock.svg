@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 16 16"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="adblock.svg"
+   width="16"
+   height="16"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:export-filename="./adblock_big.png"
+   inkscape:export-xdpi="288"
+   inkscape:export-ydpi="288">
+  <metadata
+     id="metadata10">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="41.7193"
+     inkscape:cx="-2.9086025"
+     inkscape:cy="8.7028559"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg6" />
+  <defs
+     id="defs3051">
+    <style
+       type="text/css"
+       id="current-color-scheme">
+      .ColorScheme-Text {
+        color:#4d4d4d;
+      }
+      </style>
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect851"
+       is_visible="true"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect851-7"
+       is_visible="true"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+  </defs>
+  <g
+     id="g831"
+     transform="matrix(0.0254821,0,0,0.0254821,1.4765824,1.4765824)">
+    <g
+       transform="matrix(1.661603,0,0,1.661603,862.50963,279.93339)"
+       id="text829"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:192px;line-height:1.25;font-family:'Soccer League';-inkscape-font-specification:'Soccer League Bold';letter-spacing:0px;word-spacing:0px;fill:#4d4d4d;fill-opacity:1;stroke:none"
+       aria-label="!">
+      <path
+         style="fill:#4d4d4d;fill-opacity:1"
+         inkscape:connector-curvature="0"
+         id="path831"
+         d="m -350.23077,22.364205 v 29.568 h -29.568 v -29.568 z m 0,-103.104 v 96 h -29.568 v -96 z" />
+    </g>
+    <circle
+       r="191.72928"
+       cy="256"
+       cx="256"
+       id="path817"
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#4d4d4d;stroke-width:36.97299957;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke" />
+    <path
+       transform="matrix(2.0827408,0,0,2.0827408,1262.4933,391.83702)"
+       inkscape:original-d="M -671.18644,-247.05085 C -545.8973,-125.83151 -420.60917,-4.6111679 -295.32203,116.61017 -420.60915,-4.6111498 -545.8973,-125.83151 -671.18644,-247.05085 Z"
+       inkscape:path-effect="#path-effect851-7"
+       inkscape:connector-curvature="0"
+       id="path849"
+       d="m -545.89828,-125.83049 c 0,0 125.28813,121.2203356 125.28814,121.2203449 10e-6,9.4e-6 -125.28814,-121.2203449 -125.28814,-121.2203449 z"
+       style="fill:none;stroke:#4d4d4d;stroke-width:17.75208855;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>

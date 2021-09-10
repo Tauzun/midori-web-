@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://tw3.gitlab.io/bhawk/sitemap.xml

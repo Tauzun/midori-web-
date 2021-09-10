@@ -1,5 +1,5 @@
 Name:           midori
-Version:        staging
+Version:        3.2.4
 Release:        1%{?dist}
 Summary:        Code name Blue Hawk: A QtWebEngine powered web browser
 
@@ -7,9 +7,9 @@ Summary:        Code name Blue Hawk: A QtWebEngine powered web browser
 # Files in src/lib/data/html/vantajs are MIT
 # Files in src/plugins/MouseGestures/3rdparty are BSD (2 clause)
 
-License:        GPLv3+, BSD and MIT
-URL:            https://tw3.gitlab.io/b
-Source0:        https://gitlab.com/TW3/b/-/archive/staging/b-staging.tar.bz2
+License:        GPLv3+ and BSD and MIT
+URL:            https://astian.org/midori-browser
+Source0:        https://gitlab.com/TW3/%{name}/-/archive/staging/%{name}-staging.tar.bz2
 
 # handled by qt5-srpm-macros, which defines %%qt5_qtwebengine_arches
 %{?qt5_qtwebengine_arches:ExclusiveArch: %{qt5_qtwebengine_arches}}
@@ -42,6 +42,17 @@ Provides:       qupzilla = %{version}-%{release}
 Provides:       bundled(qtsingleapplication-qt5)
 
 %global __provides_exclude_from ^%{_kf5_qtplugindir}/midori/.*$
+
+#%package gnome-keyring
+#Summary: gnome-keyring plugin for %{name}
+#BuildRequires:  pkgconfig(gnome-keyring-1)
+#Requires: %{name}%{?_isa} = %{version}-%{release}
+
+#Obsoletes:      qupzilla-gnome-keyring < 2.3
+#Provides:       qupzilla-gnome-keyring = %{version}-%{release}
+
+#%description gnome-keyring
+#%{summary}.
 
 %package kde
 Summary: KDE Frameworks Integration plugin for %{name}
@@ -97,19 +108,13 @@ rm -rf po
 %build
 mkdir %{_target_platform}
 pushd %{_target_platform}
-# Add -DNO_PLUGINS:BOOL="1" here for faster builds without any plugins
-# Testing -DCMAKE_INSTALL_PREFIX=%{buildroot}
 %cmake_kf5 -DCMAKE_CONFIGURATION_TYPES:STRING="Release" -DBUILD_TESTING:BOOL="0" -DBUILD_SHARED_LIBS:BOOL="1" ..
 popd
 
-pushd %{_target_platform}
 make %{?_smp_mflags} -C %{_target_platform}
-popd
 
 %install
-pushd %{_target_platform}
-make install DESTDIR=%{buildroot} -C %{_target_platform}
-popd
+make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 # translations (find_lang_kf5 does not support --all-name, so adapt it)
 find %{buildroot}/%{_datadir}/locale/ -name "*.qm" -type f | sed 's:%{buildroot}/::;s:%{_datadir}/locale/\([a-zA-Z_\@]*\)/LC_MESSAGES/\([^/]*\.qm\):%lang(\1) %{_datadir}/locale/\1/LC_MESSAGES/\2:' >%{name}.lang
@@ -129,8 +134,7 @@ rm -rfv %{buildroot}%{_kf5_qtplugindir}/%{name}/qml/helloqml
 
 %ldconfig_scriptlets
 
-# %files -f %{name}.lang
-%files
+%files -f %{name}.lang
 %doc README.md
 %license COPYING
 %{_kf5_bindir}/midori
@@ -145,12 +149,15 @@ rm -rfv %{buildroot}%{_kf5_qtplugindir}/%{name}/qml/helloqml
 %{_kf5_qtplugindir}/midori/StatusBarIcons.so
 %{_kf5_qtplugindir}/midori/TabManager.so
 %{_kf5_qtplugindir}/midori/VerticalTabs.so
-# %dir %{_kf5_qtplugindir}/midori/qml/
+%dir %{_kf5_qtplugindir}/midori/qml/
 %{_kf5_metainfodir}/org.astian.midori.appdata.xml
 %{_kf5_datadir}/applications/org.astian.midori.desktop
 %{_kf5_datadir}/pixmaps/midori.png
 %{_kf5_datadir}/icons/hicolor/*/*/*
 %{_kf5_datadir}/midori/
+
+#%files gnome-keyring
+#%{_kf5_qtplugindir}/midori/GnomeKeyringPasswords.so
 
 %files kde
 %{_kf5_qtplugindir}/midori/KDEFrameworksIntegration.so
@@ -158,7 +165,8 @@ rm -rfv %{buildroot}%{_kf5_qtplugindir}/%{name}/qml/helloqml
 
 %changelog
 * Mon Feb 1 2021 TW3 <2378845-TW3@users.noreply.gitlab.com> - 3.2.4-1
-- Midori package spec created using https://src.fedoraproject.org/rpms/falkon/blob/master/f/falkon.spec
+- Bhawk package spec created using https://src.fedoraproject.org/rpms/falkon/blob/master/f/falkon.spec
 
 * Mon Apr 30 2012 Christoph Wickert <cwickert@fedoraproject.org> - 1.2.0-1
 - Initial package
+ 

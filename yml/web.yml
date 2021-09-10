@@ -1,9 +1,9 @@
 
 # The web content construction job
 
-katana_build:
+construct:
 
-  stage: webpages
+  stage: katana
 
   image: php:7-cli-alpine
 
@@ -25,15 +25,15 @@ katana_build:
     - mv "content/" "$CI_PROJECT_NAME/content/" && mv "config.php" "$CI_PROJECT_NAME/config.php"
     - sed -i -- 's#'"placeholder"'#'"$CI_PROJECT_NAME"'#g' "$CI_PROJECT_NAME/config.php"
     - cd $CI_PROJECT_NAME && php katana build
-    - if [ -f "../../midori.zip" ]; then MIDORI_ZIP_SIG="$(php -r "echo hash_file('sha256', \"../../midori.zip\");")"; fi
-    - if [ -f "../../midori.zip" ]; then mkdir public/assets/dl && echo $MIDORI_ZIP_SIG > public/assets/dl/midori.zip.sha256 && mv ../../midori.zip public/assets/dl/midori.zip; fi
-    - if [ -f "public/assets/dl/midori.zip" ]; then MIDORI_ZIP_SIG="$(php -r "echo hash_file('sha256', \"public/assets/dl/midori.zip\");")"; fi
+    - if [ -f "../../midori.zip" ]; then BHAWK_ZIP_SIG="$(php -r "echo hash_file('sha256', \"../../midori.zip\");")"; fi
+    - if [ -f "../../midori.zip" ]; then mkdir public/assets/dl && echo $BHAWK_ZIP_SIG > public/assets/dl/midori.zip.sha256 && mv ../../midori.zip public/assets/dl/midori.zip; fi
+    - if [ -f "public/assets/dl/midori.zip" ]; then BHAWK_ZIP_SIG="$(php -r "echo hash_file('sha256', \"public/assets/dl/midori.zip\");")"; fi
     - if [ -f "public/assets/dl/midori.zip" ]; then APP_ARCHIVE_SIG="$(cat public/assets/dl/midori.zip.sha256 | head -c 64)"; fi
     - if [ -f "public/assets/dl/midori.zip" ]; then sed -i -- 's#'"app-checksum"'#'"$APP_ARCHIVE_SIG"'#g' "public/index.html"; fi
     - if [ -f "public/assets/dl/midori.zip" ]; then sed -i -- 's#'"app-checksum"'#'"$APP_ARCHIVE_SIG"'#g' "public/about/index.html"; fi
 
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web" && $GITLAB_USER_NAME == "TW3" && $CI_COMMIT_REF_NAME == "staging"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $GITLAB_USER_NAME == "ponchale1" && $CI_COMMIT_REF_NAME == "dev"'
       when: on_success
 
   cache:
@@ -55,12 +55,12 @@ katana_build:
       - web/$CI_PROJECT_NAME/public/
 
   dependencies:
-    - windows_build
+    - compile
 
 # The web pages deployment job
 
 pages:
-  stage: deployment
+  stage: deploy
 
   variables:
     GIT_STRATEGY: none
@@ -70,7 +70,7 @@ pages:
     - mv web/$CI_PROJECT_NAME/public/ public/
 
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web" && $GITLAB_USER_NAME == "TW3" && $CI_COMMIT_REF_NAME == "staging"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $GITLAB_USER_NAME == "ponchale" && $CI_COMMIT_REF_NAME == "dev"'
       when: on_success
 
   allow_failure: false
@@ -81,4 +81,4 @@ pages:
       - public
 
   dependencies:
-    - katana_build
+    - construct

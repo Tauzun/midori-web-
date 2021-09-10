@@ -33,7 +33,7 @@ img_builder:
    - docker push $IMAGE_TAG
 
  rules:
-   - if: '$CI_PIPELINE_SOURCE == "web" && $GITLAB_USER_NAME == "TW3" && $CI_COMMIT_REF_NAME == "staging"'
+   - if: '$CI_PIPELINE_SOURCE == "web" && $GITLAB_USER_NAME == "ponchale1" && $CI_COMMIT_REF_NAME == "dev"'
      when: always
      allow_failure: false
 

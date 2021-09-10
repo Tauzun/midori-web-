@@ -248,7 +248,7 @@ if ($labbuild -eq 0) {
 
 Write-Host "Looking for MS Visual C runtime..."
 
-$VCRUNVERNUM=Get-Content "$MSVSDIR\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt" -First 1
+$VCRUNVERNUM=Get-Content "$MSVSDIR\VC\Auxiliary\Build\Microsoft.VCRedistVersion.default.txt" -First 1
 
 if ($VCRUNVERNUM -eq $null) {
 	Throw "ERROR - Microsoft.VCToolsVersion.default.txt was not found.."

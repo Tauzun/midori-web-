@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>%TITLE%</title>
+<style>
+html {background-color:#474749; font-family:sans-serif; color:#c2c2c2}
+html * {font-size:100%; line-height:1.6}
+#box {background-color:#313133; border:0.5px solid #BABFB7; border-radius:4px; max-width:740px; min-width:400px; overflow:auto; margin:25px auto 10px auto; padding:10px 40px; text-align:%LEFT_STR%}
+h1 {color:#00A3DD; font-size:160%; margin-bottom:80px; font-weight:bold}
+h2 {margin:5px 0px; font-size:100%; color:#c2c2c2; font-weight:bold}
+dl {margin-top:0px; color:white}
+dt {display:block; min-width:24%; margin:0 0 0.3em 1%; float:%LEFT_STR%}
+dd {color:white; margin:0 0 0.3em 28%}
+p {margin-%LEFT_STR%:1%}
+.about-img {margin-top:10px; width:300px; float:%RIGHT_STR%}
+a, mailto {color:#008ED6; text-decoration:none; font-weight:bold}
+a:hover, mailto:hover {color: #00A3DD}
+::-webkit-scrollbar {width: 12px}
+::-webkit-scrollbar-track {border-radius:12px; -webkit-box-shadow:inset 0 0 6px rgba(0,175,255, 0.5)}
+::-webkit-scrollbar-thumb {background:rgba(0,175,255, 0.1); border-radius: 10px; -webkit-box-shadow:inset 0 0 6px rgba(255,255,255, 0.5)}
+::-webkit-scrollbar-thumb:hover {background: rgba(0,175,255, 0.6)}
+table.tbl {width:100%; margin:15px 0; border-radius:4px; padding:0px; border:2px solid #ffffff; border-collapse:separate}
+.tbl th{border-radius:2px; border:1px solid #ffffff; padding:1px 3px; background:#282828; font-style:italic}
+.tbl th[colspan="2"] {text-align:center; background:#404040; font-style:normal}
+.tbl td{border-radius:2px; border:1px solid #ffffff; text-align:center; padding:1px 3px}
+.tbl td:first-child{background:#282828; padding:1px 3px 1px 5px; text-align:%LEFT_STR%}
+.no-available-plugins{background:#606060 !important; text-align:center !important}
+.tbl td:nth-of-type(2){color:#787878; max-width:400px; max-height:50px; overflow:auto}
+</style>
+<script type="text/javascript">
+function addPlugins() {
+    var table = document.getElementById('npapi-plugins');
+    var existing = {};
+    for (var i = 0; i < navigator.plugins.length; i++) {
+        var plugin = navigator.plugins[i];
+        if (plugin.name == '' || existing[plugin.filename]) {
+            continue;
+        }
+        existing[plugin.filename] = true;
+        table.innerHTML += "<tr><td>" + plugin.name + "</td><td colspan=3>"
+            + plugin.description + " (" + plugin.filename + ")</td></tr>";
+    }
+}
+window.addEventListener("load", addPlugins, false);
+</script>
+</head>
+<body>
+  <div id="box">
+  <img src="%ABOUT-IMG%" class="about-img">
+<h1>%CONFIG%</h1>
+<h2>%INFORMATIONS-ABOUT-VERSION%</h2>
+ <dl>
+  %VERSION-INFO%
+ </dl>
+ 
+ <h2>%BROWSER-IDENTIFICATION%</h2>
+ <p>%USER-AGENT%</p>
+ 
+ <h2>%PATHS%</h2>
+ <dl>
+  %PATHS-TEXT%
+ </dl>
+ 
+ <h2>%BUILD-CONFIG%</h2>
+ <dl>
+  %BUILD-CONFIG-TEXT%
+ </dl>
+ 
+ <h2>%PLUGINS%</h2>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>%PL-NAME%</th><th>%PL-VER%</th><th>%PL-AUTH%</th><th>%PL-DESC%</th></tr>
+    </thead>
+    <tbody>
+      %PLUGINS-INFO%
+    </tbody>
+    <tbody id="npapi-plugins">
+
+    </tbody>
+  </table>
+
+<h2>%PREFS%</h2>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>%OPTION%</th><th>%VALUE%</th></tr>
+    </thead>
+    <tbody>
+      %PREFS-INFO%
+    </tbody>
+  </table>
+<!-- Found at https://beebom.com/chrome-urls/ -->
+<p>The following internal urls may help you to diagnose issues further: <a href="chrome://blob-internals/">blob-internals</a> &bull; <a href="chrome://appcache-internals/">appcache-internals</a> &bull; <a href="chrome://accessibility/">accessibility</a> &bull; <a href="chrome://gpu/">gpu</a> &bull; <a href="chrome://histograms/">histograms</a> &bull; <a
+  href="chrome://indexeddb-internals/">indexeddb-internals</a> &bull; <a
+  href="chrome://network-errors/">network-errors</a> &bull; <a href="chrome://process-internals/">process-internals</a>
+&bull; <a href="chrome://quota-internals/">quota-internals</a> &bull; <a
+  href="chrome://serviceworker-internals/">serviceworker-internals</a> &bull; <a
+  href="chrome://webrtc-internals/">webrtc-internals</a> &bull; <a href="chrome://webrtc-logs/">webrtc-logs</a> &bull;
+<a href="chrome://media-internals/">media-internals</a>
+</p>
+<p>
+<small style="text-align:justify">
+%CONFIG-ABOUT%
+</small>
+</p>
+</div>
+</body></html>

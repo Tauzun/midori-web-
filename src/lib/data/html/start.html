@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>%TITLE%</title>
+<!--
+The MIT License
+
+Copyright © 2010-2021 three.js (three.min.js) | authors & Copyright 2020 Teng Bao (vanta.waves.min.js)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<style type="text/css" media="screen">
+html {height: -webkit-fill-available !important; font-family:sans-serif; font-size:16px; color:#BABFB7; background-color:#333333}
+canvas{z-index: -1 !important}
+h1 {color:#1a4ba4; font-size:160%; margin-top:0; text-align: center}
+.line {padding:2px; font-size:20px; background:#333333; color:#BABFB7; width:300px; height:50px; text-align:left; border:1px solid #BABFB7; text-indent:12px; margin-right:12px; margin-top:14px}
+.line:focus {padding:0; border:3px solid #008ED6}
+.submit {margin-top:5px}
+a {color:#008ED6; text-decoration:none; font-weight: bold}
+a:hover {color:#00A3DD}
+img {margin-bottom:15px; text-align:center}
+.footer-img {margin-bottom:0; margin-left:0; margin-right:14px}
+form {text-align:center; margin-left:46px}
+#about {margin-top:5%; margin-left:34%; font-size:12px}
+#bottom {margin-left:12%; margin-top:20px; margin-bottom:3px}
+#s {width:36px; height:34px; color:transparent; background:url(%SEARCH-IMG%) transparent no-repeat; border:none; background-position:center bottom}
+#s:hover {background-position:center center; cursor:pointer}
+#s:active {background-position: center top}
+#box {background-color:transparent; width:450px; margin:auto; padding:7%; direction: %DIRECTION%}
+#big-logo {margin-bottom:0; margin-left: 6%}
+::-webkit-scrollbar{display:none}
+</style>
+</head>
+<body onload="document.getElementById('inp').focus()">
+  <div id="box">
+
+  <div id="sss-ql-tag">
+    <script type="text/javascript">
+        (function () {
+            var param = {
+                        "o": "xqm48",
+                        "s": "86958",
+                        "t": "720x250-midori5x2",
+                        "u": "{referer}",
+                        "di": "{device_identifier}",
+                        "ono":"1",
+                        "c":"{category}",
+                        "subid":"{subid}"
+                    };
+            var d = document, s = d.createElement("script"), u = [], p; param.u = d.location.href; param.ref = d.referrer; param.phR = Math.random() + "_" + (new Date).getTime(); for (p in param) if (param.hasOwnProperty(p)) u.push(p + "=" + encodeURIComponent(param[p])); s.src = "//"+param["o"]+".veve.com/qlinit.js?" + u.join("&"); s.type = "text/javascript"; d.getElementsByTagName("head")[0].appendChild(s);
+        })();
+    </script>
+</div>
+  
+<img src="%START-IMG%" width="380" alt="logo" id="big-logo">
+
+%PRIVATE-BROWSING%
+
+<form action="https://duckduckgo.com/" method="GET">
+    <input type="hidden" name="kl" value="wt-wt" />
+    <input type="hidden" name="kp" value="1" />
+    <input type="hidden" name="kd" value="-1" />
+    <input type="hidden" name="kh" value="1" />
+    <input type="hidden" name="k5" value="2" />
+    <input type="hidden" name="kae" value="-1" />
+    <input type="hidden" name="k1" value="-1" />
+    <input type="hidden" name="kaj" value="m" />
+    <input type="hidden" name="kam" value="osm" />
+    <input class="line" id="inp" name="q"/>
+    <input class="submit" id="s" type="submit" value="S">
+</form>
+
+<p id="bottom"><img src="%DUCK-IMG%" width="24" height="24" class="footer-img" alt="ddg-img"> %SEARCH-BY%</p>
+<p id="about"><a href="%WWW%">%ABOUT-MIDORI%</a></p>
+
+  </div>
+  <script>
+  %THREEJS%
+  %VANTA-WAVES%
+  %VANTA-CODE%
+  </script>
+</body></html>

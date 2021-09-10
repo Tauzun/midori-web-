@@ -11,23 +11,23 @@ fi
 
 MACDEPLOYQT=$1
 QTDIR="`dirname $MACDEPLOYQT`/.."
-LIBRARY_NAME="libMidoriPrivate.2.dylib"
-PLUGINS="Midori.app/Contents/Resources/plugins"
-QTPLUGINS="Midori.app/Contents/PlugIns"
+LIBRARY_NAME="libBhawkPrivate.2.dylib"
+PLUGINS="Bhawk.app/Contents/Resources/plugins"
+QTPLUGINS="Bhawk.app/Contents/PlugIns"
 
 # cd to directory with bundle
 test -d bin || cd ..
 cd bin
 
-# copy libMidoriPrivate into bundle
-cp $LIBRARY_NAME Midori.app/Contents/MacOS/
+# copy libBhawkPrivate into bundle
+cp $LIBRARY_NAME Bhawk.app/Contents/MacOS/
 
-# copy all Midori plugins into bundle
+# copy all Bhawk plugins into bundle
 test -d $PLUGINS || mkdir $PLUGINS
 cp plugins/*.dylib $PLUGINS/
 
-# fix libMidori
-install_name_tool -change $LIBRARY_NAME @executable_path/$LIBRARY_NAME Midori.app/Contents/MacOS/Midori
+# fix libBhawk
+install_name_tool -change $LIBRARY_NAME @executable_path/$LIBRARY_NAME Bhawk.app/Contents/MacOS/Bhawk
 
 # fix plugins
 for plugin in $PLUGINS/*.dylib
@@ -51,7 +51,7 @@ else
 fi
 
 # run macdeployqt
-$MACDEPLOYQT Midori.app -qmldir=$PWD/../src/lib/data/data
+$MACDEPLOYQT Bhawk.app -qmldir=$PWD/../src/lib/data/data
 
 # create final dmg image
 cd ../mac

@@ -6,7 +6,7 @@
 #
 
 linux_build:
-  stage: builds
+  stage: build
   image: $CI_REGISTRY_IMAGE:latest-$CI_COMMIT_REF_SLUG
 
 # https://docs.gitlab.com/ce/ci/yaml/#git-strategy
@@ -26,7 +26,7 @@ linux_build:
     - echo "Complete!"
 
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web" && $GITLAB_USER_NAME == "TW3" && $CI_COMMIT_REF_NAME == "staging"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $GITLAB_USER_NAME == "ponchale1" && $CI_COMMIT_REF_NAME == "dev"'
       when: always
 
 #  cache:

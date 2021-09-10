@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 16 16"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="visit3.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:export-filename="./visit3.png"
+   inkscape:export-xdpi="192"
+   inkscape:export-ydpi="192">
+  <metadata
+     id="metadata10">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="41.7193"
+     inkscape:cx="-0.15757322"
+     inkscape:cy="7.9495981"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg6" />
+  <defs
+     id="defs3051">
+    <style
+       type="text/css"
+       id="current-color-scheme">
+      .ColorScheme-Text {
+        color:#4d4d4d;
+      }
+      </style>
+  </defs>
+  <rect
+     style="opacity:1;fill:#4d4d4d;fill-opacity:1;fill-rule:nonzero;paint-order:fill markers stroke"
+     id="rect8"
+     width="12"
+     height="12"
+     x="2"
+     y="2" />
+  <rect
+     style="opacity:1;fill:#30383a;fill-opacity:1;fill-rule:nonzero;stroke-width:1.08877122;paint-order:fill markers stroke"
+     id="rect32"
+     width="9.9782333"
+     height="9.9782343"
+     x="3.0108833"
+     y="3.0108829"
+     inkscape:export-filename="./visit3.png"
+     inkscape:export-xdpi="192"
+     inkscape:export-ydpi="192" />
+  <g
+     id="g29"
+     transform="translate(17.468039,0.4613117)">
+    <text
+       transform="scale(0.79561527,1.2568889)"
+       id="text855"
+       y="7.6688004"
+       x="-16.568777"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.66850376px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';letter-spacing:0px;word-spacing:0px;fill:#4d4d4d;fill-opacity:1;stroke:none;stroke-width:0.01215756"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#4d4d4d;stroke-width:0.01215756"
+         y="7.6688004"
+         x="-16.568777"
+         id="tspan853"
+         sodipodi:role="line">&lt; / &gt;</tspan></text>
+    <path
+       id="path19-7"
+       d="m -10.054262,9.8940473 0.6303363,-4.7821727 0.5421086,0.071455 -0.6303365,4.7821724 z"
+       style="color:#4d4d4d;fill:#60dd49;fill-opacity:1;stroke:none;stroke-width:0.81201869"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>
