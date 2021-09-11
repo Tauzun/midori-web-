@@ -14,7 +14,7 @@ With a working Internet connection and git installed, open up a PowerShell windo
 
 `git clone https://gitlab.com/midori-web/midori-desktop/
 
-A copy of the source code will be copied into a folder named **b**.
+A copy of the source code will be copied into a folder named **midori-desktop**.
 
 ### Setting up the build environment
 
