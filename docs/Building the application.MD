@@ -7,12 +7,12 @@ On Windows 10 using Visual Studio 2019.
 
 ### Download the source code
 
-Midori Web Browser source code is available via [Gitlab](https://tw3.gitlab.io/b).
+Midori Web Browser source code is available via [Gitlab](https://gitlab.com/midori-web/midori-desktop/-/tree/dev).
 The easiest way to obtain a copy is to use git.
 
 With a working Internet connection and git installed, open up a PowerShell window using the start menu, change directory to the root of the drive (eg: `cd \`) and then do the following:
 
-`git clone https://gitlab.com/midori-web/midori-desktop/
+`git clone -b dev https://gitlab.com/midori-web/midori-desktop/
 
 A copy of the source code will be copied into a folder named **midori-desktop**.
 
