@@ -1,7 +1,7 @@
 Name:           midori
-Version:        3.2.4
+Version:        10.0
 Release:        1%{?dist}
-Summary:        Code name Blue Hawk: A QtWebEngine powered web browser
+Summary:        Lightweight browser, fast, secure, free software & open source. 
 
 # Files in src/lib/opensearch and src/lib/3rdparty are GPLv2+
 # Files in src/lib/data/html/vantajs are MIT

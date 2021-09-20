@@ -9,6 +9,8 @@ RUN yum -y install \
     wget \
     fontconfig \
     xz \
+    glib2 \
+    glib2-devel \
     openssl-devel \
     libX11-devel \
     xcb-util-devel \
@@ -33,7 +35,7 @@ RUN yum -y install \
     libgcrypt-devel \
     systemd-devel
 
-RUN yum -y install devtoolset-4-gcc-c++
+RUN yum -y install devtoolset-10-gcc-c++
 
 RUN wget -O cmake-install https://cmake.org/files/v3.11/cmake-3.11.1-Linux-x86_64.sh && \
     chmod +x cmake-install && \
@@ -42,7 +44,7 @@ RUN wget -O cmake-install https://cmake.org/files/v3.11/cmake-3.11.1-Linux-x86_6
 
 COPY setup.sh /root/setup.sh
 COPY qt-installer-noninteractive.qs /root/qt-installer-noninteractive.qs
-RUN scl enable devtoolset-4 /root/setup.sh
+RUN scl enable devtoolset-10 /root/setup.sh
 
 COPY build.sh /root/build.sh
 COPY build-appimage.sh /root/build-appimage.sh

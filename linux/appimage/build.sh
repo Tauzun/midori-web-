@@ -9,7 +9,7 @@ if [ -z "$MIDORI_URL" ]; then
 fi
 
 source /root/env.sh
-source /opt/rh/devtoolset-4/enable
+source /opt/rh/devtoolset-10/enable
 
 cd /root
 

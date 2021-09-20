@@ -3,13 +3,13 @@ set -e
 
 NCPUS=$(getconf _NPROCESSORS_ONLN)
 
-QT_INSTALL_URL="https://download.qt.io/official_releases/qt/5.10/5.10.1/qt-opensource-linux-x64-5.10.1.run"
+QT_INSTALL_URL="https://download.qt.io/official_releases/qt/5.12/5.12.11/qt-opensource-linux-x64-5.12.11.run"
 
 FRAMEWORK_VERSION="5.45"
 CMAKE_FRAMEWORKS_URL="https://download.kde.org/stable/frameworks/${FRAMEWORK_VERSION}"
 MODULE_VERSION="${FRAMEWORK_VERSION}.0"
 
-QTDIR="/root/Qt/5.10.1/gcc_64"
+QTDIR="/root/Qt/5.12.11/gcc_64"
 
 trap "rm -rf *${MODULE_VERSION} *.tar.xz phonon* qt-installer* setup.sh" EXIT 1 2
 
