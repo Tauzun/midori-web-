@@ -79,7 +79,7 @@ if (UNIX AND NOT APPLE AND NOT NO_X11)
 endif()
 
 if (WIN32)
-	include(${CMAKE_SOURCE_DIR}/windows/build/msvc.conf)
+        include(${CMAKE_SOURCE_DIR}/vsconfig/msvc.conf)
     find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS WinExtras)
 endif()
 
