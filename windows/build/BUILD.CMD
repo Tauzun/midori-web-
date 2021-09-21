@@ -64,7 +64,7 @@ IF exist %MSVSDIR%"\VC\Auxiliary\Build\vcvars64.bat" ( CALL %MSVSDIR%"\VC\Auxili
 
 :: Internal Variables
 ::
-SET BHAWK_VER=3.2.3
+SET MIDORI_VER=3.2.3
 SET ANALYSIS=false
 SET CONFIGURATION=release
 SET VCPKGDIR=%SRCROOTDIR%\vcpkg
@@ -109,7 +109,7 @@ CD %SRCROOTDIR%
 COPY CMakeLists.txt CMakeLists.bak
 powershell -Command "(Get-Content 'CMakeLists.txt') | Where-Object {$_ -notmatch 'Midori VERSION'} | Set-Content  'CMakeLists.txt'"
 powershell -Command "(Get-Content 'CMakeLists.txt') | Where-Object {$_ -notmatch 'cmake_minimum_required'} | Set-Content  'CMakeLists.txt'"
-powershell -Command "@('project(Midori VERSION %BHAWK_VER%)') + (Get-Content 'CMakeLists.txt') | set-content 'CMakeLists.txt'"
+powershell -Command "@('project(Midori VERSION %MIDORI_VER%)') + (Get-Content 'CMakeLists.txt') | set-content 'CMakeLists.txt'"
 powershell -Command "@('cmake_minimum_required(VERSION 3.1)') + (Get-Content 'CMakeLists.txt') | set-content 'CMakeLists.txt'"
 MKDIR build
 CD build
