@@ -277,8 +277,8 @@ if (ENABLE_KDE_FRAMEWORKS_INTEGRATION_PLUGIN)
         plugins/ocssupport.cpp
     )
 endif()
-# Add the logging category for BHAWK
-ecm_qt_declare_logging_category(LOGGING_SRCS HEADER Bhawk_private_debug.h IDENTIFIER "BHAWK_PRIVATE_LOG" CATEGORY_NAME "org.astian.midori")
+# Add the logging category for Midori
+ecm_qt_declare_logging_category(LOGGING_SRCS HEADER Midori_private_debug.h IDENTIFIER "MIDORI_PRIVATE_LOG" CATEGORY_NAME "org.astian.midori")
 
 if (HAVE_LIBINTL)
         set(SRCS ${SRCS} plugins/qml/api/i18n/qmli18n.cpp)
