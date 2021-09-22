@@ -19,11 +19,9 @@
 
 #include <QObject>
 
-#if HAVE_LIBINTL
 extern "C" {
 #include "libintl.h"
 }
-#endif
 
 
 /**
