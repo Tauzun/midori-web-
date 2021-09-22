@@ -142,7 +142,7 @@ if (NOT NO_PLUGINS)
 
 endif()
 
-find_package(intl)
+find_package(Intl)
 	if (Intl_FOUND)
     	set(HAVE_LIBINTL TRUE)
 endif()
