@@ -35,6 +35,7 @@ compile:
     paths:
       - C:\GitLab-Runner\builds\ponchale1\midori\qt\
       - C:\GitLab-Runner\builds\ponchale1\midori\vcpkg\packages\
+      - C:\GitLab-Runner\builds\ponchale1\midori\vcpkg\scripts\
       - C:\GitLab-Runner\builds\ponchale1\midori\vcpkg\installed\x64-windows\
       - C:\GitLab-Runner\builds\ponchale1\midori\cmake-3.19.2-win64-x64\bin\
       - C:\GitLab-Runner\builds\ponchale1\midori\cmake-3.19.2-win64-x64\share\
