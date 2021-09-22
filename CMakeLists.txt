@@ -142,22 +142,9 @@ if (NOT NO_PLUGINS)
 
 endif()
 
-# According to https://github.com/minetest/minetest/blob/master/cmake/Modules/FindGettextLib.cmake
-# "Modern Linux, as well as OSX, does not require special linking because
-# GetText is part of glibc." - True for clang???
-# The part of gettext being linked against here is libintl
-# and is used for text based translation
-
-if(WIN32)
-	find_package(unofficial-gettext REQUIRED) ### This is not required to build but without it, there will be no translations
-	if (unofficial-gettext_FOUND)
-		set(HAVE_LIBINTL TRUE)
-	endif()
-else()
-	find_package(Intl)
+find_package(intl)
 	if (Intl_FOUND)
-    		set(HAVE_LIBINTL TRUE)
-	endif()
+    	set(HAVE_LIBINTL TRUE)
 endif()
 
 # Git revision

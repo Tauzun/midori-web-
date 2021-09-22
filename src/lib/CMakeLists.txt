@@ -364,14 +364,10 @@ target_link_libraries(MidoriPrivate
 )
 
     if (HAVE_LIBINTL)
-	if(WIN32)
-        	target_link_libraries(MidoriPrivate unofficial::gettext::libintl) ### Your libintl might be different. Here we use vcpkg's version.
-	else()
-    		target_include_directories(MidoriPrivate SYSTEM PUBLIC ${Intl_INCLUDE_DIRS})
-    		target_link_libraries(MidoriPrivate ${Intl_LIBRARIES})
+    target_include_directories(MidoriPrivate SYSTEM PUBLIC ${Intl_INCLUDE_DIRS})
+    target_link_libraries(MidoriPrivate ${Intl_LIBRARIES})
+endif()
 
-	endif()
-    endif()
 
 if (ENABLE_KDE_FRAMEWORKS_INTEGRATION_PLUGIN)
     target_link_libraries(MidoriPrivate KF5::Archive)
