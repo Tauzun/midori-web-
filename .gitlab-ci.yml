@@ -1,0 +1,32 @@
+#
+###
+# Fedora docker .gitlab-ci.yml for testing
+# Check Dockerfile for more info
+###
+#
+
+# Caution: Container registry in Gitlab's settings
+# must be enabled for this system to work.
+# Ensure that you click on the "Save changes"
+# button at the bottom of the settings page
+# if you change the setting.
+
+# Once the fedora docker image is built
+# you can disable it's building to save time
+
+.shared_windows_runners:
+  tags:
+  - shared-windows
+  - windows
+
+stages:
+#  - img # Uncomment this to build or rebuild the docker image (part 1 of 2)
+  - builds
+  - webpages
+  - deployment
+
+include:
+#  - local: 'yml/linux-image.yml' # Uncomment this to build or rebuild the docker image (part 2 of 2)
+  - local: 'yml/linux-build.yml' # The linux build
+  - local: 'yml/windows-build.yml' # The Windows build
+  - local: 'yml/web.yml' # The web pages
