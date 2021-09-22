@@ -39,3 +39,7 @@ tests/autotests/autotests
 *.stash
 bin/profiles
 CMakeLists.txt.user*
+downloads
+qt
+vcpkg1
+7z
