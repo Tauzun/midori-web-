@@ -42,7 +42,11 @@ include_directories(
 
 endif()
 
-include_directories(${OPENSSL_INCLUDE_DIR})
+if (HAVE_LIBINTL)
+        include_directories(${OPENSSL_INCLUDE_DIR} ${Intl_INCLUDE_DIRS})
+else()
+    include_directories(${OPENSSL_INCLUDE_DIR})
+endif()
 
 set(SRCS ${SRCS}
     3rdparty/fancytabwidget.cpp
@@ -540,7 +544,6 @@ if (NOT DEBUG)
         ${CMAKE_SOURCE_DIR}/src/lib/plugins/qml/api/fileutils/qmlfileutils.h
         ${CMAKE_SOURCE_DIR}/src/lib/plugins/qml/api/history/qmlhistory.h
         ${CMAKE_SOURCE_DIR}/src/lib/plugins/qml/api/history/qmlhistoryitem.h
-        ${CMAKE_SOURCE_DIR}/src/lib/plugins/qml/api/i18n/qmli18n.h
         ${CMAKE_SOURCE_DIR}/src/lib/plugins/qml/api/menus/qmlaction.h
         ${CMAKE_SOURCE_DIR}/src/lib/plugins/qml/api/menus/qmlmenu.h
         ${CMAKE_SOURCE_DIR}/src/lib/plugins/qml/api/menus/qmlwebhittestresult.h
@@ -629,5 +632,10 @@ if (NOT DEBUG)
         ${CMAKE_SOURCE_DIR}/src/lib/webtab/tabbedwebview.h
         ${CMAKE_SOURCE_DIR}/src/lib/webtab/webtab.h
     )
+
+    if (HAVE_LIBINTL)
+        target_precompile_headers(MidoriPrivate PRIVATE${CMAKE_SOURCE_DIR}/src/lib/plugins/qml/api/i18n/qmli18n.h)
+endif()
+
 
 endif()

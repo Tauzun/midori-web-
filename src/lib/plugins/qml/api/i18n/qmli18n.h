@@ -19,9 +19,12 @@
 
 #include <QObject>
 
+#if HAVE_LIBINTL
 extern "C" {
 #include "libintl.h"
 }
+#endif
+
 
 /**
  * @brief The class exposing GNU Gettext to QML
