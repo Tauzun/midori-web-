@@ -1,5 +1,5 @@
 #include "winver.h"
-#include "bhawkversion.h"
+#include "midoriversion.h"
 
 IDI_ICON1 ICON DISCARDABLE "..\lib\data\icons\exeicons\midori.ico"
 IDI_ICON2 ICON DISCARDABLE "..\lib\data\icons\exeicons\page.ico"

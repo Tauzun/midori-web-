@@ -245,10 +245,10 @@
 
     <inject-code class="target" position="end">
     QList&lt;QByteArray&gt; version = QByteArray(Qz::VERSION).split('.');
-    PyObject *pyBhawkVersion = PyTuple_New(3);
+    PyObject *pyMidoriVersion = PyTuple_New(3);
     for (int i = 0; i &lt; 3; ++i)
-        PyTuple_SET_ITEM(pyBhawkVersion, i, PyInt_FromLong(version[i].toInt()));
-    PyModule_AddObject(module, "__version_info__", pyBhawkVersion);
+        PyTuple_SET_ITEM(pyMidoriVersion, i, PyInt_FromLong(version[i].toInt()));
+    PyModule_AddObject(module, "__version_info__", pyMidoriVersion);
     PyModule_AddStringConstant(module, "__version__", Qz::VERSION);
     </inject-code>
 

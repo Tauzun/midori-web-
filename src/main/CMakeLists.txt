@@ -8,7 +8,7 @@ include_directories(
 set(SRCS main.cpp)
 if (WIN32)
     set(SRCS ${SRCS} version.rc)
-    configure_file(bhawkversion.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/bhawkversion.h)
+    configure_file(midoriversion.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/midoriversion.h)
 endif()
 ecm_create_qm_loader(SRCS bhawk_qt)
 add_executable(midori ${SRCS})
