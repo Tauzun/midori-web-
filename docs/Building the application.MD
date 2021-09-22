@@ -30,7 +30,7 @@ Microsoft's compiler, build environment and IDE.
 
 _Microsoft Visual Studio 2019 is currently the only recommended version._
 
-You can use the file **vsconfig/bhawk.vsconfig** and the Visual Studio installer to import and install the workload required to build the project. Please see https://docs.microsoft.com/en-us/visualstudio/install/import-export-installation-configurations?view=vs-2019#import-a-configuration for more details.
+You can use the file **vsconfig/midori.vsconfig** and the Visual Studio installer to import and install the workload required to build the project. Please see https://docs.microsoft.com/en-us/visualstudio/install/import-export-installation-configurations?view=vs-2019#import-a-configuration for more details.
 
 #### Git
 
