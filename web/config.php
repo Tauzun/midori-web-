@@ -65,7 +65,7 @@ return [
      *
      */
 
-    'siteName' => 'Blue Hawk',
+    'siteName' => 'Midori Browser',
 
     'siteDescription' => 'A Web browser',
 
@@ -73,7 +73,7 @@ return [
 
     'releaseDate' => date('l jS \of F Y h:i:s A'),
 
-    'appArchive' => 'bhawk.zip',
+    'appArchive' => 'midori.zip',
 
     'appChecksum' => 'app-checksum',
 
