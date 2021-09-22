@@ -20,7 +20,7 @@
 #include <QObject>
 
 extern "C" {
-#include <libintl.h>
+#include "libintl.h"
 }
 
 /**
