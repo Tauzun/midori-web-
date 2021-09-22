@@ -1,4 +1,3 @@
-
 # Windows 10 64 bit build of the application
 
 compile:
@@ -19,10 +18,9 @@ compile:
   - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.Component.MSBuild
   - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.Windows10SDK
   - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.VC.Tools.x86.x64
-  - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.Git
-  - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.VC.ATL
-  - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.VC.ATLMFC
   - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.VC.Runtimes.x86.x64.Spectre
+  # Unsure if Microsoft.VisualStudio.Component.Git is needed as it is already present in the vm?
+  - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.Git
 #  - Get-VSSetupInstance | Select-VSSetupInstance -Latest -Require Microsoft.VisualStudio.Component.VC.CMake.Project
   - echo "Build prep complete!"
   - echo "Building %CI_PROJECT_NAME%..."
