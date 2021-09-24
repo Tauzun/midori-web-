@@ -371,7 +371,7 @@ QNetworkReply *NetworkManager::createRequest(QNetworkAccessManager::Operation op
 {
     QNetworkRequest req = request;
     req.setAttribute(QNetworkRequest::SpdyAllowedAttribute, true);
-    req.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+    req.setAttribute(QNetworkRequest::RedirectPolicyAttribute, 1); // https://doc.qt.io/qt-5/qnetworkrequest.html#RedirectPolicy-enum
 
     return QNetworkAccessManager::createRequest(op, req, outgoingData);
 }

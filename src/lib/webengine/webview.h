@@ -21,6 +21,8 @@
 #include <QPointer>
 #include <QWebEngineView>
 
+#include <QGestureEvent>
+
 #include "qzcommon.h"
 #include "loadrequest.h"
 #include "wheelhelper.h"
@@ -50,7 +52,6 @@ public:
     int loadingProgress() const;
 
     bool backgroundActivity() const;
-
     // Set zoom level (0 - 17)
     int zoomLevel() const;
     void setZoomLevel(int level);
@@ -155,6 +156,8 @@ protected:
     virtual void _keyPressEvent(QKeyEvent *event);
     virtual void _keyReleaseEvent(QKeyEvent *event);
     virtual void _contextMenuEvent(QContextMenuEvent *event);
+    virtual bool _touchEvent(QGestureEvent *event);
+    virtual void swipeTriggered(QSwipeGesture *gesture);
 
     void loadRequest(const LoadRequest &req);
     void applyZoom();
@@ -179,6 +182,7 @@ private Q_SLOTS:
 
 private:
     void initializeActions();
+    bool removeYtOverlay();
 
     int m_currentZoomLevel;
     int m_progress;

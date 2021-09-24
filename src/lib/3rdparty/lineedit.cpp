@@ -109,6 +109,9 @@ void LineEdit::init()
     redoAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
     connect(redoAction, &QAction::triggered, this, &QLineEdit::redo);
 
+    QAction* clearAllAction = new QAction(QIcon(QStringLiteral(":icons/menu/edit-clear.svg")), tr("Clear"), this);
+    connect(clearAllAction, &QAction::triggered, this, &QLineEdit::clear);
+
     QAction* cutAction = new QAction(QIcon(QStringLiteral(":icons/menu/edit-cut.svg")), tr("Cu&t"), this);
     cutAction->setShortcut(QKeySequence(QStringLiteral("Ctrl+X")));
     cutAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
@@ -131,9 +134,6 @@ void LineEdit::init()
     QAction* deleteAction = new QAction(QIcon(QStringLiteral(":icons/menu/edit-delete.svg")), tr("Delete"), this);
     connect(deleteAction, &QAction::triggered, this, &LineEdit::slotDelete);
 
-    QAction* clearAllAction = new QAction(QIcon(QStringLiteral(":icons/menu/edit-clear.svg")), tr("Clear"), this);
-    connect(clearAllAction, &QAction::triggered, this, &QLineEdit::clear);
-
     QAction* selectAllAction = new QAction(QIcon(QStringLiteral(":icons/menu/edit-select-all.svg")), tr("Select All"), this);
     selectAllAction->setShortcut(QKeySequence(QStringLiteral("Ctrl+A")));
     selectAllAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
@@ -141,6 +141,7 @@ void LineEdit::init()
 
     m_editActions[Undo] = undoAction;
     m_editActions[Redo] = redoAction;
+    m_editActions[ClearAll] = clearAllAction;
     m_editActions[Cut] = cutAction;
     m_editActions[Copy] = copyAction;
     m_editActions[Paste] = pasteAction;
@@ -151,6 +152,7 @@ void LineEdit::init()
     // Make action shortcuts available for webview
     addAction(undoAction);
     addAction(redoAction);
+    addAction(clearAllAction);
     addAction(cutAction);
     addAction(copyAction);
     addAction(pasteAction);

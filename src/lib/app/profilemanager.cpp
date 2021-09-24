@@ -272,7 +272,7 @@ void ProfileManager::migrateFromQupZilla()
         return;
     }
 
-    std::cout << "Midori: Migrating config from QupZilla..." << std::endl;
+    std::cout << "Midori Browser: Migrating config from QupZilla..." << std::endl;
 
     QzTools::copyRecursively(qzConfig, DataPaths::path(DataPaths::Config));
 }

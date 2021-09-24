@@ -19,19 +19,22 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>40</y>
-     <width>771</width>
-     <height>421</height>
+     <x>40</x>
+     <y>60</y>
+     <width>711</width>
+     <height>401</height>
     </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>0</x>
       <y>10</y>
-      <width>721</width>
-      <height>431</height>
+      <width>711</width>
+      <height>391</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -53,9 +56,9 @@
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_4">
     <item>
-     <widget class="QPushButton" name="buttonOptions">
-      <property name="text">
-       <string>Options</string>
+     <widget class="QLineEdit" name="search">
+      <property name="placeholderText">
+       <string>Search...</string>
       </property>
      </widget>
     </item>
@@ -91,8 +94,21 @@
       </property>
      </spacer>
     </item>
+    <item>
+     <widget class="QPushButton" name="buttonOptions">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="text">
+       <string>Options</string>
+      </property>
+     </widget>
+    </item>
     <item alignment="Qt::AlignRight|Qt::AlignVCenter">
      <widget class="QDialogButtonBox" name="buttonBox">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -139,9 +155,31 @@
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QLineEdit" name="search">
-      <property name="placeholderText">
-       <string>Search...</string>
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::MinimumExpanding</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="adblockCheckBox">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="text">
+       <string>Enable AdBlock</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -164,32 +202,6 @@
        <string>&lt;a style=&quot;color:#0078d7&quot; href=&quot;https://tw3.gitlab.io/tw3filterlists/&quot;&gt;Find more filters...&lt;/a&gt;</string>
       </property>
       <property name="openExternalLinks">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <spacer name="horizontalSpacer">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::MinimumExpanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <widget class="QCheckBox" name="adblockCheckBox">
-      <property name="text">
-       <string>Enable AdBlock</string>
-      </property>
-      <property name="checked">
        <bool>true</bool>
       </property>
      </widget>

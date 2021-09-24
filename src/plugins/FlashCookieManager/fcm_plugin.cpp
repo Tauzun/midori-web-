@@ -86,7 +86,7 @@ void FCM_Plugin::init(InitState state, const QString &settingsPath)
     }
 
     if (state == LateInitState) {
-        const auto windows = mApp->windows();
+        const QList<BrowserWindow *> windows = mApp->windows();
         for (BrowserWindow* window : windows) {
             mainWindowCreated(window);
         }
@@ -103,7 +103,7 @@ void FCM_Plugin::unload()
         removeAllButWhitelisted();
     }
 
-    const auto windows = mApp->windows();
+    const QList<BrowserWindow *> windows = mApp->windows();
     for (BrowserWindow* window : windows) {
         mainWindowDeleted(window);
     }
@@ -411,7 +411,7 @@ void FCM_Plugin::insertFlashCookie(const QString &path)
     }
 
     QString fileStr = QString(file);
-    fileStr = fileStr.split(QLatin1Char('.'), QString::SkipEmptyParts).join(QLatin1String("\n"));
+    fileStr = fileStr.split(QLatin1Char('.'), Qt::SkipEmptyParts).join(QLatin1String("\n"));
 
     QFileInfo solFileInfo(solFile);
 

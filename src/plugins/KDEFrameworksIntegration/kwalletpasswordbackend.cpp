@@ -65,9 +65,8 @@ QVector<PasswordEntry> KWalletPasswordBackend::getEntries(const QUrl &url)
             list.append(entry);
         }
     }
-
     // Sort to prefer last updated entries
-    qSort(list.begin(), list.end());
+    std::sort(list.begin(), list.end());
 
     return list;
 }
@@ -219,8 +218,10 @@ void KWalletPasswordBackend::initialize()
         }
     }
 
-    QMap<QString, QByteArray> entries;
-    if (m_wallet->readEntryList("*", entries) != 0) {
+    bool ok = false;
+    QMap<QString, QByteArray> entries = m_wallet->entriesList(&ok);
+
+    if (!ok) {
         qWarning() << "KWalletPasswordBackend::initialize Cannot read entries!";
         return;
     }

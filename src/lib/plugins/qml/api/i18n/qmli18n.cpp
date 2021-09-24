@@ -15,7 +15,9 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * ============================================================ */
+#if HAVE_LIBINTL
 #include "qmli18n.h"
+#endif
 #include "qztools.h"
 #include <QStandardPaths>
 
@@ -28,7 +30,7 @@ QmlI18n::QmlI18n(const QString &pluginName, QObject *parent)
 
 void QmlI18n::initTranslations()
 {
-    m_domain = QString(QStringLiteral("bhawk_%1")).arg(m_pluginName);
+    m_domain = QString(QStringLiteral("midori_%1")).arg(m_pluginName);
     const QString localeDir = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("locale"), QStandardPaths::LocateDirectory);
     const bool isLanguageSet = qEnvironmentVariableIsSet("LANGUAGE");
     const QByteArray language = qgetenv("LANGUAGE");

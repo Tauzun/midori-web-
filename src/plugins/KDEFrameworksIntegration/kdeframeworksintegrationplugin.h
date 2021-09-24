@@ -18,8 +18,9 @@
 #pragma once
 
 #include "plugininterface.h"
-
+#ifdef ENABLE_PURPOSE
 #include <PurposeWidgets/Menu>
+#endif
 
 class KWalletPasswordBackend;
 class KIOSchemeHandler;
@@ -41,5 +42,7 @@ public:
 private:
     KWalletPasswordBackend *m_backend = nullptr;
     QVector<KIOSchemeHandler*> m_kioSchemeHandlers;
+#ifdef ENABLE_PURPOSE
     Purpose::Menu *m_sharePageMenu = nullptr;
+#endif
 };

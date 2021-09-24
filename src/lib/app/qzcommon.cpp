@@ -24,11 +24,10 @@ const int sessionVersion = 0x0004;
 
 MIDORI_EXPORT const char *APPNAME = "Midori Browser";
 MIDORI_EXPORT const char *VERSION = MIDORI_VERSION;
-MIDORI_EXPORT const char *AUTHOR = "Astian";
+MIDORI_EXPORT const char *AUTHOR = "TW3";
 MIDORI_EXPORT const char *OG_AUTHOR = "David Rosca";
 MIDORI_EXPORT const char *COPYRIGHT = "2018 - &infin;";
 MIDORI_EXPORT const char *WWWADDRESS = "https://astian.org/midori-browser";
-MIDORI_EXPORT const char *BUGSADDRESS = "https://gitlab.com/midori-web/midori-desktop";
-MIDORI_EXPORT const char *WIKIADDRESS = "https://userbase.kde.org/Falkon";
+MIDORI_EXPORT const char *BUGSADDRESS = "https://gitlab.com/midori-web/midori-desktop/issues";
 MIDORI_EXPORT const char *ABOUTADDRESS = "browser:about";
 }

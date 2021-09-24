@@ -644,7 +644,7 @@ void OpenSearchEngine::suggestionsObtained()
 
     QStringList out;
 
-    const auto items = list.at(1).toList();
+    const QList<QVariant> items = list.at(1).toList();
     for (const QVariant &v : items) {
         out.append(v.toString());
     }

@@ -31,6 +31,7 @@
 #include <QCryptographicHash>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QSettings>
 
 GM_Script::GM_Script(GM_Manager* manager, const QString &filePath)
     : QObject(manager)
@@ -141,10 +142,23 @@ QString GM_Script::fileName() const
 
 QWebEngineScript GM_Script::webScript() const
 {
+
+    QSettings settings(m_manager->settingsPath() + QLatin1String("/plug-ins.ini"), QSettings::IniFormat);
     QWebEngineScript script;
     script.setSourceCode(QStringLiteral("%1\n%2").arg(m_manager->bootstrapScript(), m_script));
     script.setName(fullName());
-    script.setWorldId(WebPage::jsUserWorldSafe); // This is intentional and prevents one click install scripts from being able to access things they should not
+
+    if (settings.value("GreaseMonkey/noScriptIsolation", false).toBool()) {
+        // Unless you are trying to do something _very_ unusual, you almost never want this
+        script.setWorldId(QWebEngineScript::MainWorld);
+    } else {
+        // By default prevent one click install scripts from being able to access things they should not
+        // This could be expanded by using jsUserWorldSafe instead but each individual script should
+        // get its own isolated world, which would require expansive changes to the plugin.
+        // Please feel free to offer a patch if you want this :)
+        script.setWorldId(WebPage::jsAppWorldSafe);
+    }
+
     script.setInjectionPoint(QWebEngineScript::DocumentReady);
     script.setRunsOnSubFrames(!m_noframes);
     return script;

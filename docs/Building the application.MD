@@ -1,4 +1,4 @@
-# Building Midori Web Browser
+# Building Blue Hawk Web Browser
 
 ## **Build documentation**
 ### Building the application from source code.
@@ -7,14 +7,14 @@ On Windows 10 using Visual Studio 2019.
 
 ### Download the source code
 
-Midori Web Browser source code is available via [Gitlab](https://gitlab.com/midori-web/midori-desktop/-/tree/dev).
+Blue Hawk's source code is available via [Gitlab](https://gitlab.com/midori-web/midori-desktop/).
 The easiest way to obtain a copy is to use git.
 
 With a working Internet connection and git installed, open up a PowerShell window using the start menu, change directory to the root of the drive (eg: `cd \`) and then do the following:
 
-`git clone -b dev https://gitlab.com/midori-web/midori-desktop/
+`git clone https://gitlab.com/TW3/b`
 
-A copy of the source code will be copied into a folder named **midori-desktop**.
+A copy of the source code will be copied into a folder named **b**.
 
 ### Setting up the build environment
 
@@ -79,8 +79,8 @@ _Windows 10 (64 bit) is currently the only supported operating system which can 
 
 ### Once the build succeeds
 
-Once a build has been successfully completed, the folder **Midori Web Browser** contains the resulting application and associated files.
-The application is portable. This means that the resulting **Midori Web Browser** folder can be copied and run from anywhere you like.
+Once a build has been successfully completed, the folder **Blue Hawk** contains the resulting application and associated files.
+The application is portable. This means that the resulting **Blue Hawk** folder can be copied and run from anywhere you like.
 
 By default, the application will automatically run upon successful build completion. If you do not want the application to start in this way, run the build script using the `-buildandrun` switch and set it to **0**.
 

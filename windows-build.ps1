@@ -230,7 +230,7 @@ if ($labbuild -eq 0) {
 			Write-Host "Found vs_installer.exe `n"
 			Write-Host "Please install the workload presented in the Visual Studio installer (if required) `n"
 			# This can't just be done silently because it needs privilege escalation (to be run as admin) to do so
-			Start-Process -FilePath $VSINSTBINARY -ArgumentList "modify", "--installPath", "$MSVSDIR", "--config", "$SRCROOTDIR\vsconfig\midori.vsconfig" -Wait -PassThru
+                        Start-Process -FilePath $VSINSTBINARY -ArgumentList "modify", "--installPath", "$MSVSDIR", "--config", "$SRCROOTDIR\vsconfig\midori.vsconfig" -Wait -PassThru
 			if (!(Test-Path "$MSVSDIR\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt", $MSBUILDBIN)) {
 				# This check that the required components have been installed could be made to a little more comprehensive...
 				Throw "ERROR - Please re-run this script and install the workload presented by the Visual Studio installer"
@@ -248,7 +248,7 @@ if ($labbuild -eq 0) {
 
 Write-Host "Looking for MS Visual C runtime..."
 
-$VCRUNVERNUM=Get-Content "$MSVSDIR\VC\Auxiliary\Build\Microsoft.VCRedistVersion.default.txt" -First 1
+$VCRUNVERNUM=Get-Content "$MSVSDIR\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt" -First 1
 
 if ($VCRUNVERNUM -eq $null) {
 	Throw "ERROR - Microsoft.VCToolsVersion.default.txt was not found.."
@@ -1129,7 +1129,7 @@ if (Test-Path "$INSTDIR") {
 }
 
 if (Test-Path "$SRCROOTDIR\Midori Browser") {
-	remove-item -path "$SRCROOTDIR\Midori Browser" -Force -Recurse
+        remove-item -path "$SRCROOTDIR\Midori Browser" -Force -Recurse
 }
 
 if (Test-Path "$SRCROOTDIR\build") {
@@ -1226,7 +1226,7 @@ if ($labbuild -eq 1) {
 
 if (Test-Path "$SRCROOTDIR\build\Midori.sln") {
 	Write-Host "`nAttempting to build the application...`n"
-	& $MSBUILDBIN /m ".\Midori.sln" /p:CharacterSet=Unicode /p:configuration=$CONFIGURATION /p:platform=x64 /p:PlatformToolset=$TOOLSET /p:RunCodeAnalysis=$ANALYSIS /p:PreferredToolArchitecture=x64 /p:UseEnv=true
+        & $MSBUILDBIN /m ".\Midori.sln" /p:CharacterSet=Unicode /p:configuration=$CONFIGURATION /p:platform=x64 /p:PlatformToolset=$TOOLSET /p:RunCodeAnalysis=$ANALYSIS /p:PreferredToolArchitecture=x64 /p:UseEnv=true
 } else {
 	CD $SRCROOTDIR
 	Throw "ERROR - cmake failed to configure the project. Please correct the errors presented in the console output and try again."
@@ -1245,8 +1245,8 @@ if ($debugbuild -eq 1) {
 	COPY "$SRCROOTDIR\build\bin\$CONFIGURATION\*.*" $INSTDIR
 	XCOPY /Y /E /I $SRCROOTDIR\build\bin\plugins\$CONFIGURATION $INSTDIR\plug-ins
 } else {
-	COPY $SRCROOTDIR\build\bin\$CONFIGURATION\MidoriPrivate.dll $INSTDIR
-	COPY $SRCROOTDIR\build\bin\$CONFIGURATION\midori.exe $INSTDIR
+        COPY $SRCROOTDIR\build\bin\$CONFIGURATION\MidoriPrivate.dll $INSTDIR
+        COPY $SRCROOTDIR\build\bin\$CONFIGURATION\midori.exe $INSTDIR
 }
 COPY $SRCROOTDIR\COPYING $INSTDIR
 XCOPY /Y /E /I $SRCROOTDIR\themes $INSTDIR\themes
@@ -1271,11 +1271,11 @@ Rename-Item $INSTDIR\COPYING LICENSE.TXT
 
 # --------------------------------------------------------------------------------
 
-'[Config]' | Out-File -FilePath $INSTDIR\midori.conf -encoding utf8
-'Portable=true' | Out-File -FilePath $INSTDIR\midori.conf -Append -encoding utf8
+'[Config]' | Out-File -FilePath $INSTDIR\midori.conf
+'Portable=true' | Out-File -FilePath $INSTDIR\midori.conf -Append
 
-'[Paths]' | Out-File -FilePath $INSTDIR\qt.conf -encoding utf8
-'Plugins = "."' | Out-File -FilePath $INSTDIR\qt.conf -Append -encoding utf8
+'[Paths]' | Out-File -FilePath $INSTDIR\qt.conf
+'Plugins = "."' | Out-File -FilePath $INSTDIR\qt.conf -Append
 
 # --------------------------------------------------------------------------------
 
@@ -1515,14 +1515,14 @@ if (Test-Path "$SRCROOTDIR\Midori Browser\midori.exe") {
 	$TIMESTAMPEND="{0:HH:mm:ss} {0:dd/MM/yyyy}" -f (Get-Date)
 	Write-Host "--------------------------------------------------------------------------------`n"
 	Write-Host "- Build success!`n"
-	Write-Host "- The folder `"$SRCROOTDIR\Midori Browser`" contains the output from this build.`n"
+        Write-Host "- The folder `"$SRCROOTDIR\Midori Browser`" contains the output from this build.`n"
 	Write-Host "- Build started at $TIMESTAMPBEGIN and completed at $TIMESTAMPEND`n"
 	Write-Host "--------------------------------------------------------------------------------`n"
 	if ($buildandrun -eq 1) {
-		& "$SRCROOTDIR\Midori Browser\midori.exe"
+                & "$SRCROOTDIR\Midori Browser\midori.exe"
 	}
 	if ($labbuild -eq 1) {
-		Compress-Archive -Path "$SRCROOTDIR\Midori Browser" -DestinationPath "$SRCROOTDIR\midori.zip"
+                Compress-Archive -Path "$SRCROOTDIR\Midori Browser" -DestinationPath "$SRCROOTDIR\midori.zip"
 	}
 } else {
 	Write-Host "--------------------------------------------------------------------------------`n"

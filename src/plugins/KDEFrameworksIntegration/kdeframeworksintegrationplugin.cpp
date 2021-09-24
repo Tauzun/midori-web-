@@ -30,9 +30,10 @@
 #include <KCrash>
 #include <KAboutData>
 #include <KProtocolInfo>
+#ifdef ENABLE_PURPOSE
 #include <PurposeWidgets/Menu>
 #include <Purpose/AlternativesModel>
-
+#endif
 #include <QWebEngineProfile>
 #include <QMenu>
 #include <QJsonArray>
@@ -56,7 +57,7 @@ void KDEFrameworksIntegrationPlugin::init(InitState state, const QString &settin
         mApp->autoFill()->passwordManager()->switchBackend(QStringLiteral("KWallet"));
     }
 
-    const auto protocols = KProtocolInfo::protocols();
+    const QStringList protocols = KProtocolInfo::protocols();
     for (const QString &protocol : protocols) {
         if (WebPage::internalSchemes().contains(protocol)) {
             continue;
@@ -66,12 +67,12 @@ void KDEFrameworksIntegrationPlugin::init(InitState state, const QString &settin
         mApp->webProfile()->installUrlSchemeHandler(protocol.toUtf8(), handler);
         WebPage::addSupportedScheme(protocol);
     }
-
+#ifdef ENABLE_PURPOSE
     m_sharePageMenu = new Purpose::Menu();
     m_sharePageMenu->setTitle(tr("Share page"));
     m_sharePageMenu->setIcon(QIcon(QStringLiteral(":icons/menu/mail-message-new.svg")));
     m_sharePageMenu->model()->setPluginType(QStringLiteral("ShareUrl"));
-
+#endif
     KAboutData aboutData(QStringLiteral("browser"), QStringLiteral("browser"), QCoreApplication::applicationVersion());
     KAboutData::setApplicationData(aboutData);
 
@@ -83,8 +84,9 @@ void KDEFrameworksIntegrationPlugin::unload()
 {
     mApp->autoFill()->passwordManager()->unregisterBackend(m_backend);
     delete m_backend;
+#ifdef ENABLE_PURPOSE
     delete m_sharePageMenu;
-
+#endif
     for (KIOSchemeHandler *handler : qAsConst(m_kioSchemeHandlers)) {
         mApp->webProfile()->removeUrlSchemeHandler(handler);
         WebPage::removeSupportedScheme(handler->protocol());
@@ -96,7 +98,7 @@ void KDEFrameworksIntegrationPlugin::unload()
 void KDEFrameworksIntegrationPlugin::populateWebViewMenu(QMenu *menu, WebView *view, const WebHitTestResult &r)
 {
     Q_UNUSED(r)
-
+#ifdef ENABLE_PURPOSE
     m_sharePageMenu->model()->setInputData(QJsonObject{
         { QStringLiteral("urls"), QJsonArray {QJsonValue(view->url().toString())} },
         { QStringLiteral("title"), QJsonValue(view->title()) }
@@ -104,10 +106,15 @@ void KDEFrameworksIntegrationPlugin::populateWebViewMenu(QMenu *menu, WebView *v
     m_sharePageMenu->reload();
 
     menu->addAction(m_sharePageMenu->menuAction());
+#else
+    Q_UNUSED(menu);
+    Q_UNUSED(view);
+#endif
+
 }
 
 bool KDEFrameworksIntegrationPlugin::testPlugin()
 {
     // Require the version that the plugin was built with
-    return (Qz::VERSION == QLatin1String(BHAWK_VERSION));
+    return (Qz::VERSION == QLatin1String(MIDORI_VERSION));
 }

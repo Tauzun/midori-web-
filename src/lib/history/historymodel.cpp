@@ -186,7 +186,7 @@ QModelIndex HistoryModel::parent(const QModelIndex &index) const
 Qt::ItemFlags HistoryModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid()) {
-        return 0;
+        return Qt::NoItemFlags;
     }
 
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -336,7 +336,7 @@ void HistoryModel::historyEntryAdded(const HistoryEntry &entry)
 
         m_todayItem = new HistoryItem(0);
         m_todayItem->setStartTimestamp(-1);
-        m_todayItem->setEndTimestamp(QDateTime::currentMSecsSinceEpoch());
+        m_todayItem->setEndTimestamp(QDate::currentDate().startOfDay().toMSecsSinceEpoch());
         m_todayItem->title = tr("Today");
 
         m_rootItem->prependChild(m_todayItem);
@@ -466,17 +466,17 @@ void HistoryModel::init()
         QString itemName;
 
         if (timestampDate == today) {
-            endTimestamp = QDateTime(today).toMSecsSinceEpoch();
+            endTimestamp = QDateTime(today.startOfDay()).toMSecsSinceEpoch();
 
             itemName = tr("Today");
         }
         else if (timestampDate >= week) {
-            endTimestamp = QDateTime(week).toMSecsSinceEpoch();
+            endTimestamp = QDateTime(week.startOfDay()).toMSecsSinceEpoch();
 
             itemName = tr("This Week");
         }
         else if (timestampDate.month() == month.month() && timestampDate.year() == month.year()) {
-            endTimestamp = QDateTime(month).toMSecsSinceEpoch();
+            endTimestamp = QDateTime(month.startOfDay()).toMSecsSinceEpoch();
 
             itemName = tr("This Month");
         }
@@ -484,8 +484,9 @@ void HistoryModel::init()
             QDate startDate(timestampDate.year(), timestampDate.month(), timestampDate.daysInMonth());
             QDate endDate(startDate.year(), startDate.month(), 1);
 
-            timestamp = QDateTime(startDate, QTime(23, 59, 59)).toMSecsSinceEpoch();
-            endTimestamp = QDateTime(endDate).toMSecsSinceEpoch();
+            timestamp = startDate.endOfDay().toMSecsSinceEpoch();
+            endTimestamp = endDate.startOfDay().toMSecsSinceEpoch();
+
             itemName = QString("%1 %2").arg(History::titleCaseLocalizedMonth(timestampDate.month()), QString::number(timestampDate.year()));
         }
 

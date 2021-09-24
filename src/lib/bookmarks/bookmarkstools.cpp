@@ -79,7 +79,7 @@ void BookmarksFoldersMenu::createMenu(QMenu* menu, BookmarkItem* parent)
 
     menu->addSeparator();
 
-    const auto children = parent->children();
+    const QList<BookmarkItem *> children = parent->children();
     for (BookmarkItem* child : children) {
         if (child->isFolder()) {
             QMenu* m = menu->addMenu(child->icon(), child->title());
@@ -206,7 +206,7 @@ bool BookmarksTools::bookmarkAllTabsDialog(QWidget* parent, TabWidget* tabWidget
         return false;
     }
 
-    const auto allTabs = tabWidget->allTabs(false);
+    const QList<WebTab *> allTabs = tabWidget->allTabs(false);
     for (WebTab* tab : allTabs) {
         if (!tab->url().isEmpty()) {
             BookmarkItem* bookmark = new BookmarkItem(BookmarkItem::Url);
@@ -328,7 +328,7 @@ void BookmarksTools::openFolderInTabs(BrowserWindow* window, BookmarkItem* folde
     Q_ASSERT(window);
     Q_ASSERT(folder->isFolder());
 
-    const auto children = folder->children();
+    const QList<BookmarkItem *> children = folder->children();
 
     bool showWarning = folder->children().size() > 10;
     if (!showWarning) {
@@ -341,7 +341,7 @@ void BookmarksTools::openFolderInTabs(BrowserWindow* window, BookmarkItem* folde
     }
 
     if (showWarning) {
-        const auto button = QMessageBox::warning(window, Bookmarks::tr("Confirmation"),
+        const QMessageBox::StandardButton button = QMessageBox::warning(window, Bookmarks::tr("Confirmation"),
                                                  Bookmarks::tr("Are you sure you want to open all bookmarks from '%1' folder in tabs?").arg(folder->title()),
                                                  QMessageBox::Yes | QMessageBox::No);
         if (button != QMessageBox::Yes) {
@@ -431,7 +431,7 @@ void BookmarksTools::addFolderContentsToMenu(QObject *receiver, Menu *menu, Book
     QObject::connect(menu, SIGNAL(aboutToShow()), receiver, SLOT(menuAboutToShow()));
     QObject::connect(menu, SIGNAL(menuMiddleClicked(Menu*)), receiver, SLOT(menuMiddleClicked(Menu*)));
 
-    const auto children = folder->children();
+    const QList<BookmarkItem *> children = folder->children();
     for (BookmarkItem* child : children) {
         addActionToMenu(receiver, menu, child);
     }

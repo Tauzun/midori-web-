@@ -67,7 +67,7 @@ BookmarkItem* IeImporter::importBookmarks()
 
 void IeImporter::readDir(const QDir &dir, BookmarkItem *parent)
 {
-    const auto files = dir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
+    const QList<QFileInfo> files = dir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
     for (const QFileInfo &file : files) {
         if (file.isDir()) {
             BookmarkItem* folder = new BookmarkItem(BookmarkItem::Folder, parent);

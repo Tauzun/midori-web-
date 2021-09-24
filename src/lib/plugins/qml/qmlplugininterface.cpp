@@ -124,7 +124,7 @@ bool QmlPluginInterface::mouseDoubleClick(Qz::ObjectName type, QObject *obj, QMo
     if (!m_mouseDoubleClick.isCallable()) {
         return false;
     }
-    auto qmlMouseEvent = new QmlMouseEvent(event);
+    QmlMouseEvent * qmlMouseEvent = new QmlMouseEvent(event);
     QJSValueList args;
     args.append(QmlQzObjects::ObjectName(type));
     args.append(m_engine->newQObject(qmlMouseEvent));
@@ -139,7 +139,7 @@ bool QmlPluginInterface::mousePress(Qz::ObjectName type, QObject *obj, QMouseEve
     if (!m_mousePress.isCallable()) {
         return false;
     }
-    auto qmlMouseEvent = new QmlMouseEvent(event);
+    QmlMouseEvent * qmlMouseEvent = new QmlMouseEvent(event);
     QJSValueList args;
     args.append(QmlQzObjects::ObjectName(type));
     args.append(m_engine->newQObject(qmlMouseEvent));
@@ -154,7 +154,7 @@ bool QmlPluginInterface::mouseRelease(Qz::ObjectName type, QObject *obj, QMouseE
     if (!m_mouseRelease.isCallable()) {
         return false;
     }
-    auto qmlMouseEvent = new QmlMouseEvent(event);
+    QmlMouseEvent * qmlMouseEvent = new QmlMouseEvent(event);
     QJSValueList args;
     args.append(QmlQzObjects::ObjectName(type));
     args.append(m_engine->newQObject(qmlMouseEvent));
@@ -169,7 +169,7 @@ bool QmlPluginInterface::mouseMove(Qz::ObjectName type, QObject *obj, QMouseEven
     if (!m_mouseMove.isCallable()) {
         return false;
     }
-    auto qmlMouseEvent = new QmlMouseEvent(event);
+    QmlMouseEvent * qmlMouseEvent = new QmlMouseEvent(event);
     QJSValueList args;
     args.append(QmlQzObjects::ObjectName(type));
     args.append(m_engine->newQObject(qmlMouseEvent));
@@ -184,7 +184,7 @@ bool QmlPluginInterface::wheelEvent(Qz::ObjectName type, QObject *obj, QWheelEve
     if (!m_wheelEvent.isCallable()) {
         return false;
     }
-    auto qmlWheelEvent = new QmlWheelEvent(event);
+    QmlWheelEvent * qmlWheelEvent = new QmlWheelEvent(event);
     QJSValueList args;
     args.append(QmlQzObjects::ObjectName(type));
     args.append(m_engine->newQObject(qmlWheelEvent));
@@ -199,7 +199,7 @@ bool QmlPluginInterface::keyPress(Qz::ObjectName type, QObject *obj, QKeyEvent *
     if (!m_keyPress.isCallable()) {
         return false;
     }
-    auto qmlKeyEvent = new QmlKeyEvent(event);
+    QmlKeyEvent * qmlKeyEvent = new QmlKeyEvent(event);
     QJSValueList args;
     args.append(QmlQzObjects::ObjectName(type));
     args.append(m_engine->newQObject(qmlKeyEvent));
@@ -214,7 +214,7 @@ bool QmlPluginInterface::keyRelease(Qz::ObjectName type, QObject *obj, QKeyEvent
     if (!m_keyRelease.isCallable()) {
         return false;
     }
-    auto qmlKeyEvent = new QmlKeyEvent(event);
+    QmlKeyEvent * qmlKeyEvent = new QmlKeyEvent(event);
     QJSValueList args;
     args.append(QmlQzObjects::ObjectName(type));
     args.append(m_engine->newQObject(qmlKeyEvent));
@@ -386,5 +386,5 @@ void QmlPluginInterface::setAcceptNavigationRequest(const QJSValue &acceptNaviga
 
 QQmlListProperty<QObject> QmlPluginInterface::childItems()
 {
-    return QQmlListProperty<QObject>(this, m_childItems);
+    return QQmlListProperty<QObject>(this, &m_childItems);
 }

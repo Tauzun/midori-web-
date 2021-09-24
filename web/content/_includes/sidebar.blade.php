@@ -11,7 +11,7 @@
                     <div class="card-header">
                         <h3 class="text-light">Warning:</h3>
                     </div>
-                    <div class="card-body"><span class="text-warning bg-dark">Blue Hawk is highly experimental and runs on 64 bit Microsoft Windows® 10 only.</span><br /><br /><span class="text-gray">Please <a href="https://gitlab.com/TW3/bhawk/issues" class="external-link">report</a> any bugs you find. <b>Thank You!</b></span></div>
+                    <div class="card-body"><span class="text-warning bg-dark">Blue Hawk is highly experimental and runs on 64 bit Microsoft Windows® 10 only.</span><br /><br /><span class="text-gray">Please <a href="https://gitlab.com/TW3/b/issues" class="external-link">report</a> any bugs you find. <b>Thank You!</b></span></div>
                     <div class="card-footer"><i class="icon icon-download text-gray"></i></div>
                 </div>
             </div>

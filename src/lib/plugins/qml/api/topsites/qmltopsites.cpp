@@ -33,7 +33,7 @@ QList<QObject*> QmlTopSites::get() const
     QList<QObject*> list;
     list.reserve(pages.size());
     for(const SpeedDial::Page &page : pages) {
-        auto mostVisitedUrl = QmlStaticData::instance().getMostVisitedUrl(page.title, page.url);
+        QmlMostVisitedUrl * mostVisitedUrl = QmlStaticData::instance().getMostVisitedUrl(page.title, page.url);
         list.append(mostVisitedUrl);
     }
     return list;

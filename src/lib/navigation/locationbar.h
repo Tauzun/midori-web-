@@ -32,6 +32,7 @@ class TabbedWebView;
 class BookmarksIcon;
 class SiteIcon;
 class GoIcon;
+class DownIcon;
 class AutoFillIcon;
 class BookmarkItem;
 
@@ -54,7 +55,6 @@ public:
         BookmarkItem *bookmark = nullptr;
         LoadRequest loadRequest;
     };
-
     // BrowserWindow can be null!
     BrowserWindow *browserWindow() const;
     void setBrowserWindow(BrowserWindow *window);
@@ -65,6 +65,9 @@ public:
     static QString convertUrlToText(const QUrl &url);
     static SearchEngine searchEngine();
     static LoadAction loadAction(const QString &text);
+
+    BookmarksIcon* m_bookmarkIcon;
+    DownIcon* down;
 
 public Q_SLOTS:
     void setText(const QString &text);
@@ -113,7 +116,6 @@ private:
     LocationCompleter* m_completer;
     QStringListModel* m_domainCompleterModel;
 
-    BookmarksIcon* m_bookmarkIcon;
     GoIcon* m_goIcon;
     SiteIcon* m_siteIcon;
     AutoFillIcon* m_autofillIcon;

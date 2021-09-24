@@ -25,6 +25,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="autoRaise">
       <bool>true</bool>
      </property>
@@ -54,14 +57,14 @@
    </item>
    <item>
     <widget class="QToolButton" name="next">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="toolTip">
       <string>Find the next match for the current search phrase</string>
      </property>
      <property name="text">
       <string>&amp;Next</string>
-     </property>
-     <property name="icon">
-      <iconset theme="go-down-search"/>
      </property>
      <property name="toolButtonStyle">
       <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -70,14 +73,14 @@
    </item>
    <item>
     <widget class="QToolButton" name="previous">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="toolTip">
       <string>Find the previous match for the current search phrase</string>
      </property>
      <property name="text">
       <string>&amp;Previous</string>
-     </property>
-     <property name="icon">
-      <iconset theme="go-up-search"/>
      </property>
      <property name="toolButtonStyle">
       <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -86,6 +89,9 @@
    </item>
    <item>
     <widget class="QToolButton" name="caseSensitive">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="text">
       <string>&amp;Match Case</string>
      </property>

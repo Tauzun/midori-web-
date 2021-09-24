@@ -39,7 +39,6 @@ AutoFill::AutoFill(QObject* parent)
     , m_manager(new PasswordManager(this))
 {
     loadSettings();
-
     // Setup AutoFill userscript
     QWebEngineScript script;
     script.setName(QStringLiteral("_browser_autofill"));
@@ -59,8 +58,8 @@ void AutoFill::loadSettings()
 {
     Settings settings;
     settings.beginGroup(QStringLiteral("Web-Browser-Settings"));
-    m_isStoring = settings.value(QStringLiteral("SavePasswordsOnSites"), true).toBool();
-    m_isAutoComplete = settings.value(QStringLiteral("AutoCompletePasswords"), true).toBool();
+    m_isStoring = settings.value(QStringLiteral("SavePasswordsOnSites"), false).toBool();
+    m_isAutoComplete = settings.value(QStringLiteral("AutoCompletePasswords"), false).toBool();
     settings.endGroup();
 }
 
@@ -229,7 +228,7 @@ QStringList AutoFill::completePage(WebPage *page, const QUrl &frameUrl)
         return m_manager->getUsernames(frameUrl);
     }
 
-    const auto entries = getFormData(frameUrl);
+    const QVector<PasswordEntry> entries = getFormData(frameUrl);
 
     if (!entries.isEmpty()) {
         PasswordEntry entry = entries.at(0);
@@ -318,7 +317,7 @@ bool AutoFill::importPasswords(const QByteArray &data)
                 if (entry.isValid()) {
                     bool containsEntry = false;
 
-                    const auto entries = m_manager->getEntries(QUrl(entry.host));
+                    const QVector<PasswordEntry> entries = m_manager->getEntries(QUrl(entry.host));
                     for (const PasswordEntry &e : entries) {
                         if (e.username == entry.username) {
                             containsEntry = true;

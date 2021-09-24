@@ -132,7 +132,7 @@ void WebScrollBarManager::addWebView(WebView *view)
 
     const int thickness = data->vscrollbar->thickness();
 
-    auto updateValues = [=]() {
+    std::function<void ()> updateValues = [=]() {
         const QSize viewport = viewportSize(view, thickness);
         data->vscrollbar->updateValues(viewport);
         data->vscrollbar->setVisible(data->vscrollbarVisible);

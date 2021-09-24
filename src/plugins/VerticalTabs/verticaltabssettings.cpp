@@ -74,7 +74,7 @@ void VerticalTabsSettings::loadThemes()
 {
     ui->theme->clear();
     bool found = false;
-    const auto files = QDir(QStringLiteral(":verticaltabs/data/themes")).entryInfoList({QStringLiteral("*.css")});
+    const QList<QFileInfo> files = QDir(QStringLiteral(":verticaltabs/data/themes")).entryInfoList({QStringLiteral("*.css")});
     for (const QFileInfo &file : files) {
         ui->theme->addItem(file.baseName(), file.absoluteFilePath());
         if (file.absoluteFilePath() == m_plugin->theme()) {

@@ -20,7 +20,7 @@
 
 #define TLDExtractor_Version "1.0"
 
-#include <QHash>
+#include <QMultiHash>
 #include <QObject>
 #include <QStringList>
 

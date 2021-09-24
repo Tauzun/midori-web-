@@ -54,7 +54,7 @@ void TabIcon::setWebTab(WebTab* tab)
     connect(m_tab->webView(), &WebView::iconChanged, this, &TabIcon::updateIcon);
     connect(m_tab->webView(), &WebView::backgroundActivityChanged, this, [this]() { update(); });
 
-    auto pageChanged = [this](WebPage *page) {
+    std::function<void (WebPage *)> pageChanged = [this](WebPage *page) {
         connect(page, &QWebEnginePage::recentlyAudibleChanged, this, &TabIcon::updateAudioIcon);
     };
     pageChanged(m_tab->webView()->page());

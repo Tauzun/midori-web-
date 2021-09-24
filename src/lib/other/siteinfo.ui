@@ -16,11 +16,17 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="3" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Ok</set>
+     </property>
+     <property name="centerButtons">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -42,6 +48,9 @@
    </item>
    <item row="0" column="0">
     <widget class="HorizontalListWidget" name="listWidget">
+     <property name="cursor" stdset="0">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <item>
       <property name="text">
        <string>General</string>
@@ -56,6 +65,9 @@
    </item>
    <item row="2" column="0">
     <widget class="QStackedWidget" name="stackedWidget">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>

@@ -122,7 +122,7 @@ public:
     static bool isTestModeEnabled();
     static void setTestModeEnabled(bool enabled);
 #ifdef Q_OS_LINUX
-    QByteArray plat;
+    const QByteArray plat = QString(qgetenv("QT_QPA_PLATFORM")).toLatin1();
 #endif
 public Q_SLOTS:
     void addNewTab(const QUrl &url = QUrl());
@@ -169,8 +169,7 @@ private:
     bool m_isPortable;
     bool m_isClosing;
     bool m_isStartingAfterCrash;
-
-    bool setPlat;
+    bool checkUpdates = false;
 
     History* m_history;
     Bookmarks* m_bookmarks;
@@ -204,7 +203,7 @@ private:
 
     void createJumpList();
     void highDPISupport();
-#if !defined(Q_OS_WIN)
+#ifdef Q_OS_LINUX
     void initPulseSupport();
 #endif
 

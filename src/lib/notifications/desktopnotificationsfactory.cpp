@@ -96,7 +96,7 @@ void DesktopNotificationsFactory::showNotification(const QPixmap &icon, const QS
 
         QDBusInterface dbus("org.freedesktop.Notifications", "/org/freedesktop/Notifications", "org.freedesktop.Notifications", QDBusConnection::sessionBus());
         QVariantList args;
-        args.append(QLatin1String("Midori Browser"));
+        args.append(QLatin1String("Bhawk"));
         args.append(m_uint);
         args.append(tmp.fileName());
         args.append(heading);

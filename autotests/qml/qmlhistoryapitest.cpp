@@ -45,7 +45,7 @@ void QmlHistoryApiTest::testAddition()
     HistoryEntry entry = qvariant_cast<HistoryEntry>(historySpy.at(0).at(0));
     QCOMPARE(entry.title, QSL("Example Domain"));
 
-    auto object = m_testHelper.evaluateQObject("Bhawk.History");
+    QObject * object = m_testHelper.evaluateQObject("Bhawk.History");
     QSignalSpy qmlHistorySpy(object, SIGNAL(visited(QmlHistoryItem*)));
     mApp->history()->addHistoryEntry(QUrl("https://sample.com"), "Sample Domain");
     QTRY_COMPARE(qmlHistorySpy.count(), 1);
@@ -59,7 +59,7 @@ void QmlHistoryApiTest::testSearch()
     mApp->history()->addHistoryEntry(QUrl("https://another-example.com"), "Another Example Domain");
     mApp->history()->addHistoryEntry(QUrl("https://sample.com"), "Sample Domain");
     QTRY_COMPARE(historySpy.count(), 3);
-    auto list = m_testHelper.evaluate("Bhawk.History.search('example')").toVariant().toList();
+    QList<QVariant> list = m_testHelper.evaluate("Bhawk.History.search('example')").toVariant().toList();
     QCOMPARE(list.length(), 2);
 }
 
@@ -80,7 +80,7 @@ void QmlHistoryApiTest::testRemoval()
     m_testHelper.evaluate("Bhawk.History.deleteUrl('https://sample.com')");
     QTRY_COMPARE(historySpy.count(), 1);
 
-    auto object = m_testHelper.evaluateQObject("Bhawk.History");
+    QObject * object = m_testHelper.evaluateQObject("Bhawk.History");
     QSignalSpy qmlHistorySpy(object, SIGNAL(visitRemoved(QmlHistoryItem*)));
     mApp->history()->deleteHistoryEntry("https://example.com", "Example Domain");
     QTRY_COMPARE(qmlHistorySpy.count(), 1);

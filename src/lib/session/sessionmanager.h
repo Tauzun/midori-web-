@@ -66,8 +66,8 @@ public Q_SLOTS:
 private Q_SLOTS:
     void aboutToShowSessionsMenu();
     void sessionsDirectoryChanged();
-    void openSession(QString sessionFilePath = QString(), SessionFlags flags = nullptr);
-    void renameSession(QString sessionFilePath = QString(), SessionFlags flags = nullptr);
+    void openSession(QString sessionFilePath = QString(), SessionFlags flags = SessionFlags());
+    void renameSession(QString sessionFilePath = QString(), SessionFlags flags = SessionFlags());
     void saveSession();
 
     void replaceSession(const QString &filePath);

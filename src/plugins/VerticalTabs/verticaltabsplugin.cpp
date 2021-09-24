@@ -63,7 +63,7 @@ void VerticalTabsPlugin::init(InitState state, const QString &settingsPath)
     connect(mApp->plugins(), &PluginProxy::mainWindowCreated, this, &VerticalTabsPlugin::mainWindowCreated);
 
     if (state == LateInitState) {
-        const auto windows = mApp->windows();
+        const QList<BrowserWindow *> windows = mApp->windows();
         for (BrowserWindow *window : windows) {
             mainWindowCreated(window);
             if (window->sideBarManager()->activeSideBar().isEmpty()) {
@@ -191,7 +191,7 @@ void VerticalTabsPlugin::mainWindowCreated(BrowserWindow *window)
 
 void VerticalTabsPlugin::setTabBarVisible(bool visible)
 {
-    const auto windows = mApp->windows();
+    const QList<BrowserWindow *> windows = mApp->windows();
     for (BrowserWindow *window : windows) {
         window->tabWidget()->tabBar()->setForceHidden(!visible);
     }

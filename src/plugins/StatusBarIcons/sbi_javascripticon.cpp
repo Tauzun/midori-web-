@@ -57,7 +57,7 @@ void SBI_JavaScriptIcon::showMenu(const QPoint &point)
         menu.addAction(tr("Enable JavaScript (temporarily)"), this, &SBI_JavaScriptIcon::toggleJavaScript);
     }
 
-    // JavaScript needs to be always enabled for midori: sites
+    // JavaScript needs to be always enabled for browser: sites
     if (currentPage() && currentPage()->url().scheme() == QLatin1String("browser")) {
         menu.actions().at(1)->setEnabled(false);
     }

@@ -22,7 +22,7 @@
 #include <QFlags>
 #include <QtWebEngineVersion>
 
-#ifdef BHAWK_SHAREDLIBRARY
+#ifdef MIDORI_SHAREDLIBRARY
 #define MIDORI_EXPORT Q_DECL_EXPORT
 #else
 #define MIDORI_EXPORT Q_DECL_IMPORT
@@ -60,7 +60,6 @@ MIDORI_EXPORT extern const char *OG_AUTHOR;
 MIDORI_EXPORT extern const char *COPYRIGHT;
 MIDORI_EXPORT extern const char *WWWADDRESS;
 MIDORI_EXPORT extern const char *BUGSADDRESS;
-MIDORI_EXPORT extern const char *WIKIADDRESS;
 MIDORI_EXPORT extern const char *ABOUTADDRESS;
 
 enum BrowserWindowType {

@@ -36,69 +36,61 @@ CommandLineOptions::ActionPairList CommandLineOptions::getActions()
 void CommandLineOptions::parseActions()
 {
     // Options
-    QCommandLineOption authorsOption(QStringList({QStringLiteral("a"), QStringLiteral("authors")}));
-    authorsOption.setDescription(QStringLiteral("Displays author information."));
-
-    QCommandLineOption profileOption(QStringList({QStringLiteral("p"), QStringLiteral("profile")}));
+    QCommandLineOption profileOption(QStringList({QStringLiteral("a"), QStringLiteral("opt-a")}));
     profileOption.setValueName(QStringLiteral("profileName"));
-    profileOption.setDescription(QStringLiteral("Starts with the specified profile."));
+    profileOption.setDescription(QStringLiteral("Start by loading the specified profile."));
 
-    QCommandLineOption noExtensionsOption(QStringList({QStringLiteral("e"), QStringLiteral("no-plugs")}));
-    noExtensionsOption.setDescription(QStringLiteral("Starts without loading plug-ins."));
+    QCommandLineOption noExtensionsOption(QStringList({QStringLiteral("b"), QStringLiteral("opt-b")}));
+    noExtensionsOption.setDescription(QStringLiteral("Start without loading any plug-ins."));
 
-    QCommandLineOption privateBrowsingOption(QStringList({QStringLiteral("i"), QStringLiteral("private")}));
-    privateBrowsingOption.setDescription(QStringLiteral("Starts private browsing."));
+    QCommandLineOption privateBrowsingOption(QStringList({QStringLiteral("c"), QStringLiteral("opt-c")}));
+    privateBrowsingOption.setDescription(QStringLiteral("Start private browsing."));
 
-    QCommandLineOption portableOption(QStringList({QStringLiteral("o"), QStringLiteral("portable")}));
-    portableOption.setDescription(QStringLiteral("Starts in portable mode."));
+    QCommandLineOption portableOption(QStringList({QStringLiteral("e"), QStringLiteral("opt-e")}));
+    portableOption.setDescription(QStringLiteral("Start in portable mode."));
 
-    QCommandLineOption noRemoteOption(QStringList({QStringLiteral("r"), QStringLiteral("no-remote")}));
-    noRemoteOption.setDescription(QStringLiteral("Starts a new browser instance."));
+    QCommandLineOption noRemoteOption(QStringList({QStringLiteral("f"), QStringLiteral("opt-f")}));
+    noRemoteOption.setDescription(QStringLiteral("Start a new browser instance."));
 
-    QCommandLineOption newTabOption(QStringList({QStringLiteral("t"), QStringLiteral("new-tab")}));
-    newTabOption.setDescription(QStringLiteral("Opens a new tab."));
+    QCommandLineOption newWindowOption(QStringList({QStringLiteral("i"), QStringLiteral("opt-i")}));
+    newWindowOption.setDescription(QStringLiteral("Open a new window."));
 
-    QCommandLineOption newWindowOption(QStringList({QStringLiteral("w"), QStringLiteral("new-win")}));
-    newWindowOption.setDescription(QStringLiteral("Opens a new window."));
+    QCommandLineOption downloadManagerOption(QStringList({QStringLiteral("j"), QStringLiteral("opt-j")}));
+    downloadManagerOption.setDescription(QStringLiteral("Open the download manager."));
 
-    QCommandLineOption downloadManagerOption(QStringList({QStringLiteral("d"), QStringLiteral("dl-man")}));
-    downloadManagerOption.setDescription(QStringLiteral("Opens the download manager."));
-
-    QCommandLineOption currentTabOption(QStringList({QStringLiteral("c"), QStringLiteral("cur-tab")}));
+    QCommandLineOption currentTabOption(QStringList({QStringLiteral("k"), QStringLiteral("opt-k")}));
     currentTabOption.setValueName(QStringLiteral("URL"));
-    currentTabOption.setDescription(QStringLiteral("Opens URL in the current tab."));
+    currentTabOption.setDescription(QStringLiteral("Open URL in the current tab."));
 
-    QCommandLineOption openWindowOption(QStringList({QStringLiteral("u"), QStringLiteral("new-win")}));
-    openWindowOption.setValueName(QStringLiteral("URL"));
-    openWindowOption.setDescription(QStringLiteral("Opens URL in a new window."));
+    QCommandLineOption fullscreenOption(QStringList({QStringLiteral("m"), QStringLiteral("opt-m")}));
+    fullscreenOption.setDescription(QStringLiteral("Start in fullscreen."));
 
-    QCommandLineOption fullscreenOption(QStringList({QStringLiteral("f"), QStringLiteral("fullscreen")}));
-    fullscreenOption.setDescription(QStringLiteral("Toggles fullscreen."));
-
+    QCommandLineOption newTabOption(QStringList({QStringLiteral("u"), QStringLiteral("opt-u")}));
+    newTabOption.setDescription(QStringLiteral("Open a new tab."));
+#ifdef Q_OS_LINUX
     QCommandLineOption wmclassOption(QStringList({QStringLiteral("wmclass")}));
     wmclassOption.setValueName(QStringLiteral("WM_CLASS"));
     wmclassOption.setDescription(QStringLiteral("Application class (X11 only)."));
-
+#endif
     // Parser
     QCommandLineParser parser;
-    parser.setApplicationDescription(QStringLiteral("QtWebEngine based browser"));
-    QCommandLineOption helpOption = parser.addHelpOption();
-    QCommandLineOption versionOption = parser.addVersionOption();
-    parser.addOption(authorsOption);
+    parser.setApplicationDescription(QStringLiteral("Midori Web Browser"));
     parser.addOption(profileOption);
     parser.addOption(noExtensionsOption);
     parser.addOption(privateBrowsingOption);
     parser.addOption(portableOption);
     parser.addOption(noRemoteOption);
-    parser.addOption(newTabOption);
+    QCommandLineOption helpOption = parser.addHelpOption();
     parser.addOption(newWindowOption);
     parser.addOption(downloadManagerOption);
     parser.addOption(currentTabOption);
-    parser.addOption(openWindowOption);
     parser.addOption(fullscreenOption);
+    parser.addOption(newTabOption);
+    QCommandLineOption versionOption = parser.addVersionOption();
+#ifdef Q_OS_LINUX
     parser.addOption(wmclassOption);
+#endif
     parser.addPositionalArgument(QStringLiteral("URL"), QStringLiteral("URLs to open"), QStringLiteral("[URL...]"));
-
     // parse() and not process() so we can pass arbitrary options to Chromium
     parser.parse(QCoreApplication::arguments());
 
@@ -110,18 +102,9 @@ void CommandLineOptions::parseActions()
         parser.showVersion();
     }
 
-    if (parser.isSet(authorsOption)) {
-        std::cout << "Astian <contact@astian.org>" << std::endl;
-
-        ActionPair pair;
-        pair.action = Qz::CL_ExitAction;
-        m_actions.append(pair);
-        return;
-    }
-
     if (parser.isSet(profileOption)) {
         const QString profileName = parser.value(profileOption);
-        std::cout << "midori: Starting with profile '" << profileName.toUtf8().data() << "'" << std::endl;
+        std::cout << "browser: Starting with profile '" << profileName.toUtf8().data() << "'" << std::endl;
 
         ActionPair pair;
         pair.action = Qz::CL_StartWithProfile;
@@ -178,26 +161,25 @@ void CommandLineOptions::parseActions()
         m_actions.append(pair);
     }
 
-    if (parser.isSet(openWindowOption)) {
-        ActionPair pair;
-        pair.action = Qz::CL_OpenUrlInNewWindow;
-        pair.text = parser.value(openWindowOption);
-        m_actions.append(pair);
-    }
-
     if (parser.isSet(fullscreenOption)) {
         ActionPair pair;
         pair.action = Qz::CL_ToggleFullScreen;
         m_actions.append(pair);
     }
-
+#ifdef Q_OS_LINUX
     if (parser.isSet(wmclassOption)) {
-        ActionPair pair;
-        pair.action = Qz::CL_WMClass;
-        pair.text = parser.value(wmclassOption);
-        m_actions.append(pair);
-    }
 
+        const QByteArray sessType = qgetenv("XDG_SESSION_TYPE").toLower();
+
+        if (!sessType.contains("wayland")) {
+            ActionPair pair;
+            pair.action = Qz::CL_WMClass;
+            pair.text = parser.value(wmclassOption);
+            m_actions.append(pair);
+        }
+
+    }
+#endif
     if (parser.positionalArguments().isEmpty())
         return;
 

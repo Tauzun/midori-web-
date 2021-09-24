@@ -179,8 +179,7 @@ void LocationCompleter::slotPopupClosed()
 
 void LocationCompleter::addSuggestions(const QStringList &suggestions)
 {
-    const auto suggestionItems = s_model->suggestionItems();
-
+    const QList<QStandardItem *> suggestionItems = s_model->suggestionItems();
     // Delete existing suggestions
     for (QStandardItem *item : suggestionItems) {
         s_model->takeRow(item->row());
@@ -322,7 +321,7 @@ LoadRequest LocationCompleter::createLoadRequest(const QModelIndex &index)
         const QString text = index.data(LocationCompleterModel::TitleRole).toString();
         request = mApp->searchEnginesManager()->searchResult(LocationBar::searchEngine(), text);
     } else if (index.data(LocationCompleterModel::VisitSearchItemRole).toBool()) {
-        const auto action = LocationBar::loadAction(index.data(LocationCompleterModel::SearchStringRole).toString());
+        const LocationBar::LoadAction action = LocationBar::loadAction(index.data(LocationCompleterModel::SearchStringRole).toString());
         switch (action.type) {
         case LocationBar::LoadAction::Url:
         case LocationBar::LoadAction::Search:

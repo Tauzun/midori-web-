@@ -90,9 +90,8 @@ CookieManager::CookieManager(QWidget *parent)
     connect(ui->search, &QLineEdit::textChanged, this, &CookieManager::filterString);
     connect(mApp->cookieJar(), &CookieJar::cookieAdded, this, &CookieManager::addCookie);
     connect(mApp->cookieJar(), &CookieJar::cookieRemoved, this, &CookieManager::removeCookie);
-
     // Load cookies
-    const auto allCookies = mApp->cookieJar()->getAllCookies();
+    const QVector<QNetworkCookie> allCookies = mApp->cookieJar()->getAllCookies();
     for (const QNetworkCookie &cookie : allCookies) {
         addCookie(cookie);
     }
@@ -118,7 +117,7 @@ void CookieManager::removeAll()
 void CookieManager::remove()
 {
     QList<QNetworkCookie> cookies;
-    auto selection = ui->cookieTree->selectedItems();
+    QList<QTreeWidgetItem *> selection = ui->cookieTree->selectedItems();
 
     for (int i = 0; i < selection.count(); i++) {
         QTreeWidgetItem* current = selection[i];

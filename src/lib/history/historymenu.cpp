@@ -146,7 +146,7 @@ void HistoryMenu::aboutToShowClosedTabs()
 
     TabWidget* tabWidget = m_window->tabWidget();
 
-    const auto closedTabs = tabWidget->closedTabsManager()->closedTabs();
+    const QVector<ClosedTabsManager::Tab> closedTabs = tabWidget->closedTabsManager()->closedTabs();
     for (int i = 0; i < closedTabs.count(); ++i) {
         const ClosedTabsManager::Tab tab = closedTabs.at(i);
         const QString title = QzTools::truncatedText(tab.tabState.title, 40);
@@ -169,7 +169,7 @@ void HistoryMenu::aboutToShowClosedWindows()
 
     ClosedWindowsManager *manager = mApp->closedWindowsManager();
 
-    const auto closedWindows = manager->closedWindows();
+    const QVector<ClosedWindowsManager::Window> closedWindows = manager->closedWindows();
     for (int i = 0; i < closedWindows.count(); ++i) {
         const ClosedWindowsManager::Window window = closedWindows.at(i);
         const QString title = QzTools::truncatedText(window.title, 40);

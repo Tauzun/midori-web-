@@ -1,2 +1,2 @@
 User-agent: *
-Sitemap: https://tw3.gitlab.io/bhawk/sitemap.xml
+Sitemap: https://gitlab.com/midori-web/midori-desktop/

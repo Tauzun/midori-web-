@@ -68,7 +68,7 @@ void ProtocolHandlerManager::save()
     Settings settings;
     settings.remove(QStringLiteral("ProtocolHandlers"));
     settings.beginGroup(QStringLiteral("ProtocolHandlers"));
-    for (auto it = m_protocolHandlers.cbegin(); it != m_protocolHandlers.cend(); ++it) {
+    for (QHash<QString, QUrl>::const_iterator it = m_protocolHandlers.cbegin(); it != m_protocolHandlers.cend(); ++it) {
         settings.setValue(it.key(), it.value());
     }
     settings.endGroup();

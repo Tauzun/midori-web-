@@ -53,7 +53,7 @@ void HTML5PermissionsDialog::showFeaturePermissions(QWebEnginePage::Feature feat
 
     ui->treeWidget->clear();
 
-    const auto grantedSites = m_granted.value(feature);
+    const QStringList grantedSites = m_granted.value(feature);
     for (const QString &site : grantedSites) {
         QTreeWidgetItem* item = new QTreeWidgetItem(ui->treeWidget);
         item->setText(0, site);
@@ -62,7 +62,7 @@ void HTML5PermissionsDialog::showFeaturePermissions(QWebEnginePage::Feature feat
         ui->treeWidget->addTopLevelItem(item);
     }
 
-    const auto deniedSites = m_denied.value(feature);
+    const QStringList deniedSites = m_denied.value(feature);
     for (const QString &site : deniedSites) {
         QTreeWidgetItem* item = new QTreeWidgetItem(ui->treeWidget);
         item->setText(0, site);
@@ -110,6 +110,10 @@ QWebEnginePage::Feature HTML5PermissionsDialog::currentFeature() const
         return QWebEnginePage::MediaAudioVideoCapture;
     case 5:
         return QWebEnginePage::MouseLock;
+    case 6:
+        return QWebEnginePage::DesktopVideoCapture;
+    case 7:
+        return QWebEnginePage::DesktopAudioVideoCapture;
     default:
         Q_UNREACHABLE();
         return QWebEnginePage::Notifications;

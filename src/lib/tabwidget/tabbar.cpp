@@ -103,9 +103,9 @@ TabBar::TabBar(BrowserWindow* window, TabWidget* tabWidget)
     setAcceptDrops(true);
     setDrawBase(false);
     setMovable(true);
+    setCursor(Qt::PointingHandCursor);
 
     connect(this, &ComboTabBar::currentChanged, this, &TabBar::currentTabChanged);
-
     // ComboTabBar features
     setUsesScrollButtons(true);
     setCloseButtonsToolTip(BrowserWindow::tr("Close Tab"));
@@ -683,7 +683,7 @@ void TabBar::dropEvent(QDropEvent* event)
     int index = tabAt(event->pos());
     if (index == -1) {
         if (mime->hasUrls()) {
-            const auto urls = mime->urls();
+            const QList<QUrl> urls = mime->urls();
             for (const QUrl &url : urls) {
                 m_tabWidget->addView(url, Qz::NT_SelectedTabAtTheEnd);
             }

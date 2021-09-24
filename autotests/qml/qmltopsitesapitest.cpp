@@ -33,7 +33,7 @@ void QmlTopSitesApiTest::cleanupTestCase()
 void QmlTopSitesApiTest::testTopSites()
 {
     mApp->plugins()->speedDial()->addPage(QUrl("https://example.com"), "Example Domain");
-    auto list = m_testHelper.evaluate("Bhawk.TopSites.get()").toVariant().toList();
+    QList<QVariant> list = m_testHelper.evaluate("Bhawk.TopSites.get()").toVariant().toList();
     QCOMPARE(list.length(), 1);
     QObject* object = qvariant_cast<QObject*>(list.at(0));
     QVERIFY(object);

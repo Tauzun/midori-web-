@@ -123,7 +123,7 @@ void QmlPlugins::registerQmlTypes()
         }
         QString filePath = qmlEngine->extensionPath();
 
-        auto *object = new QmlNotifications();
+        QmlNotifications *object = new QmlNotifications();
         object->setPluginPath(filePath);
         return object;
     });

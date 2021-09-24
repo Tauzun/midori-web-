@@ -59,8 +59,8 @@ bool OcsSupport::handleUrl(const QUrl &url)
     QString fileType;
     QString fileName;
 
-    const auto items = QUrlQuery(url).queryItems(QUrl::FullyDecoded);
-    for (const auto &item : items) {
+    const QList<QPair<QString, QString>> items = QUrlQuery(url).queryItems(QUrl::FullyDecoded);
+    for (const QPair<QString, QString> &item : items) {
         if (item.first == QLatin1String("url")) {
             fileUrl = QUrl(item.second);
         } else if (item.first == QLatin1String("type")) {
@@ -70,7 +70,7 @@ bool OcsSupport::handleUrl(const QUrl &url)
         }
     }
 
-    if (!fileType.startsWith(QLatin1String("bhawk_"))) {
+    if (!fileType.startsWith(QLatin1String("midori_"))) {
         return false;
     }
 
@@ -110,22 +110,21 @@ bool OcsSupport::handleUrl(const QUrl &url)
 
     return true;
 }
-
 // static
 OcsSupport *OcsSupport::instance()
 {
     return qz_ocs_support();
 }
 
+static void showErrorTheme() {
+    mApp->desktopNotifications()->showNotification(QObject::tr("Installation failed"), QObject::tr("Failed to install theme"));
+}
+
 void OcsSupport::installTheme(const KArchiveDirectory *directory)
 {
-    auto showError = []() {
-        mApp->desktopNotifications()->showNotification(tr("Installation failed"), tr("Failed to install theme"));
-    };
-
     if (directory->entries().size() != 1) {
         qWarning() << "Invalid archive format";
-        showError();
+        showErrorTheme();
         return;
     }
 
@@ -133,7 +132,7 @@ void OcsSupport::installTheme(const KArchiveDirectory *directory)
     const KArchiveEntry *entry = directory->entry(name);
     if (!entry || !entry->isDirectory()) {
         qWarning() << "Invalid archive format";
-        showError();
+        showErrorTheme();
         return;
     }
 
@@ -150,7 +149,7 @@ void OcsSupport::installTheme(const KArchiveDirectory *directory)
 
     if (!directory->copyTo(targetDir)) {
         qWarning() << "Failed to copy theme to" << targetDir;
-        showError();
+        showErrorTheme();
         return;
     }
 
@@ -159,15 +158,16 @@ void OcsSupport::installTheme(const KArchiveDirectory *directory)
     mApp->desktopNotifications()->showNotification(tr("Theme installed"), tr("'%1' was successfully installed").arg(metaData.name()));
 }
 
+static void showErrorExtension() {
+    mApp->desktopNotifications()->showNotification(QObject::tr("Installation failed"), QObject::tr("Failed to install plug-in"));
+}
+
 void OcsSupport::installExtension(const KArchiveDirectory *directory)
 {
-    auto showError = []() {
-        mApp->desktopNotifications()->showNotification(tr("Installation failed"), tr("Failed to install plug-in"));
-    };
-
     if (directory->entries().size() != 1) {
         qWarning() << "Invalid archive format";
-        showError();
+        showErrorExtension();
+
         return;
     }
 
@@ -175,7 +175,8 @@ void OcsSupport::installExtension(const KArchiveDirectory *directory)
     const KArchiveEntry *entry = directory->entry(name);
     if (!entry || !entry->isDirectory()) {
         qWarning() << "Invalid archive format";
-        showError();
+        showErrorExtension();
+
         return;
     }
 
@@ -191,7 +192,8 @@ void OcsSupport::installExtension(const KArchiveDirectory *directory)
 
     if (type.isEmpty()) {
         qWarning() << "Unsupported plug-in type" << extensionType;
-        showError();
+        showErrorExtension();
+
         return;
     }
 
@@ -206,7 +208,7 @@ void OcsSupport::installExtension(const KArchiveDirectory *directory)
 
     if (!directory->copyTo(targetDir)) {
         qWarning() << "Failed to copy plug-in to" << targetDir;
-        showError();
+        showErrorExtension();
         return;
     }
 
@@ -215,7 +217,7 @@ void OcsSupport::installExtension(const KArchiveDirectory *directory)
     const QString fullId = QStringLiteral("%1:%2/%3").arg(type, targetDir, name);
     if (!mApp->plugins()->addPlugin(fullId)) {
         qWarning() << "Failed to add plugin" << fullId;
-        showError();
+        showErrorExtension();
         return;
     }
 

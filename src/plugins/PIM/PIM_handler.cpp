@@ -243,7 +243,7 @@ QString PIM_Handler::matchingJsTable() const
     while (i.hasNext()) {
         i.next();
 
-        const auto ivalues = i.value();
+        const QStringList ivalues = i.value();
         for (const QString &value : ivalues) {
             QString key = m_allInfo.value(i.key());
             key.replace(QLatin1Char('"'), QLatin1String("\\\""));

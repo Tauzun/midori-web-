@@ -83,6 +83,7 @@ private:
     QPointer<GM_Settings> m_settings;
 
     QStringList m_disabledScripts;
+    bool m_noScriptIsolation;
     GM_JSObject *m_jsObject;
     QList<GM_Script*> m_scripts;
 

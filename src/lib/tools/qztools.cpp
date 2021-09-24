@@ -518,7 +518,7 @@ QString QzTools::resolveFromPath(const QString &name)
         return QString();
     }
 
-    const QStringList dirs = path.split(QLatin1Char(':'), QString::SkipEmptyParts);
+    const QStringList dirs = path.split(QLatin1Char(':'), Qt::SkipEmptyParts);
 
     for (const QString &dir : dirs) {
         QDir d(dir);

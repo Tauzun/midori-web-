@@ -56,7 +56,8 @@ void SessionManager::aboutToShowSessionsMenu()
 
     QActionGroup *group = new QActionGroup(menu);
 
-    const auto sessions = sessionMetaData(/*withBackups*/ false);
+    const QList<SessionManager::SessionMetaData> sessions = sessionMetaData(/*withBackups*/ false);
+
     for (const SessionManager::SessionMetaData &metaData : sessions) {
         QAction* action = menu->addAction(metaData.name);
         action->setCheckable(true);
@@ -236,7 +237,7 @@ QList<SessionManager::SessionMetaData> SessionManager::sessionMetaData(bool with
 {
     fillSessionsMetaDataListIfNeeded();
 
-    auto out = m_sessionsMetaDataList;
+    QList<SessionManager::SessionMetaData> out = m_sessionsMetaDataList;
 
     if (withBackups && QFile::exists(m_firstBackupSession)) {
         SessionMetaData data;

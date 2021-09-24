@@ -35,6 +35,9 @@
    </item>
    <item>
     <widget class="HistoryTreeView" name="historyTree">
+     <property name="cursor" stdset="0">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="alternatingRowColors">
       <bool>true</bool>
      </property>

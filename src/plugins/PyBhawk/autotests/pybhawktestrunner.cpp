@@ -48,7 +48,7 @@ int main(int argc, char **argv)
         return 2;
     }
 
-    auto run_script = (bool(*)(const QByteArray&)) library.resolve("pybhawk_run_script");
+    std::function<bool (const QByteArray &)> run_script = (bool(*)(const QByteArray&)) library.resolve("pybhawk_run_script");
     if (!run_script) {
         return 3;
     }

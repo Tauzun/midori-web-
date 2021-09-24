@@ -16,6 +16,9 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
     <widget class="QPushButton" name="bookmarksButton">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="text">
       <string>Add to Bookmarks</string>
      </property>
@@ -26,6 +29,9 @@
    </item>
    <item row="0" column="0">
     <widget class="QPushButton" name="speeddialButton">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -42,7 +48,11 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="BookmarksFoldersButton" name="folderButton"/>
+    <widget class="BookmarksFoldersButton" name="folderButton">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

@@ -81,7 +81,7 @@ To run Blue Hawk, your computer system must meet the following specs:
 
 There is no hard decision regarding the timing frequency of releases. Compiled binaries are offered for testing purposes and depend upon the external services which build them.
 
-Release archives are created in an open, reproducible and transparent way. You can follow all the way from [commit](https://gitlab.com/TW3/bhawk/commits/staging) to [build](https://gitlab.com/TW3/bhawk/-/pipelines) via log files.
+Release archives are created in an open, reproducible and transparent way. You can follow all the way from [commit](https://gitlab.com/TW3/b/commits/staging) to [build](https://gitlab.com/TW3/b/-/pipelines) via log files.
 In short, this means that you can absolutely trust that the files you are downloading have been created by a clean source. Installing or using the software carries no hidden risks which could in any way knowingly or deliberately, compromise the security of your computer.
 
 Releases will be made as and when ready. Usually based upon major feature completion or security updates. However, depending upon code churn; this may change at any time.
@@ -94,7 +94,7 @@ To update the program, simply copy the contents of a newer release archive over 
 
 ### Bug Reports
 
-Please [report](https://gitlab.com/TW3/bhawk/issues) any bugs you find.
+Please [report](https://gitlab.com/TW3/b/issues) any bugs you find.
 
 ### Infrastructure
 
@@ -125,7 +125,7 @@ If you are a news reporter or other type of content creator, please feel free to
 
         @endmarkdown
 
-<img src="@url('assets/images/bhawk-blue.svg')" class="img-responsive height-256" alt="Blue Hawk Logo" />
+<img src="@url('assets/images/midori-green.svg')" class="img-responsive height-256" alt="Blue Hawk Logo" />
 
     </main></div>
 

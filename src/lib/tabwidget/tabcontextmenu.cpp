@@ -34,6 +34,7 @@ TabContextMenu::TabContextMenu(int index, BrowserWindow *window, Options options
     , m_options(options)
 {
     setObjectName("tabcontextmenu");
+    setCursor(Qt::PointingHandCursor);
 
     TabWidget *tabWidget = m_window->tabWidget();
     connect(this, &TabContextMenu::tabCloseRequested, tabWidget->tabBar(), &ComboTabBar::tabCloseRequested);

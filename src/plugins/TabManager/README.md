@@ -1,6 +1,6 @@
 TabManager plug-in for Bhawk
 -------------------------------------------------
-This plug-in adds the ability to manage tabs and windows in Blue Hawk.
+This plug-in adds the ability to manage tabs and windows in Midori Browser.
 
 ![tbm3](http://i.imgur.com/Gh8bEXo.png)
 

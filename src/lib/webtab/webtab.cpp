@@ -55,7 +55,7 @@ WebTab::SavedTab::SavedTab(WebTab* webTab)
     zoomLevel = webTab->zoomLevel();
     parentTab = webTab->parentTab() ? webTab->parentTab()->tabIndex() : -1;
 
-    const auto children = webTab->childTabs();
+    const QVector<WebTab *> children = webTab->childTabs();
     childTabs.reserve(children.count());
     for (WebTab *child : children) {
         childTabs.append(child->tabIndex());
@@ -186,13 +186,12 @@ WebTab::WebTab(QWidget *parent)
     connect(m_webView, &TabbedWebView::loadStarted, this, std::bind(&WebTab::loadingChanged, this, true));
     connect(m_webView, &TabbedWebView::loadFinished, this, std::bind(&WebTab::loadingChanged, this, false));
 
-    auto pageChanged = [this](WebPage *page) {
+    std::function<void (WebPage *)> pageChanged = [this](WebPage *page) {
         connect(page, &WebPage::audioMutedChanged, this, &WebTab::playingChanged);
         connect(page, &WebPage::recentlyAudibleChanged, this, &WebTab::mutedChanged);
     };
     pageChanged(m_webView->page());
     connect(m_webView, &TabbedWebView::pageChanged, this, pageChanged);
-
     // Workaround QTabBar not immediately noticing resizing of tab buttons
     connect(m_tabIcon, &TabIcon::resized, this, [this]() {
         if (m_tabBar) {
@@ -218,14 +217,14 @@ bool WebTab::haveInspector() const
 
 void WebTab::showWebInspector(bool inspectElement)
 {
-    if (!WebInspector::isEnabled() || haveInspector())
+    if (!WebInspector::isEnabled() || haveInspector()) {
         return;
-
+    }
     WebInspector *inspector = new WebInspector(this);
     inspector->setView(m_webView);
-    if (inspectElement)
+    if (inspectElement) {
         inspector->inspectElement();
-
+    }
     const int height = inspector->sizeHint().height();
     m_splitter->addWidget(inspector);
     m_splitter->setSizes({m_splitter->height() - height, height});
@@ -233,10 +232,11 @@ void WebTab::showWebInspector(bool inspectElement)
 
 void WebTab::toggleWebInspector()
 {
-    if (!haveInspector())
+    if (!haveInspector()) {
         showWebInspector();
-    else
+    } else {
         delete m_splitter->widget(1);
+    }
 }
 
 void WebTab::showSearchToolBar(const QString &searchText)
@@ -267,8 +267,7 @@ QUrl WebTab::url() const
             return m_webView->page()->requestedUrl();
         }
         return m_webView->url();
-    }
-    else {
+    } else {
         return m_savedTab.url;
     }
 }
@@ -315,14 +314,11 @@ void WebTab::detach()
 {
     Q_ASSERT(m_window);
     Q_ASSERT(m_tabBar);
-
     // Remove from tab tree
     removeFromTabTree();
-
     // Remove icon from tab
     m_tabBar->setTabButton(tabIndex(), m_tabBar->iconButtonPosition(), nullptr);
     m_tabIcon->setParent(this);
-
     // Remove the tab from tabbar
     m_window->tabWidget()->removeTab(tabIndex());
     setParent(nullptr);
@@ -336,7 +332,6 @@ void WebTab::detach()
         emit currentTabChanged(m_isCurrentTab);
     }
     m_tabBar->disconnect(this);
-
     // WebTab is now standalone widget
     m_window = nullptr;
     m_tabBar = nullptr;
@@ -353,7 +348,7 @@ void WebTab::attach(BrowserWindow* window)
     m_tabBar->setTabButton(tabIndex(), m_tabBar->iconButtonPosition(), m_tabIcon);
     QTimer::singleShot(0, m_tabIcon, &TabIcon::updateIcon);
 
-    auto currentChanged = [this](int index) {
+    std::function<void (int)> currentChanged = [this](int index) {
         const bool wasCurrent = m_isCurrentTab;
         m_isCurrentTab = index == tabIndex();
         if (wasCurrent != m_isCurrentTab) {
@@ -390,12 +385,33 @@ void WebTab::reload()
 
 void WebTab::load(const LoadRequest &request)
 {
+
     if (!isRestored()) {
         tabActivated();
         QTimer::singleShot(0, this, std::bind(&WebTab::load, this, request));
     } else {
         m_webView->load(request);
     }
+
+    if (qzSettings->loadTabsOnActivation) {
+
+        if (m_isCurrentTab) {
+            m_webView->page()->setDefaultPageStatus();
+
+            if (QStringLiteral("http").contains(url().scheme())) {
+                if (!WebInspector::isEnabled() || haveInspector()) {
+
+                    QTimer::singleShot(7200000, this, [this]() { // 7200000 miliseconds = 120 minutes (or 2hrs)
+                        m_webView->page()->setFrozenPageStatus();
+                    });
+
+                }
+            }
+
+        }
+
+    }
+
 }
 
 void WebTab::unload()
@@ -565,11 +581,10 @@ void WebTab::restoreTab(const WebTab::SavedTab &tab)
         m_tabBar->setTabText(index, tab.title);
         m_locationBar->showUrl(tab.url);
         m_tabIcon->updateIcon();
-    }
-    else {
-        // This is called only on restore session and restoring tabs immediately
-        // crashes QtWebEngine, waiting after initialization is complete fixes it
-        QTimer::singleShot(1000, this, [=]() {
+    } else {
+        // This is called only on restore session. Restoring tabs immediately
+        // crashes QtWebEngine. Waiting after initialization is complete fixes it.
+        QTimer::singleShot(600, this, [=]() {
             p_restoreTab(tab);
         });
     }
@@ -578,17 +593,8 @@ void WebTab::restoreTab(const WebTab::SavedTab &tab)
 void WebTab::p_restoreTab(const QUrl &url, const QByteArray &history, int zoomLevel)
 {
     m_webView->load(url);
-
-    // Restoring history of internal pages crashes QtWebEngine 5.8
-    static const QStringList blacklistedSchemes = {
-        QStringLiteral("view-source"),
-        QStringLiteral("chrome")
-    };
-
-    if (!blacklistedSchemes.contains(url.scheme())) {
-        QDataStream stream(history);
-        stream >> *m_webView->history();
-    }
+    QDataStream stream(history);
+    stream >> *m_webView->history();
 
     m_webView->setZoomLevel(zoomLevel);
     m_webView->setFocus();
@@ -612,6 +618,7 @@ void WebTab::showNotification(QWidget* notif)
 void WebTab::loadFinished()
 {
     titleWasChanged(m_webView->title());
+
 }
 
 void WebTab::titleWasChanged(const QString &title)
@@ -641,6 +648,7 @@ void WebTab::tabActivated()
         m_savedTab.clear();
         emit restoredChanged(isRestored());
     });
+
 }
 
 static WebTab::AddChildBehavior s_addChildBehavior = WebTab::AppendChild;

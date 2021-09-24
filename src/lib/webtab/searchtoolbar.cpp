@@ -29,7 +29,7 @@ SearchToolBar::SearchToolBar(WebView* view, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SearchToolbar)
     , m_view(view)
-    , m_findFlags(0)
+    , m_findFlags(QWebEnginePage::FindFlags())
 {
     setAttribute(Qt::WA_DeleteOnClose);
     ui->setupUi(this);
@@ -80,7 +80,7 @@ void SearchToolBar::close()
 
 void SearchToolBar::findNext()
 {
-    m_findFlags = 0;
+    m_findFlags = QWebEnginePage::FindFlags();
     updateFindFlags();
 
     searchText(ui->lineEdit->text());

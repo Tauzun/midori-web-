@@ -39,9 +39,7 @@ ThemeManager::ThemeManager(QWidget* parent, Preferences* preferences)
     ui->license->hide();
 
     Settings settings;
-    settings.beginGroup("Themes");
-    m_activeTheme = settings.value("activeTheme", DEFAULT_THEME_NAME).toString();
-    settings.endGroup();
+    m_activeTheme = settings.value("Themes/activeTheme", DEFAULT_THEME_NAME).toString();
 
     const QStringList themePaths = DataPaths::allPaths(DataPaths::Themes);
 
@@ -105,7 +103,7 @@ ThemeManager::ThemeManager(QWidget* parent, Preferences* preferences)
     Theme info;
     info.name = QLatin1String("None");
     info.description = QLatin1String("No styles at all");
-    info.author = QLatin1String("Astian");
+    info.author = QLatin1String("TW3");
     m_themeHash.insert("None", info);
 
     if (m_activeTheme == QLatin1String("None")) {
@@ -143,7 +141,7 @@ void ThemeManager::removeTheme()
     }
     Theme currentTheme = m_themeHash[currentItem->data(Qt::UserRole).toString()];
 
-    const auto button = QMessageBox::warning(this, tr("Confirmation"),
+    const QMessageBox::StandardButton button = QMessageBox::warning(this, tr("Confirmation"),
                                              tr("Are you sure you want to remove '%1'?").arg(currentTheme.name),
                                              QMessageBox::Yes | QMessageBox::No);
     if (button != QMessageBox::Yes) {
@@ -167,7 +165,26 @@ void ThemeManager::currentChanged()
     ui->author->setText(currentTheme.author);
     ui->description->setText(currentTheme.description);
     ui->license->setHidden(currentTheme.license.isEmpty());
-    ui->remove->setEnabled(QFileInfo(currentTheme.themePath).isWritable());
+
+    const int a = QString::compare(currentTheme.name, "Noir", Qt::CaseInsensitive);
+    const int b = QString::compare(currentTheme.name, "Vivid", Qt::CaseInsensitive);
+    const int c = QString::compare(currentTheme.name, "None", Qt::CaseInsensitive);
+    int d = 0;
+
+    if (a == 0) {
+        d = 1;
+    } else if (b == 0) {
+        d = 1;
+    } else if (c == 0) {
+        d = 1;
+    }
+
+    ui->remove->setEnabled(false);
+
+    if (d != 1) {
+        ui->remove->setEnabled(QFileInfo(currentTheme.themePath).isWritable());
+    }
+
 }
 
 ThemeManager::Theme ThemeManager::parseTheme(const QString &path, const QString &name)
@@ -217,9 +234,8 @@ void ThemeManager::save()
     }
 
     Settings settings;
-    settings.beginGroup("Themes");
-    settings.setValue("activeTheme", currentItem->data(Qt::UserRole));
-    settings.endGroup();
+    settings.setValue("Themes/activeTheme", currentItem->data(Qt::UserRole));
+
 }
 
 ThemeManager::~ThemeManager()

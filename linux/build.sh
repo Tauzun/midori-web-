@@ -4,14 +4,12 @@
 # Builds a binary of the application
 #
 
-# See the file 'Dockerfile' for the dnf command to install the build deps when using Fedora
-# Side note: Update the Docker image to be Fedora 33
+# See the file 'Dockerfile' for the dnf command to install the build deps when using Fedora (version 33 or newer recommended)
 
 # Set NO_PLUGINS:BOOL="0" to build the plugins
 
 CURDIR="${PWD}"
 BINOUT="$CURDIR/../build/midori"
-
 
 cd ..
 if [ -d "build" ]; then rm -rf build; fi

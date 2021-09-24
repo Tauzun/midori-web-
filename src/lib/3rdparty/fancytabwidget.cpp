@@ -43,7 +43,6 @@
 #include <QToolButton>
 #include <QToolTip>
 #include <QVBoxLayout>
-//#include <QWindowsStyle>
 
 using namespace Core;
 using namespace Internal;
@@ -243,7 +242,6 @@ FancyTabBar::FancyTabBar(QWidget* parent)
     , m_currentIndex(-1)
 {
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
-    //setStyle(new QWindowsStyle);
     setMinimumWidth(qMax(2 * m_rounding, 40));
     setAttribute(Qt::WA_Hover, true);
     setFocusPolicy(Qt::NoFocus);
@@ -255,7 +253,6 @@ FancyTabBar::FancyTabBar(QWidget* parent)
     layout->setSpacing(0);
     layout->setContentsMargins(0, 0, 0, 0);
     setLayout(layout);
-
     // We use a zerotimer to keep the sidebar responsive
     connect(&m_triggerTimer, &QTimer::timeout, this, &FancyTabBar::emitCurrentIndex);
 }
@@ -299,7 +296,6 @@ void FancyTabBar::paintEvent(QPaintEvent* event)
         if (i != currentIndex()) {
             paintTab(&p, i);
         }
-
     // paint active tab last, since it overlaps the neighbors
     if (currentIndex() != -1) {
         paintTab(&p, currentIndex());
@@ -342,7 +338,6 @@ void FancyTabBar::setTabToolTip(int index, const QString &toolTip)
 {
     m_tabs[index]->setToolTip(toolTip);
 }
-
 // This keeps the sidebar responsive since
 // we get a repaint before loading the
 // mode itself
@@ -398,14 +393,12 @@ void FancyTabBar::paintTab(QPainter* painter, int tabIndex) const
         grad.setColorAt(1, QColor(255, 255, 255, 210));
         painter->fillRect(rect.adjusted(0, 0, 0, -1), grad);
         painter->restore();
-
         //shadows
         painter->setPen(QColor(0, 0, 0, 110));
         painter->drawLine(rect.topLeft() + QPoint(1, -1), rect.topRight() - QPoint(0, 1));
         painter->drawLine(rect.bottomLeft(), rect.bottomRight());
         painter->setPen(QColor(0, 0, 0, 40));
         painter->drawLine(rect.topLeft(), rect.bottomLeft());
-
         //highlights
         painter->setPen(QColor(255, 255, 255, 50));
         painter->drawLine(rect.topLeft() + QPoint(0, -2), rect.topRight() - QPoint(0, 2));
@@ -415,7 +408,6 @@ void FancyTabBar::paintTab(QPainter* painter, int tabIndex) const
         painter->drawLine(rect.topRight() + QPoint(0, 1), rect.bottomRight() - QPoint(0, 1));
         painter->drawLine(rect.bottomLeft() + QPoint(0, -1), rect.bottomRight() - QPoint(0, 1));
     }
-
     // QString tabText(painter->fontMetrics().elidedText(this->tabText(tabIndex), Qt::ElideMiddle, width()));
     QRect tabTextRect(tabRect(tabIndex));
     QRect tabIconRect(tabTextRect);
@@ -426,8 +418,6 @@ void FancyTabBar::paintTab(QPainter* painter, int tabIndex) const
     boldFont.setBold(true);
     painter->setFont(boldFont);
     painter->setPen(selected ? QColor(255, 255, 255, 160) : QColor(0, 0, 0, 110));
-    // int textFlags = Qt::AlignCenter | Qt::AlignBottom;
-    // painter->drawText(tabTextRect, textFlags, tabText);
     painter->setPen(selected ? QColor(60, 60, 60) : Utils::StyleHelper::panelTextColor());
 #ifndef Q_OS_MACOS
     if (!selected) {
@@ -437,8 +427,6 @@ void FancyTabBar::paintTab(QPainter* painter, int tabIndex) const
         grad.setColorAt(0, Qt::transparent);
         grad.setColorAt(0.5, QColor(255, 255, 255, fader));
         grad.setColorAt(1, Qt::transparent);
-//        painter->fillRect(rect, grad);
-//        painter->setPen(QPen(grad, 1.0));
         painter->fillRect(rect, QColor(255, 255, 255, fader));
         painter->setPen(QPen(QColor(255, 255, 255, fader), 1.0));
         painter->drawLine(rect.topLeft(), rect.topRight());
@@ -447,12 +435,10 @@ void FancyTabBar::paintTab(QPainter* painter, int tabIndex) const
     }
 #endif
 
-    // const int textHeight = painter->fontMetrics().height();
     tabIconRect.adjust(0, 6, 0, -6);
     Utils::StyleHelper::drawIconWithShadow(tabIcon(tabIndex), tabIconRect, painter, selected ? QIcon::Selected : QIcon::Normal);
 
     painter->translate(0, -1);
-    // painter->drawText(tabTextRect, textFlags, tabText);
     painter->restore();
 }
 
@@ -462,7 +448,6 @@ void FancyTabBar::setCurrentIndex(int index)
     update();
     emit currentChanged(m_currentIndex);
 }
-
 
 //////
 // FancyColorButton
@@ -605,14 +590,12 @@ void FancyTabWidget::SetMode(Mode mode)
     tab_bar_ = nullptr;
 
     use_background_ = false;
-
     // Create new tab bar
     switch (mode) {
     case Mode_None:
     default:
         qDebug() << "Unknown fancy tab mode" << mode;
         // fallthrough
-
     case Mode_LargeSidebar: {
         FancyTabBar* bar = new FancyTabBar(this);
         side_layout_->insertWidget(0, bar);
@@ -662,23 +645,7 @@ void FancyTabWidget::SetMode(Mode mode)
 
 void FancyTabWidget::contextMenuEvent(QContextMenuEvent* e)
 {
-    Q_UNUSED(e)
-//  if (!menu_) {
-//    menu_ = new QMenu(this);
-
-//    QSignalMapper* mapper = new QSignalMapper(this);
-//    QActionGroup* group = new QActionGroup(this);
-//    AddMenuItem(mapper, group, tr("Large sidebar"), Mode_LargeSidebar);
-//    AddMenuItem(mapper, group, tr("Small sidebar"), Mode_SmallSidebar);
-//    AddMenuItem(mapper, group, tr("Plain sidebar"), Mode_PlainSidebar);
-//    AddMenuItem(mapper, group, tr("Tabs on top"), Mode_Tabs);
-//    AddMenuItem(mapper, group, tr("Icons on top"), Mode_IconOnlyTabs);
-//    menu_->addActions(group->actions());
-
-//    connect(mapper, SIGNAL(mapped(int)), SLOT(SetMode(int)));
-//  }
-
-//  menu_->popup(e->globalPos());
+    Q_UNUSED(e);
 }
 
 void FancyTabWidget::AddMenuItem(QSignalMapper* mapper, QActionGroup* group,

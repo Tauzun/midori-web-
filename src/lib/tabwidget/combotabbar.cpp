@@ -562,6 +562,7 @@ void ComboTabBar::insertCloseButton(int index)
     QAbstractButton* closeButton = new CloseButton(this);
     closeButton->setFixedSize(closeButtonSize());
     closeButton->setToolTip(m_closeButtonsToolTip);
+    closeButton->setCursor(Qt::PointingHandCursor);
     connect(closeButton, &QAbstractButton::clicked, this, &ComboTabBar::closeTabFromButton);
     m_mainTabBar->setTabButton(index, closeButtonPosition(), closeButton);
 }
@@ -1415,7 +1416,7 @@ void TabBarHelper::mouseMoveEvent(QMouseEvent *event)
 
     // Hack to find QMovableTabWidget
     if (m_dragInProgress && !m_movingTab) {
-        const auto objects = children();
+        const QList<QObject *> objects = children();
         const int taboverlap = style()->pixelMetric(QStyle::PM_TabBarTabOverlap, nullptr, this);
         QRect grabRect = tabRect(currentIndex());
         grabRect.adjust(-taboverlap, 0, taboverlap, 0);
@@ -1430,7 +1431,7 @@ void TabBarHelper::mouseMoveEvent(QMouseEvent *event)
 
     // Don't allow to move tabs outside of tabbar
     if (m_dragInProgress && m_movingTab) {
-        // FIXME: This doesn't work at all with RTL...
+        // This doesn't currently work at all with RTL
         if (isRightToLeft()) {
             return;
         }
@@ -1698,36 +1699,32 @@ void TabBarScrollWidget::scrollStart()
 void TabBarScrollWidget::scrollByWheel(QWheelEvent* event)
 {
     event->accept();
-
     // Check if direction has changed from last time
-    if (m_totalDeltas * event->delta() < 0) {
+    if (m_totalDeltas * event->angleDelta().x() + event->angleDelta().y() < 0) {
         m_totalDeltas = 0;
     }
 
-    m_totalDeltas += event->delta();
-
+    m_totalDeltas += event->angleDelta().x() + event->angleDelta().y();
     // Slower scrolling for horizontal wheel scrolling
-    if (event->orientation() == Qt::Horizontal) {
-        if (event->delta() > 0) {
+    if (event->angleDelta().y() < 0) {
+        if (event->angleDelta().x() > 0) {
             scrollToLeft();
         }
-        else if (event->delta() < 0) {
+        else if (event->angleDelta().x() < 0) {
             scrollToRight();
         }
         return;
     }
-
     // Faster scrolling with control modifier
-    if (event->orientation() == Qt::Vertical && event->modifiers() == Qt::ControlModifier) {
-        if (event->delta() > 0) {
+    if (event->angleDelta().x() < 0 && event->modifiers() == Qt::ControlModifier) {
+        if (event->angleDelta().y() > 0) {
             scrollToLeft(10);
         }
-        else if (event->delta() < 0) {
+        else if (event->angleDelta().y() < 0) {
             scrollToRight(10);
         }
         return;
     }
-
     // Fast scrolling with just wheel scroll
     int factor = qMax(qRound(m_scrollBar->pageStep() / 1.5), m_scrollBar->singleStep());
     if ((event->modifiers() & Qt::ControlModifier) || (event->modifiers() & Qt::ShiftModifier)) {

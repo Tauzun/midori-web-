@@ -58,9 +58,9 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>English</string>
     <key>CFBundleName</key>
-    <string>Blue Hawk</string>
+    <string>Midori Browser</string>
     <key>CFBundleDisplayName</key>
-    <string>Blue Hawk</string>
+    <string>Midori Browser</string>
 
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.productivity</string>

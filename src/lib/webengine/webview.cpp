@@ -71,6 +71,7 @@ WebView::WebView(QWidget* parent)
     m_currentZoomLevel = zoomLevels().indexOf(100);
 
     setAcceptDrops(true);
+    setAttribute(Qt::WA_AcceptTouchEvents);
     installEventFilter(this);
     if (parentWidget()) {
         parentWidget()->installEventFilter(this);
@@ -196,19 +197,20 @@ void WebView::load(const LoadRequest &request) {
     if (reqUrl.isEmpty())
         return;
 
-    if (reqUrl.scheme() == QLatin1String("javascript")) {
-
-        const QString scriptSource = reqUrl.toString().mid(11);
-        // Is the javascript source percent encoded or not?
-        // Looking for % character in source should work in most cases
-        if (scriptSource.contains(QLatin1Char('%')))
-            page()->runJavaScript(QUrl::fromPercentEncoding(scriptSource.toUtf8()));
-        else
-            page()->runJavaScript(scriptSource);
-        return;
-    }
-
     if ( isUrlValid(reqUrl) ) {
+
+        if (reqUrl.scheme() == QLatin1String("javascript")) {
+
+            const QString scriptSource = reqUrl.toString().mid(11);
+            // Is the javascript source percent encoded or not?
+            // Looking for % character in source should work in most cases
+            if (scriptSource.contains(QLatin1Char('%'))) {
+                page()->runJavaScript(QUrl::fromPercentEncoding(scriptSource.toUtf8()));
+            } else {
+                page()->runJavaScript(scriptSource);
+            }
+            return;
+        }
 
         if (qzSettings->httpsByDefault) {
 
@@ -698,6 +700,7 @@ void WebView::showEvent(QShowEvent *event)
 
 void WebView::createContextMenu(QMenu *menu, WebHitTestResult &hitTest)
 {
+    menu->setCursor(Qt::PointingHandCursor);
     // cppcheck-suppress variableScope
     int spellCheckActionCount = 0;
 
@@ -751,7 +754,9 @@ void WebView::createContextMenu(QMenu *menu, WebHitTestResult &hitTest)
         if (hitTest.tagName() == QLatin1String("input")) {
             QAction *act = menu->addAction(QString());
             act->setVisible(false);
-            checkForForm(act, hitTest.pos());
+            if (url().toString() != QLatin1String("browser:start")) {
+                checkForForm(act, hitTest.pos());
+            }
         }
     }
 
@@ -767,8 +772,53 @@ void WebView::createContextMenu(QMenu *menu, WebHitTestResult &hitTest)
     mApp->plugins()->populateWebViewMenu(menu, this, hitTest);
 }
 
+bool WebView::removeYtOverlay() {
+
+    m_page->runJavaScript("var x = document.getElementsByTagName('iron-overlay-backdrop')[0];x.parentNode.removeChild(x);");
+
+    return true;
+}
+
 void WebView::createPageContextMenu(QMenu* menu)
 {
+    menu->setCursor(Qt::PointingHandCursor);
+
+    const QString scheme = url().scheme();
+    Settings settings;
+    const QUrl newTabAddress = settings.value(QStringLiteral("Web-URL-Settings/newTabUrl"), QUrl(QStringLiteral("browser:speeddial"))).toUrl();
+    // Special menu for start page
+    if (url().toString() == QLatin1String("browser:start")) {
+        menu->addAction(IconProvider::newTabIcon(), tr("New tab"), mApp, SLOT(addNewTab()))->setData(newTabAddress);
+        menu->addAction(IconProvider::newWindowIcon(), tr("New &window"), this, &WebView::openUrlInNewWindow)->setData(QUrl(QStringLiteral("browser:start")));
+        menu->addAction(IconProvider::privateBrowsingIcon(), tr("New &private window"), mApp, SLOT(startPrivateBrowsing()))->setData(QUrl(QStringLiteral("browser:start")));
+        menu->addSeparator();
+
+        return;
+    }
+    // Special menu for Speed Dial page
+    if (url().toString() == QLatin1String("browser:speeddial")) {
+        menu->addAction(QIcon(QStringLiteral(":icons/menu/list-add.svg")), tr("&Add New Page"), this, &WebView::addSpeedDial);
+        menu->addAction(IconProvider::settingsIcon(), tr("&Configure Speed Dial"), this, &WebView::configureSpeedDial);
+        menu->addSeparator();
+        menu->addAction(QIcon(QStringLiteral(":icons/menu/view-refresh.svg")), tr("Reload All Dials"), this, &WebView::reloadAllSpeedDials);
+
+        return;
+    }
+    // Special menu for pdf reader
+    if (url().toString().endsWith(".pdf")) {
+        menu->addAction(QIcon(QStringLiteral(":icons/menu/document-save.svg")), tr("&Save document"), this, &WebView::downloadMediaToDisk);
+        return;
+    }
+/*
+    // The day after this code was added, youtube updated their site and removed the obnoxious overlay
+    // So, the code will be disabled for now and may be repurposed to deal with any other poor site designs
+    if (url().host().contains("youtube", Qt::CaseInsensitive)) {
+        if (qzSettings->javascriptEnabled) {
+            menu->addSeparator();
+            menu->addAction(QIcon(QStringLiteral(":icons/menu/application-exit.svg")), tr("Remove overlay"), this, &WebView::removeYtOverlay);
+        }
+    }
+*/
     QAction* action = menu->addAction(tr("&Back"), this, SLOT(back()));
     action->setIcon(IconProvider::standardIcon(QStyle::SP_ArrowBack));
     action->setEnabled(history()->canGoBack());
@@ -776,16 +826,6 @@ void WebView::createPageContextMenu(QMenu* menu)
     action = menu->addAction(tr("&Forward"), this, SLOT(forward()));
     action->setIcon(IconProvider::standardIcon(QStyle::SP_ArrowForward));
     action->setEnabled(history()->canGoForward());
-
-    // Special menu for Speed Dial page
-    if (url().toString() == QLatin1String("https://astian.org/midori-start")) {
-        menu->addSeparator();
-        menu->addAction(QIcon(QStringLiteral(":icons/menu/list-add.svg")), tr("&Add New Page"), this, &WebView::addSpeedDial);
-        menu->addAction(IconProvider::settingsIcon(), tr("&Configure Speed Dial"), this, &WebView::configureSpeedDial);
-        menu->addSeparator();
-        menu->addAction(QIcon(QStringLiteral(":icons/menu/view-refresh.svg")), tr("Reload All Dials"), this, &WebView::reloadAllSpeedDials);
-        return;
-    }
 
     QAction *reloadAction = pageAction(QWebEnginePage::Reload);
     action = menu->addAction(reloadAction->icon(), reloadAction->text(), reloadAction, &QAction::trigger);
@@ -810,18 +850,22 @@ void WebView::createPageContextMenu(QMenu* menu)
     menu->addAction(QIcon(QStringLiteral(":icons/menu/edit-select-all.svg")), tr("Select &all"), this, &WebView::editSelectAll);
     menu->addSeparator();
 
-    const QString scheme = url().scheme();
-
     if (scheme != QLatin1String("view-source") && WebPage::internalSchemes().contains(scheme)) {
-        menu->addAction(QIcon(QStringLiteral(":icons/menu/text-html.svg")), tr("Show so&urce code"), this, &WebView::showSource);
+        if (scheme != QLatin1String("browser")) {
+            menu->addAction(QIcon(QStringLiteral(":icons/menu/text-html.svg")), tr("Show so&urce code"), this, &WebView::showSource);
+        }
     }
 
-    if (SiteInfo::canShowSiteInfo(url()))
+    if (SiteInfo::canShowSiteInfo(url())) {
         menu->addAction(QIcon(QStringLiteral(":icons/menu/dialog-information.svg")), tr("Show info ab&out site"), this, &WebView::showSiteInfo);
+    }
+
 }
 
 void WebView::createLinkContextMenu(QMenu* menu, const WebHitTestResult &hitTest)
 {
+    menu->setCursor(Qt::PointingHandCursor);
+
     menu->addSeparator();
     Action* act = new Action(IconProvider::newTabIcon(), tr("Open link in new &tab"));
     act->setData(hitTest.linkUrl());
@@ -832,24 +876,45 @@ void WebView::createLinkContextMenu(QMenu* menu, const WebHitTestResult &hitTest
     menu->addAction(IconProvider::privateBrowsingIcon(), tr("Open link in &private window"), mApp, SLOT(startPrivateBrowsing()))->setData(hitTest.linkUrl());
     menu->addSeparator();
 
-    QVariantList bData;
-    bData << hitTest.linkUrl() << hitTest.linkTitle();
-    menu->addAction(QIcon(QStringLiteral(":icons/menu/bookmark-new.svg")), tr("B&ookmark link"), this, &WebView::bookmarkLink)->setData(bData);
+    if (url().toString() != QLatin1String("browser:start")) {
 
-    menu->addAction(QIcon(QStringLiteral(":icons/menu/document-save.svg")), tr("&Save link as..."), this, &WebView::downloadLinkToDisk);
-    menu->addAction(QIcon(QStringLiteral(":icons/menu/mail-message-new.svg")), tr("Send link..."), this, &WebView::sendTextByMail)->setData(hitTest.linkUrl().toEncoded());
-    menu->addAction(QIcon(QStringLiteral(":icons/menu/edit-copy-text.svg")), tr("&Copy link text"), this, &WebView::copyPlainTextToClipboard)->setData(hitTest.linkTitle());
-    menu->addAction(QIcon(QStringLiteral(":icons/menu/edit-copy.svg")), tr("&Copy link location"), this, &WebView::copyLinkToClipboard)->setData(hitTest.linkUrl());
-    menu->addSeparator();
+        QVariantList bData;
+        bData << hitTest.linkUrl() << hitTest.linkTitle();
+        menu->addAction(QIcon(QStringLiteral(":icons/menu/bookmark-new.svg")), tr("B&ookmark link"), this, &WebView::bookmarkLink)->setData(bData);
+        if (url().toString() != QLatin1String("browser:speeddial")) {
+            menu->addAction(QIcon(QStringLiteral(":icons/menu/document-save.svg")), tr("&Save link as..."), this, &WebView::downloadLinkToDisk);
+        }
+        menu->addAction(QIcon(QStringLiteral(":icons/menu/mail-message-new.svg")), tr("Send link..."), this, &WebView::sendTextByMail)->setData(hitTest.linkUrl().toEncoded());
+        if (url().toString() != QLatin1String("browser:speeddial")) {
+            menu->addAction(QIcon(QStringLiteral(":icons/menu/edit-copy-text.svg")), tr("&Copy link text"), this, &WebView::copyPlainTextToClipboard)->setData(hitTest.linkTitle());
+        }
+        menu->addAction(QIcon(QStringLiteral(":icons/menu/edit-copy.svg")), tr("&Copy link location"), this, &WebView::copyLinkToClipboard)->setData(hitTest.linkUrl());
+        menu->addSeparator();
 
-    if (!selectedText().isEmpty()) {
-        pageAction(QWebEnginePage::Copy)->setIcon(QIcon(QStringLiteral(":icons/menu/edit-copy.svg")));
-        menu->addAction(pageAction(QWebEnginePage::Copy));
+        if (!selectedText().isEmpty()) {
+            pageAction(QWebEnginePage::Copy)->setIcon(QIcon(QStringLiteral(":icons/menu/edit-copy.svg")));
+            menu->addAction(pageAction(QWebEnginePage::Copy));
+        }
+
     }
+
 }
 
 void WebView::createImageContextMenu(QMenu* menu, const WebHitTestResult &hitTest)
 {
+    menu->setCursor(Qt::PointingHandCursor);
+    Settings settings;
+    const QUrl newTabAddress = settings.value(QStringLiteral("Web-URL-Settings/newTabUrl"), QUrl(QStringLiteral("browser:speeddial"))).toUrl();
+    // Special menu for start page
+    if (url().toString() == QLatin1String("browser:start")) {
+        menu->addAction(IconProvider::newTabIcon(), tr("New tab"), mApp, SLOT(addNewTab()))->setData(newTabAddress);
+        menu->addAction(IconProvider::newWindowIcon(), tr("New &window"), this, &WebView::openUrlInNewWindow)->setData(QUrl(QStringLiteral("browser:start")));
+        menu->addAction(IconProvider::privateBrowsingIcon(), tr("New &private window"), mApp, SLOT(startPrivateBrowsing()))->setData(QUrl(QStringLiteral("browser:start")));
+        menu->addSeparator();
+
+        return;
+    }
+
     menu->addSeparator();
     if (hitTest.imageUrl() != url()) {
         Action *act = new Action(tr("Show i&mage"));
@@ -862,7 +927,8 @@ void WebView::createImageContextMenu(QMenu* menu, const WebHitTestResult &hitTes
     menu->addAction(QIcon(QStringLiteral(":icons/menu/edit-copy.svg")), tr("Copy image ad&dress"), this, &WebView::copyLinkToClipboard)->setData(hitTest.imageUrl());
     menu->addSeparator();
     menu->addAction(QIcon(QStringLiteral(":icons/menu/document-save.svg")), tr("&Save image as..."), this, &WebView::downloadImageToDisk);
-    menu->addAction(QIcon(QStringLiteral(":icons/menu/mail-message-new.svg")), tr("Send image..."), this, &WebView::sendTextByMail)->setData(hitTest.imageUrl().toEncoded());
+    // Nice idea but I am not a fan of this link at all
+    //menu->addAction(QIcon(QStringLiteral(":icons/menu/mail-message-new.svg")), tr("Send image..."), this, &WebView::sendTextByMail)->setData(hitTest.imageUrl().toEncoded());
     menu->addSeparator();
 
     if (!selectedText().isEmpty()) {
@@ -873,6 +939,8 @@ void WebView::createImageContextMenu(QMenu* menu, const WebHitTestResult &hitTes
 
 void WebView::createSelectedTextContextMenu(QMenu* menu, const WebHitTestResult &hitTest)
 {
+    menu->setCursor(Qt::PointingHandCursor);
+    
     Q_UNUSED(hitTest)
 
     QString selectedText = page()->selectedText();
@@ -883,7 +951,6 @@ void WebView::createSelectedTextContextMenu(QMenu* menu, const WebHitTestResult 
     }
     menu->addAction(QIcon(QStringLiteral(":icons/menu/mail-message-new.svg")), tr("Send text..."), this, &WebView::sendTextByMail)->setData(selectedText);
     menu->addSeparator();
-
     // #379: Remove newlines
     QString selectedString = selectedText.trimmed().remove(QLatin1Char('\n'));
     if (!selectedString.contains(QLatin1Char('.'))) {
@@ -916,7 +983,7 @@ void WebView::createSelectedTextContextMenu(QMenu* menu, const WebHitTestResult 
     Menu* swMenu = new Menu(tr("Search with..."), menu);
     swMenu->setCloseOnMiddleClick(true);
     SearchEnginesManager* searchManager = mApp->searchEnginesManager();
-    const auto engines = searchManager->allEngines();
+    const QVector<SearchEnginesManager::Engine> engines = searchManager->allEngines();
     for (const SearchEngine &en : engines) {
         Action* act = new Action(en.icon, en.name);
         act->setData(QVariant::fromValue(en));
@@ -931,6 +998,8 @@ void WebView::createSelectedTextContextMenu(QMenu* menu, const WebHitTestResult 
 
 void WebView::createMediaContextMenu(QMenu *menu, const WebHitTestResult &hitTest)
 {
+    menu->setCursor(Qt::PointingHandCursor);
+    
     bool paused = hitTest.mediaPaused();
     bool muted = hitTest.mediaMuted();
 
@@ -1052,6 +1121,29 @@ void WebView::initializeActions()
     addAction(selectAllAction);
 }
 
+void WebView::swipeTriggered(QSwipeGesture *gesture) {
+
+    if (gesture->state() == Qt::GestureFinished){
+        if (gesture->horizontalDirection() == QSwipeGesture::Left)
+            back();
+        if (gesture->horizontalDirection() == QSwipeGesture::Right)
+            forward();
+    }
+
+}
+// Likely use the MouseGestures plugin to enable left and right swiping on touch devices for now
+bool WebView::_touchEvent(QGestureEvent *event) { // This is a nice idea but doesn't appear to work
+
+    event->accept(); // This default can be removed if this code is ever put to use
+/*
+    if (QGesture *swipe = event->gesture(Qt::SwipeGesture)) {
+        swipeTriggered(static_cast<QSwipeGesture *>(swipe));
+        event->accept();
+    }
+*/
+    return true;
+}
+
 void WebView::_wheelEvent(QWheelEvent *event)
 {
     if (mApp->plugins()->processWheelEvent(Qz::ON_WebView, this, event)) {
@@ -1082,14 +1174,13 @@ void WebView::_wheelEvent(QWheelEvent *event)
     }
 
     m_wheelHelper.reset();
-
     // QtWebEngine ignores QApplication::wheelScrollLines() and instead always scrolls 3 lines
     if (event->spontaneous()) {
         const qreal multiplier = QApplication::wheelScrollLines() / 3.0;
         if (multiplier != 1.0) {
-            QWheelEvent e(event->pos(), event->globalPos(), event->pixelDelta(),
-                          event->angleDelta() * multiplier, 0, Qt::Horizontal, event->buttons(),
-                          event->modifiers(), event->phase(), event->source(), event->inverted());
+            QWheelEvent e(event->position(), event->globalPosition(), event->pixelDelta(),
+                          event->angleDelta() * multiplier, event->buttons(),
+                          event->modifiers(), event->phase(), event->inverted(), event->source());
             QApplication::sendEvent(m_rwhvqt, &e);
             event->accept();
         }
@@ -1294,7 +1385,6 @@ bool WebView::eventFilter(QObject *obj, QEvent *event)
     if (obj == this && event->type() == QEvent::ParentChange && parentWidget()) {
         parentWidget()->installEventFilter(this);
     }
-
     // Hack to find widget that receives input events
     if (obj == this && event->type() == QEvent::ChildAdded) {
         QPointer<QWidget> child = qobject_cast<QWidget*>(static_cast<QChildEvent*>(event)->child());
@@ -1334,6 +1424,9 @@ bool WebView::eventFilter(QObject *obj, QEvent *event)
         case QEvent::Wheel:
             HANDLE_EVENT(_wheelEvent, QWheelEvent);
 
+        case QEvent::Gesture:
+            HANDLE_EVENT(_touchEvent, QGestureEvent);
+
         default:
             break;
         }
@@ -1352,7 +1445,6 @@ bool WebView::eventFilter(QObject *obj, QEvent *event)
         }
     }
 #undef HANDLE_EVENT
-
     // Block already handled events
     if (obj == this) {
         switch (event->type()) {
@@ -1362,6 +1454,7 @@ bool WebView::eventFilter(QObject *obj, QEvent *event)
         case QEvent::MouseButtonRelease:
         case QEvent::MouseMove:
         case QEvent::Wheel:
+        case QEvent::Gesture:
             return true;
 
         case QEvent::Hide:

@@ -137,7 +137,7 @@ QAction *QmlSideBarHelper::createMenuAction()
     if (!m_item) {
         return action;
     }
-    auto qmlEngine = qobject_cast<QmlEngine*>(m_item->creationContext()->engine());
+    QmlEngine * qmlEngine = qobject_cast<QmlEngine*>(m_item->creationContext()->engine());
     if (qmlEngine) {
         return action;
     }

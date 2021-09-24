@@ -6,7 +6,7 @@ macro(pybhawk_tests)
 endmacro()
 
 add_executable(pybhawktestrunner pybhawktestrunner.cpp)
-target_link_libraries(pybhawktestrunner BhawkPrivate Qt5::Test)
+target_link_libraries(pybhawktestrunner MidoriPrivate Qt5::Test)
 
 pybhawk_tests(
     basictest

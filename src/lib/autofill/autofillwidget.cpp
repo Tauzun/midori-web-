@@ -50,7 +50,7 @@ void AutoFillWidget::setUsernames(const QStringList &usernames)
 
         ui->gridLayout->addWidget(button, i++, 0);
         connect(button, &QPushButton::clicked, this, [=]() {
-            const auto entries = mApp->autoFill()->getFormData(m_view->url());
+            const QVector<PasswordEntry> entries = mApp->autoFill()->getFormData(m_view->url());
             PasswordEntry entry;
             // Find exact username match
             for (const PasswordEntry &e : entries) {

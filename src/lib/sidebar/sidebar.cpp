@@ -146,7 +146,7 @@ void SideBarManager::removeSidebar(SideBarInterface *interface)
 
     s_sidebars.remove(id);
 
-    const auto windows = mApp->windows();
+    const QList<BrowserWindow *> windows = mApp->windows();
     for (BrowserWindow* window : windows) {
         window->sideBarManager()->sideBarRemoved(id);
     }

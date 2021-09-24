@@ -85,7 +85,7 @@ void DownloadItem::startDownloading()
     connect(m_download, &QWebEngineDownloadItem::downloadProgress, this, &DownloadItem::downloadProgress);
 
     m_downloading = true;
-    if (m_downTimer.elapsed() < 1) {
+    if (!m_downTimer.isValid()) {
         m_downTimer.start();
     }
 
@@ -125,7 +125,7 @@ void DownloadItem::finished()
     switch (m_download->state()) {
     case QWebEngineDownloadItem::DownloadCompleted:
         success = true;
-        ui->downloadInfo->setText(tr("Done - %1 (%2)").arg(host, QDateTime::currentDateTime().toString(Qt::DefaultLocaleShortDate)));
+        ui->downloadInfo->setText(tr("Done - %1 (%2)").arg(host, QDateTime::currentDateTime().toString("ddd d MMMM yyyy @ hh:mm:ss")));
         break;
 
     case QWebEngineDownloadItem::DownloadInterrupted:

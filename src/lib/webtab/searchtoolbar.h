@@ -64,7 +64,7 @@ private:
     Ui::SearchToolbar* ui;
     WebView* m_view;
 
-    QWebEnginePage::FindFlags m_findFlags;
+    QWebEnginePage::FindFlags m_findFlags = QWebEnginePage::FindFlags();
     int m_searchRequests = 0;
 };
 

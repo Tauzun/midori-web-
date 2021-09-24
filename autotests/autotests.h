@@ -23,7 +23,7 @@
 #define BHAWKTEST_MAIN(Test) \
     int main(int argc, char **argv) \
     { \
-        QzTools::removeRecursively(QDir::tempPath() + QSL("/Midori-test")); \
+        QzTools::removeRecursively(QDir::tempPath() + QSL("/Bhawk-test")); \
         MainApplication::setTestModeEnabled(true); \
         MainApplication app(argc, argv); \
         QTEST_DISABLE_KEYPAD_NAVIGATION; \

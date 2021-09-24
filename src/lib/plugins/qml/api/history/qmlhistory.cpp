@@ -42,7 +42,7 @@ QList<QObject*> QmlHistory::search(const QString &text)
     const QList<HistoryEntry> result = mApp->history()->searchHistoryEntry(text);
     list.reserve(result.size());
     for (const HistoryEntry &entry : result) {
-        auto item = QmlStaticData::instance().getHistoryItem(entry);
+        QmlHistoryItem * item = QmlStaticData::instance().getHistoryItem(entry);
         list.append(item);
     }
     return list;

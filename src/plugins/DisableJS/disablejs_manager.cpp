@@ -37,6 +37,7 @@ void DisableJS_Manager::unloadPlugin() {
     // Save settings
     QSettings settings(m_settingsPath + "/plug-ins.ini", QSettings::IniFormat);
     settings.beginGroup("DisableJS");
+    // There is nothing here yet
     settings.endGroup();
     // Remove icons from all windows
     QHashIterator<BrowserWindow*, DisableJS_Icon*> it(m_windows);

@@ -44,7 +44,7 @@ void ExternalJsObject::setupWebChannel(QWebChannel *webChannel, WebPage *page)
 {
     webChannel->registerObject(QStringLiteral("qz_object"), new ExternalJsObject(page));
 
-    for (auto it = s_extraObjects.constBegin(); it != s_extraObjects.constEnd(); ++it) {
+    for (QHash<QString, QObject *>::const_iterator it = s_extraObjects.constBegin(); it != s_extraObjects.constEnd(); ++it) {
         webChannel->registerObject(QStringLiteral("qz_") + it.key(), it.value());
     }
 }
@@ -63,7 +63,7 @@ void ExternalJsObject::unregisterExtraObject(QObject *object)
 
 QObject *ExternalJsObject::speedDial() const
 {
-    if (m_page->url().toString() != QLatin1String("https://astian.org/midori-start"))
+    if (m_page->url().toString() != QLatin1String("browser:speeddial"))
         return Q_NULLPTR;
 
     return mApp->plugins()->speedDial();
@@ -76,7 +76,7 @@ QObject *ExternalJsObject::autoFill() const
 
 QObject *ExternalJsObject::recovery() const
 {
-    if (!mApp->restoreManager() || m_page->url().toString() != QLatin1String("midori:restore"))
+    if (!mApp->restoreManager() || m_page->url().toString() != QLatin1String("browser:restore"))
         return Q_NULLPTR;
 
     return mApp->restoreManager()->recoveryObject(m_page);

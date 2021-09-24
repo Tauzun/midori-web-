@@ -1,5 +1,5 @@
 /**
- * Userscript for Blue Hawk Web Browser
+ * Userscript for Midori Web Browser
  *
  * Modified from https://gist.githubusercontent.com/arantius/3123124/raw/grant-none-shim.js
  *
@@ -152,7 +152,7 @@ GM.notification = function (text, title, image, onclick) { if (console) console.
 //Legacy Public Methods
 GM.legacyAddStyle = function (/* string */ styles) {
 
-    if ((new RegExp("^http?://(?!(test.local)).*$")).test(document.location.href) || (document.location.href.indexOf("midori:") != 1) || (document.location.href.indexOf("ftp://") != 1) || (document.location.href.indexOf("file://") != 1)) {
+	if ((new RegExp("^http?://(?!(test.local)).*$")).test(document.location.href) || (document.location.href.indexOf("browser:") != 1) || (document.location.href.indexOf("ftp://") != 1) || (document.location.href.indexOf("file://") != 1)) {
 
 		var head = document.getElementsByTagName("head")[0];
 		if (head === undefined) {

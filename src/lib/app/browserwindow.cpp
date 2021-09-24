@@ -203,7 +203,7 @@ BrowserWindow::BrowserWindow(Qz::BrowserWindowType type, const QUrl &startUrl)
     setAttribute(Qt::WA_DontCreateNativeAncestors);
 
     setObjectName(QStringLiteral("mainwindow"));
-    setWindowTitle(tr("Midori Browser"));
+    setWindowTitle(QLatin1String("Midori Browser"));
     setProperty("private", mApp->isPrivate());
 
     setupUi();
@@ -261,7 +261,7 @@ void BrowserWindow::postLaunch()
         break;
 
     case MainApplication::OpenSpeedDial:
-        startUrl = QUrl(QStringLiteral("https://astian.org/midori-start"));
+        startUrl = QUrl(QStringLiteral("browser:speeddial"));
         break;
 
     case MainApplication::OpenHomePage:
@@ -283,7 +283,7 @@ void BrowserWindow::postLaunch()
         if (mApp->isStartingAfterCrash()) {
             addTab = false;
             startUrl.clear();
-            m_tabWidget->addView(QUrl(QStringLiteral("midori:restore")), Qz::NT_CleanSelectedTabAtTheEnd);
+            m_tabWidget->addView(QUrl(QStringLiteral("browser:restore")), Qz::NT_CleanSelectedTabAtTheEnd);
         }
         else if (mApp->afterLaunch() == MainApplication::SelectSession || mApp->afterLaunch() == MainApplication::RestoreSession) {
             addTab = m_tabWidget->count() <= 0;
@@ -319,7 +319,7 @@ void BrowserWindow::postLaunch()
     if (addTab) {
         m_tabWidget->addView(startUrl, Qz::NT_CleanSelectedTabAtTheEnd);
 
-        if (startUrl.isEmpty() || startUrl.toString() == QLatin1String("https://astian.org/midori-start")) {
+        if (startUrl.isEmpty() || startUrl.toString() == QLatin1String("browser:speeddial")) {
             locationBar()->setFocus();
         }
     }
@@ -410,8 +410,6 @@ void BrowserWindow::setupUi() {
     m_statusBar->addButton(downloadsButton);
     m_navigationToolbar->addToolButton(downloadsButton);
 
-    QDesktopWidget* desktop = mApp->desktop();
-
     QScreen *screen = mApp->primaryScreen();
     QRect  screenGeometry = screen->geometry();
 
@@ -421,7 +419,8 @@ void BrowserWindow::setupUi() {
     if (m_windowType != Qz::BW_FirstAppWindow && m_windowType != Qz::BW_MacFirstWindow && mApp->getWindow()) {
 
         #ifdef Q_OS_WIN
-        // Windows WM places every new window in the middle of screen .. for some reason
+            QDesktopWidget* desktop = mApp->desktop();
+            // Windows WM places every new window in the middle of screen
             QPoint p = mApp->getWindow()->geometry().topLeft();
             p.setX(p.x() + 30);
             p.setY(p.y() + 30);
@@ -506,7 +505,7 @@ void BrowserWindow::setupMenu()
     QShortcut* restoreClosedWindow = new QShortcut(QKeySequence(QStringLiteral("Ctrl+Shift+N")), this);
     connect(restoreClosedWindow, &QShortcut::activated, mApp->closedWindowsManager(), &ClosedWindowsManager::restoreClosedWindow);
 }
-// FIXME: Startup focus appears broken on Windows
+
 void BrowserWindow::updateStartupFocus()
 {
     QTimer::singleShot(500, this, [this]() {
@@ -974,15 +973,14 @@ void BrowserWindow::currentTabChanged()
 
     const QString title = view->webTab()->title(/*allowEmpty*/true);
     if (title.isEmpty()) {
-        setWindowTitle(tr("● Midori Web Browser ●"));
+        setWindowTitle(QLatin1String("Midori Web Browser"));
     } else {
-        setWindowTitle(tr("%1").arg(title)); // Removed application name
+        setWindowTitle(QLatin1String("%1").arg(title)); // Removed application name
     }
     m_ipLabel->setText(view->getIp());
     view->setFocus();
 
     updateLoadingActions();
-
     // Setting correct tab order (LocationBar -> WebSearchBar -> WebView)
     setTabOrder(locationBar(), m_navigationToolbar->webSearchBar());
     setTabOrder(m_navigationToolbar->webSearchBar(), view);
@@ -1006,8 +1004,7 @@ void BrowserWindow::updateLoadingActions()
     if (isLoading) {
         m_progressBar->setValue(view->loadingProgress());
         m_navigationToolbar->showStopButton();
-    }
-    else {
+    } else {
         m_navigationToolbar->showReloadButton();
     }
 }
@@ -1081,7 +1078,8 @@ void BrowserWindow::createEncodingMenu(QMenu* menu)
     QStringList otherCodecs;
     QStringList allCodecs;
 
-    const auto mibs = QTextCodec::availableMibs();
+    const QList<int> mibs = QTextCodec::availableMibs();
+
     for (const int mib : mibs) {
         const QString codecName = QString::fromUtf8(QTextCodec::codecForMib(mib)->name());
 
@@ -1206,39 +1204,61 @@ void BrowserWindow::hideNavigationSlot()
     bool mouseInView = view && view->underMouse();
 
     if (isFullScreen() && mouseInView) {
-        m_navigationContainer->hide();
+        Settings settings;
+        const bool hideNav = settings.value(QStringLiteral("Browser-View-Settings/AutoHideNavInFullscreen"), true).toBool();
+        if (hideNav) {
+            m_navigationContainer->hide();
+        }
     }
 }
 
 bool BrowserWindow::event(QEvent *event)
 {
     if (event->type() == QEvent::WindowStateChange) {
+
         QWindowStateChangeEvent *e = static_cast<QWindowStateChangeEvent*>(event);
+        Settings settings;
+        const bool showNavi = settings.value(QStringLiteral("Browser-View-Settings/ShowNavInFullscreen"), false).toBool();
+        const bool autoHideNav = settings.value(QStringLiteral("Browser-View-Settings/AutoHideNavInFullscreen"), true).toBool();
+
+        m_statusBarVisible = m_statusBar->isVisible();
+        m_menuBarVisible = menuBar()->isVisible();
+
         if (!(e->oldState() & Qt::WindowFullScreen) && windowState() & Qt::WindowFullScreen) {
             // Enter fullscreen
-            m_statusBarVisible = m_statusBar->isVisible();
 #ifndef Q_OS_MACOS
-            m_menuBarVisible = menuBar()->isVisible();
             menuBar()->hide();
 #endif
             m_statusBar->hide();
-
-            m_navigationContainer->hide();
-            m_navigationToolbar->enterFullScreen();
-
+            if (autoHideNav) {
+                m_navigationContainer->hide();
+            }
+            locationBar()->m_bookmarkIcon->setVisible(false);
+            locationBar()->down->setVisible(false);
+            if (showNavi) {
+                m_navigationToolbar->enterFullScreen();
+            } else {
+                m_navigationToolbar->hide();
+            }
             // Show main menu button since menubar is hidden
-            m_navigationToolbar->setSuperMenuVisible(true);
-        }
-        else if (e->oldState() & Qt::WindowFullScreen && !(windowState() & Qt::WindowFullScreen)) {
+            m_navigationToolbar->setSuperMenuVisible(false);
+        } else if (e->oldState() & Qt::WindowFullScreen && !(windowState() & Qt::WindowFullScreen)) {
             // Leave fullscreen
             m_statusBar->setVisible(m_statusBarVisible);
 #ifndef Q_OS_MACOS
             menuBar()->setVisible(m_menuBarVisible);
 #endif
-
-            m_navigationContainer->show();
-            m_navigationToolbar->setSuperMenuVisible(!m_menuBarVisible);
-            m_navigationToolbar->leaveFullScreen();
+            if (autoHideNav) {
+                m_navigationContainer->show();
+            }
+            locationBar()->m_bookmarkIcon->setVisible(true);
+            locationBar()->down->setVisible(true);
+            if (showNavi) {
+                m_navigationToolbar->leaveFullScreen();
+            } else {
+                m_navigationToolbar->show();
+            }
+            m_navigationToolbar->setSuperMenuVisible(true);
             m_htmlFullScreenView = nullptr;
         }
 
@@ -1247,7 +1267,7 @@ bool BrowserWindow::event(QEvent *event)
         }
     }
 
-    return QMainWindow::event(event);
+    return QMainWindow::event(event); // bool???
 }
 
 void BrowserWindow::resizeEvent(QResizeEvent* event)
@@ -1548,8 +1568,8 @@ void BrowserWindow::saveSettings()
     settings.beginGroup(QStringLiteral("Browser-View-Settings"));
     settings.setValue(QStringLiteral("WindowGeometry"), saveGeometry());
 
-    const auto state = saveUiState();
-    for (auto it = state.constBegin(); it != state.constEnd(); ++it) {
+    const QHash<QString, QVariant> state = saveUiState();
+    for (QHash<QString, QVariant>::const_iterator it = state.constBegin(); it != state.constEnd(); ++it) {
         settings.setValue(it.key(), it.value());
     }
 

@@ -205,7 +205,7 @@ QImage IconProvider::imageForUrl(const QUrl &url, bool allowNull)
         return img->isNull() && !allowNull ? IconProvider::emptyWebImage() : *img;
     }
 
-    const auto iconBuffer = instance()->m_iconBuffer;
+    const QVector<QPair<QUrl, QImage>> iconBuffer = instance()->m_iconBuffer;
     for (const BufferedIcon &ic : iconBuffer) {
         if (encodeUrl(ic.first) == encodedUrl) {
             return ic.second;
@@ -239,7 +239,7 @@ QImage IconProvider::imageForDomain(const QUrl &url, bool allowNull)
 
     QMutexLocker locker(&instance()->m_iconCacheMutex);
 
-    const auto iconBuffer = instance()->m_iconBuffer;
+    const QVector<QPair<QUrl, QImage>> iconBuffer = instance()->m_iconBuffer;
     for (const BufferedIcon &ic : iconBuffer) {
         if (ic.first.host() == url.host()) {
             return ic.second;
@@ -276,7 +276,7 @@ void IconProvider::saveIconsToDatabase()
         const QByteArray encodedUrl = encodeUrl(ic.first);
         m_urlImageCache.remove(encodedUrl);
 
-        auto job = new SqlQueryJob(QStringLiteral("INSERT OR REPLACE INTO icons (icon, url) VALUES (?,?)"), this);
+        SqlQueryJob * job = new SqlQueryJob(QSL("INSERT OR REPLACE INTO icons (icon, url) VALUES (?,?)"), this);
         job->addBindValue(buffer.data());
         job->addBindValue(QString::fromUtf8(encodedUrl));
         job->start();

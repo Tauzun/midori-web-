@@ -34,7 +34,7 @@
    <item row="1" column="1">
     <widget class="QLineEdit" name="url">
      <property name="text">
-      <string notr="true">http://</string>
+      <string notr="true">https://</string>
      </property>
     </widget>
    </item>
@@ -58,7 +58,16 @@
    <item row="4" column="1">
     <widget class="QFrame" name="editIconFrame">
      <layout class="QHBoxLayout" name="editIconLayout">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <item>
@@ -79,6 +88,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="iconFromFile">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
         <property name="text">
          <string>Change...</string>
         </property>
@@ -103,17 +115,7 @@
    <item row="5" column="0" colspan="2">
     <widget class="QLabel" name="label_4">
      <property name="text">
-      <string>&lt;b&gt;Note: &lt;/b&gt;%s in url or post data represent searched string</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <string>&lt;b&gt;Note: &lt;/b&gt;%s in url or post data represents the text to search for</string>
      </property>
     </widget>
    </item>
@@ -126,6 +128,22 @@
    </item>
    <item row="2" column="1">
     <widget class="QLineEdit" name="postData"/>
+   </item>
+   <item row="6" column="0" colspan="2">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+     <property name="centerButtons">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

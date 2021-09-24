@@ -167,9 +167,7 @@ void Plugins::loadSettings()
     #endif
 
     Settings settings;
-    settings.beginGroup("Plugin-Settings");
-    m_allowedPlugins = settings.value("AllowedPlugins", defaultAllowedPlugins).toStringList();
-    settings.endGroup();
+    m_allowedPlugins = settings.value("Plugin-Settings/AllowedPlugins", defaultAllowedPlugins).toStringList();
 }
 
 void Plugins::shutdown()
@@ -187,7 +185,7 @@ PluginSpec Plugins::createSpec(const QJsonObject &metaData)
     QFile::remove(tempMetadata);
     QSettings settings(tempMetadata, QSettings::IniFormat);
     settings.beginGroup(QStringLiteral("Desktop Entry"));
-    for (auto it = metaData.begin(); it != metaData.end(); ++it) {
+    for (QJsonObject::const_iterator it = metaData.begin(); it != metaData.end(); ++it) {
         const QString value = it.value().toString();
         if (it.key() == QLatin1String("Icon") && value.startsWith(QLatin1String("base64:"))) {
             QFile file(tempIcon);
@@ -271,7 +269,7 @@ void Plugins::loadAvailablePlugins()
     registerAvailablePlugin(loadInternalPlugin(QStringLiteral("adblock")));
 
     for (const QString &dir : dirs) {
-        const auto files = QDir(dir).entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+        const QList<QFileInfo> files = QDir(dir).entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
         for (const QFileInfo &info : files) {
             Plugin plugin;
             const QString pluginPath = info.absoluteFilePath();
@@ -329,7 +327,7 @@ void Plugins::loadPythonSupport()
 {
     const QStringList dirs = DataPaths::allPaths(DataPaths::Plugins);
     for (const QString &dir : dirs) {
-        const auto files = QDir(dir).entryInfoList({QStringLiteral("PyBhawk*")}, QDir::Files);
+        const QList<QFileInfo> files = QDir(dir).entryInfoList({QSL("PyBhawk*")}, QDir::Files);
         for (const QFileInfo &info : files) {
             m_pythonPlugin = new QLibrary(info.absoluteFilePath(), this);
             m_pythonPlugin->setLoadHints(QLibrary::ExportExternalSymbolsHint);
@@ -352,7 +350,7 @@ Plugins::Plugin Plugins::loadPlugin(const QString &id)
 
     const int colon = id.indexOf(QLatin1Char(':'));
     if (colon > -1) {
-        const auto t = id.leftRef(colon);
+        const QStringRef t = id.leftRef(colon);
         if (t == QLatin1String("internal")) {
             type = Plugin::InternalPlugin;
         } else if (t == QLatin1String("lib")) {
@@ -431,7 +429,8 @@ Plugins::Plugin Plugins::loadPythonPlugin(const QString &name)
         return out;
     }
 
-    auto f = (Plugin*(*)(const QString &)) m_pythonPlugin->resolve("pybhawk_load_plugin");
+    std::function<Plugins::Plugin *(const QString &)> f = (Plugin*(*)(const QString &)) m_pythonPlugin->resolve("pybhawk_load_plugin");
+
     if (!f) {
         qWarning() << "Failed to resolve" << "pybhawk_load_plugin";
         return out;
@@ -517,7 +516,7 @@ void Plugins::initPythonPlugin(Plugin *plugin)
         return;
     }
 
-    auto f = (void(*)(Plugin *)) m_pythonPlugin->resolve("pybhawk_init_plugin");
+    std::function<void (Plugins::Plugin *)> f = (void(*)(Plugin *)) m_pythonPlugin->resolve("pybhawk_init_plugin");
     if (!f) {
         qWarning() << "Failed to resolve" << "pybhawk_init_plugin";
         return;

@@ -46,21 +46,17 @@ void msgHandler(QtMsgType type, const QMessageLogContext &context, const QString
 }
 #endif
 
-#ifdef Q_OS_LINUX
-bool setPlat(){
-
-    QByteArray plat = qgetenv("QT_QPA_PLATFORM");
-    qputenv("QT_QPA_PLATFORM", "xcb"); // No Wayland support yet. Sorry
-
-    return true;
-}
-#endif
-
 int main(int argc, char* argv[])
 {
 
 #ifdef Q_OS_LINUX
-    setPlat();
+    const QByteArray cDesk = qgetenv("XDG_CURRENT_DESKTOP").toLower();
+    const QByteArray sessDesk = qgetenv("XDG_SESSION_DESKTOP").toLower();
+    const QByteArray sessType = qgetenv("XDG_SESSION_TYPE").toLower();
+    if (sessType.contains("wayland") && (cDesk.contains("gnome") || sessDesk.contains("gnome"))) {
+        const QByteArray platBa = QString("xcb").toLatin1();
+        qputenv("QT_QPA_PLATFORM", platBa); // No Wayland support yet. Sorry
+    }
 #endif
 
 #ifndef Q_OS_WIN
@@ -78,6 +74,9 @@ int main(int argc, char* argv[])
         argv = args;
     }
 
+    MainApplication::setOrganizationName("org");
+    MainApplication::setAttribute(Qt::AA_SynthesizeMouseForUnhandledTouchEvents);
+    MainApplication::setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents);
     MainApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     MainApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     MainApplication::setAttribute(Qt::AA_ShareOpenGLContexts);

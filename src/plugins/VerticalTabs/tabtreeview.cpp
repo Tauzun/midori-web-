@@ -55,7 +55,7 @@ TabTreeView::TabTreeView(BrowserWindow *window, QWidget *parent)
     // Enable hover to force redrawing close button
     viewport()->setAttribute(Qt::WA_Hover);
 
-    auto saveExpandedState = [this](const QModelIndex &index, bool expanded) {
+    std::function<void(const QModelIndex &index, bool expanded)> saveExpandedState = [this](const QModelIndex &index, bool expanded) {
         if (m_initializing) {
             return;
         }

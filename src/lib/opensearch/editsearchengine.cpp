@@ -81,7 +81,9 @@ void EditSearchEngine::setShortcut(const QString &shortcut)
 
 QIcon EditSearchEngine::icon()
 {
-    return QIcon(*ui->icon->pixmap());
+    QPixmap pic = ui->icon->pixmap(Qt::ReturnByValue);
+
+    return QIcon(pic);
 }
 
 void EditSearchEngine::setIcon(const QIcon &icon)

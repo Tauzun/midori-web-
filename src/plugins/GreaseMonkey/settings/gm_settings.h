@@ -49,6 +49,7 @@ private Q_SLOTS:
     void newScript();
     void openUserJs();
     void greaseSpot();
+    bool changeScriptIsolation();
 
     void loadScripts();
 

@@ -54,7 +54,6 @@ LocationBar::LocationBar(QWidget *parent)
 {
     setObjectName("locationbar");
     setDragEnabled(true);
-
     // Disable KDE QLineEdit transitions, it breaks with setText() && home()
     setProperty("_kde_no_animations", QVariant(true));
 
@@ -62,7 +61,7 @@ LocationBar::LocationBar(QWidget *parent)
     m_goIcon = new GoIcon(this);
     m_siteIcon = new SiteIcon(this);
     m_autofillIcon = new AutoFillIcon(this);
-    DownIcon* down = new DownIcon(this);
+    down = new DownIcon(this);
 
     addWidget(m_siteIcon, LineEdit::LeftSide);
     addWidget(m_autofillIcon, LineEdit::RightSide);
@@ -103,7 +102,6 @@ LocationBar::LocationBar(QWidget *parent)
     loadSettings();
 
     updateSiteIcon();
-
     // Hide icons by default
     m_goIcon->setVisible(qzSettings->alwaysShowGoIcon);
     m_autofillIcon->hide();
@@ -156,15 +154,15 @@ void LocationBar::setText(const QString &text)
 void LocationBar::updatePlaceHolderText()
 {
     if (qzSettings->searchFromAddressBar) {
-        setPlaceholderText(tr("Enter address or search with %1").arg(searchEngine().name));
-    } else
-        setPlaceholderText(tr("Enter address"));
+        setPlaceholderText(tr("Enter a web address or search with %1").arg(searchEngine().name));
+    } else {
+        setPlaceholderText(tr("Enter a web address"));
+    }
 }
 
 void LocationBar::showCompletion(const QString &completion, bool completeDomain)
 {
     LineEdit::setText(completion);
-
     // Move cursor to the end
     end(false);
 
@@ -184,7 +182,6 @@ void LocationBar::clearCompletion()
 void LocationBar::showDomainCompletion(const QString &completion)
 {
     m_domainCompleterModel->setStringList(QStringList() << completion);
-
     // We need to manually force the completion because model is updated asynchronously
     // But only force completion when the user actually added new text
     if (!completion.isEmpty() && m_oldTextLength < m_currentTextLength)
@@ -195,14 +192,13 @@ QString LocationBar::convertUrlToText(const QUrl &url)
 {
     // It was most probably entered by user, so don't urlencode it
     // Also don't urlencode JavaScript code
-
     if (url.scheme().isEmpty() || url.scheme() == QLatin1String("javascript")) {
         return QUrl::fromPercentEncoding(url.toEncoded());
     }
 
     QString stringUrl = QzTools::urlEncodeQueryString(url);
 
-    if (stringUrl.contains(QLatin1String("midori:"), Qt::CaseInsensitive) || stringUrl == QLatin1String("about:blank")) {
+    if (stringUrl.contains(QLatin1String("browser:"), Qt::CaseInsensitive) || stringUrl == QLatin1String("about:blank")) {
         stringUrl.clear();
     }
 
@@ -263,7 +259,6 @@ LocationBar::LoadAction LocationBar::loadAction(const QString &text)
         }
         return action;
     }
-
     // Check for one word search
     if (t != QLatin1String("localhost")
             && !QzTools::containsSpace(t)
@@ -366,9 +361,10 @@ void LocationBar::setGoIconVisible(bool state)
     if (state) {
         m_bookmarkIcon->hide();
         m_goIcon->show();
-    }
-    else {
-        m_bookmarkIcon->show();
+    } else {
+        if (m_window->isFullScreen() == false) {
+            m_bookmarkIcon->show();
+        }
 
         if (!qzSettings->alwaysShowGoIcon) {
             m_goIcon->hide();

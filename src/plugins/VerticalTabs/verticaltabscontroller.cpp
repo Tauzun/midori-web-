@@ -56,7 +56,7 @@ QWidget *VerticalTabsController::createSideBarWidget(BrowserWindow *window)
 
 bool VerticalTabsController::handleKeyPress(QKeyEvent *event, TabWidget *tabWidget)
 {
-    auto switchToNextTab = [=]() {
+    std::function<bool()> switchToNextTab = [=]() {
         VerticalTabsWidget *widget = m_widgets.value(tabWidget->browserWindow());
         if (widget) {
             widget->switchToNextTab();
@@ -65,7 +65,7 @@ bool VerticalTabsController::handleKeyPress(QKeyEvent *event, TabWidget *tabWidg
         return false;
     };
 
-    auto switchToPreviousTab = [=]() {
+    std::function<bool()> switchToPreviousTab = [=]() {
         VerticalTabsWidget *widget = m_widgets.value(tabWidget->browserWindow());
         if (widget) {
             widget->switchToPreviousTab();

@@ -43,8 +43,9 @@ ProtocolHandlerDialog::~ProtocolHandlerDialog()
 
 void ProtocolHandlerDialog::init()
 {
-    const auto handlers = mApp->protocolHandlerManager()->protocolHandlers();
-    for (auto it = handlers.cbegin(); it != handlers.cend(); ++it) {
+    const QHash<QString, QUrl> handlers = mApp->protocolHandlerManager()->protocolHandlers();
+    for (QHash<QString, QUrl>::const_iterator it = handlers.cbegin(); it != handlers.cend(); ++it) {
+
         QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
         item->setText(0, it.key());
         item->setText(1, it.value().host());
@@ -54,12 +55,12 @@ void ProtocolHandlerDialog::init()
 
 void ProtocolHandlerDialog::accepted()
 {
-    auto handlers = mApp->protocolHandlerManager()->protocolHandlers();
+    QHash<QString, QUrl> handlers = mApp->protocolHandlerManager()->protocolHandlers();
     for (int i = 0; i < ui->treeWidget->topLevelItemCount(); ++i) {
         QTreeWidgetItem *item = ui->treeWidget->topLevelItem(i);
         handlers.remove(item->text(0));
     }
-    for (auto it = handlers.cbegin(); it != handlers.cend(); ++it) {
+    for (QHash<QString, QUrl>::const_iterator it = handlers.cbegin(); it != handlers.cend(); ++it) {
         mApp->protocolHandlerManager()->removeProtocolHandler(it.key());
     }
     close();

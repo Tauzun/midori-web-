@@ -283,7 +283,7 @@ void AdBlockManager::load()
         QDir(DataPaths::currentProfilePath()).mkdir(QStringLiteral("adblock"));
     }
 
-    const auto fileNames = adblockDir.entryList(QStringList(QStringLiteral("*.txt")), QDir::Files);
+    const QStringList fileNames = adblockDir.entryList(QStringList(QSL("*.txt")), QDir::Files);
     for (const QString &fileName : fileNames) {
         if (fileName == QLatin1String("customlist.txt")) {
             continue;
@@ -315,87 +315,87 @@ void AdBlockManager::load()
     // Add subscriptions
     if (m_subscriptions.isEmpty()) {
 
-        AdBlockSubscription *aList = new AdBlockSubscription(tr("EasyList"), this);
+        AdBlockSubscription *aList = new AdBlockSubscription(QLatin1String("EasyList"), this);
         aList->setUrl(QUrl(ADBLOCK_ELIST_URL));
         aList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/aList.txt"));
         m_subscriptions.append(aList);
 
-        AdBlockSubscription *bList = new AdBlockSubscription(tr("Peter Lowe's list (English)"), this);
+        AdBlockSubscription *bList = new AdBlockSubscription(QLatin1String("Peter Lowe's list (English)"), this);
         bList->setUrl(QUrl(ADBLOCK_PLIST_URL));
         bList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/bList.txt"));
         m_subscriptions.append(bList);
 
-        AdBlockSubscription *cList = new AdBlockSubscription(tr("ABP Anti-Circumvention Filter List"), this);
+        AdBlockSubscription *cList = new AdBlockSubscription(QLatin1String("ABP Anti-Circumvention Filter List"), this);
         cList->setUrl(QUrl(ADBLOCK_ABPACFL_URL));
         cList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/cList.txt"));
         m_subscriptions.append(cList);
 
-        AdBlockSubscription *dList = new AdBlockSubscription(tr("Adblock YouTube"), this);
+        AdBlockSubscription *dList = new AdBlockSubscription(QLatin1String("Adblock YouTube"), this);
         dList->setUrl(QUrl(ADBLOCK_AY_URL));
         dList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/dList.txt"));
         m_subscriptions.append(dList);
 
-        AdBlockSubscription *eList = new AdBlockSubscription(tr("Adblock Wikipedia"), this);
+        AdBlockSubscription *eList = new AdBlockSubscription(QLatin1String("Adblock Wikipedia"), this);
         eList->setUrl(QUrl(ADBLOCK_AW_URL));
         eList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/eList.txt"));
         m_subscriptions.append(eList);
 
-        AdBlockSubscription *fList = new AdBlockSubscription(tr("Adware Filters"), this);
+        AdBlockSubscription *fList = new AdBlockSubscription(QLatin1String("Adware Filters"), this);
         fList->setUrl(QUrl(ADBLOCK_AF_URL));
         fList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/fList.txt"));
         m_subscriptions.append(fList);
 
-        AdBlockSubscription *hList = new AdBlockSubscription(tr("Anti-Facebook List"), this);
+        AdBlockSubscription *hList = new AdBlockSubscription(QLatin1String("Anti-Facebook List"), this);
         hList->setUrl(QUrl(ADBLOCK_AFLIST_URL));
         hList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/hList.txt"));
         m_subscriptions.append(hList);
 
-        AdBlockSubscription *IList = new AdBlockSubscription(tr("Distractions and Clickbait Filter"), this);
+        AdBlockSubscription *IList = new AdBlockSubscription(QLatin1String("Distractions and Clickbait Filter"), this);
         IList->setUrl(QUrl(ADBLOCK_DAC_URL));
         IList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/IList.txt"));
         m_subscriptions.append(IList);
 
-        AdBlockSubscription *JList = new AdBlockSubscription(tr("EasyList Cookie List"), this);
+        AdBlockSubscription *JList = new AdBlockSubscription(QLatin1String("EasyList Cookie List"), this);
         JList->setUrl(QUrl(ADBLOCK_ELCL_URL));
         JList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/JList.txt"));
         m_subscriptions.append(JList);
 /* // Too aggressive as it blocks sign-in with Google
-        AdBlockSubscription *KList = new AdBlockSubscription(tr("Fanboy's Annoyance List"), this);
+        AdBlockSubscription *KList = new AdBlockSubscription(QLatin1String("Fanboy's Annoyance List"), this);
         KList->setUrl(QUrl(ADBLOCK_FBAL_URL));
         KList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/KList.txt"));
         m_subscriptions.append(KList);
 */
-        AdBlockSubscription *RList = new AdBlockSubscription(tr("I Don't Care about Cookies"), this);
+        AdBlockSubscription *RList = new AdBlockSubscription(QLatin1String("I Don't Care about Cookies"), this);
         RList->setUrl(QUrl(ADBLOCK_IDCAC_URL));
         RList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/RList.txt"));
         m_subscriptions.append(RList);
 
-        AdBlockSubscription *SList = new AdBlockSubscription(tr("I don't care about newsletters"), this);
+        AdBlockSubscription *SList = new AdBlockSubscription(QLatin1String("I don't care about newsletters"), this);
         SList->setUrl(QUrl(ADBLOCK_IDCANL_URL));
         SList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/SList.txt"));
         m_subscriptions.append(SList);
 
-        AdBlockSubscription *LList = new AdBlockSubscription(tr("Linked Insanity Annoyance Rules"), this);
+        AdBlockSubscription *LList = new AdBlockSubscription(QLatin1String("Linked Insanity Annoyance Rules"), this);
         LList->setUrl(QUrl(ADBLOCK_LIA_URL));
         LList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/LList.txt"));
         m_subscriptions.append(LList);
 
-        AdBlockSubscription *MList = new AdBlockSubscription(tr("Prebake Obtrusive"), this);
+        AdBlockSubscription *MList = new AdBlockSubscription(QLatin1String("Prebake Obtrusive"), this);
         MList->setUrl(QUrl(ADBLOCK_PO_URL));
         MList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/MList.txt"));
         m_subscriptions.append(MList);
 
-        AdBlockSubscription *NList = new AdBlockSubscription(tr("Spam404"), this);
+        AdBlockSubscription *NList = new AdBlockSubscription(QLatin1String("Spam404"), this);
         NList->setUrl(QUrl(ADBLOCK_S404_URL));
         NList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/NList.txt"));
         m_subscriptions.append(NList);
 
-        AdBlockSubscription *OList = new AdBlockSubscription(tr("The Hosts File Project Adblock Filters"), this);
+        AdBlockSubscription *OList = new AdBlockSubscription(QLatin1String("The Hosts File Project Adblock Filters"), this);
         OList->setUrl(QUrl(ADBLOCK_HFPAF_URL));
         OList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/OList.txt"));
         m_subscriptions.append(OList);
 
-        AdBlockSubscription *QList = new AdBlockSubscription(tr("Twitch: Pure Viewing Experience"), this);
+        AdBlockSubscription *QList = new AdBlockSubscription(QLatin1String("Twitch: Pure Viewing Experience"), this);
         QList->setUrl(QUrl(ADBLOCK_TPVE_URL));
         QList->setFilePath(DataPaths::currentProfilePath() + QLatin1String("/adblock/QList.txt"));
         m_subscriptions.append(QList);

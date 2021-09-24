@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html id="html"><head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="shortcut icon" href="%FAVICON-IMG%" type="image/x-icon" />
 <title>%SITE-TITLE%</title>
 <!--
 The MIT License
@@ -27,8 +28,8 @@ THE SOFTWARE.
 -->
 <style type="text/css" media="screen">
 html {background-color: #333333}
-body {height: -webkit-fill-available !important; background-color: transparent; font-family:sans-serif; color:#eaeaea; direction:%DIRECTION%}
-canvas {height: -webkit-fill-available !important}
+body {height: 100% !important; background-color: transparent; font-family:sans-serif; color:#eaeaea; direction:%DIRECTION%}
+canvas {min-height: 100% !important; height: -webkit-fill-available !important}
 ::-webkit-scrollbar {width:12px}
 ::-webkit-scrollbar-track {border-radius:12px; -webkit-box-shadow:inset 0 0 6px rgba(0,175,255, 0.5)}
 ::-webkit-scrollbar-thumb {background:rgba(0,175,255, 0.1); border-radius:10px; -webkit-box-shadow:inset 0 0 6px rgba(255,255,255, 0.5)}
@@ -37,14 +38,14 @@ canvas {height: -webkit-fill-available !important}
 body * {-webkit-user-select:none; font-size:100%; line-height:1.6; margin:0}
 .add {background:url(qrc:html/plus.svg); height:32px; outline:none; position:fixed; bottom:10px; width:32px; %RIGHT_STR%:6px}
 .sett {background:url(qrc:html/configure.svg); height:32px; outline:none; position:fixed; top:10px; width:32px; %RIGHT_STR%:6px}
-.add:hover {background-color:rgba(90,90,92, 0.5); box-shadow:0 0 1px 2px rgba(0,175,255, 0.5); cursor:pointer}
-.sett:hover {background-color:rgba(90,90,92, 0.5); box-shadow:0 0 1px 2px rgba(0,175,255, 0.5); cursor:pointer}
+.add:hover {background-color:rgba(90,90,92, 0.5); box-shadow:0 0 1px 2px rgba(0,120,215); cursor:pointer}
+.sett:hover {background-color:rgba(90,90,92, 0.5); box-shadow:0 0 1px 2px rgba(0,120,215); cursor:pointer}
 #quickdial {outline:none; margin:auto; text-align:center}
 #quickdial div.entry {background-color:rgba(90,90,92, 0.4); position:relative; margin:5px; border-radius:1px;
     overflow: hidden;border:1px solid rgba(90,90,92, 0.3); background-clip:padding-box; float:%LEFT_STR%
 }
-#quickdial div.entry:hover {box-shadow:0 0 0 2px rgba(0,175,255, 0.5)}
-#quickdial img {display:block; margin:auto; border-radius: 0px 0px 0 0}
+#quickdial div.entry:hover {box-shadow:0 0 0 2px rgba(0,120,215)}
+#quickdial img {display:block; margin:auto; height:auto; border-radius: 0px 0px 0 0}
 #quickdial img[src="%LOADING-IMG%"]{margin:10% auto auto auto; height:66%; width: 44%}
 #quickdial img[src=""] {visibility: hidden}
 #quickdial a {position:absolute; top:0; width:100%; height:87%; %LEFT_STR%:0}
@@ -116,15 +117,18 @@ input[type=button], select {padding:0px; margin:5px; outline:none; background:rg
     box-shadow:0 0 1px 2px rgba(255,255,255, 0.5); border:6px; border-radius:2px; color:#eaeaea;
     width:135px; height:32px; font-weight:bold
 }
-input[type=button]:hover, input[type=text]:hover, select:hover {box-shadow:0 0 1px 2px rgba(0,175,255, 0.8);
-    background:rgba(90,90,92, 0.3); transition:0.1s; cursor:pointer
+input[type=button]:hover, select:hover {box-shadow:0 0 1px 2px rgba(90,90,92, 0.8);
+    background:rgba(0,120,215); transition:0.1s; cursor:pointer
 }
 input[type=button]:active, select:active {background:rgba(90,165,255, 0.8);
     box-shadow:0 0 1px 2px rgba(51,51,51, 0.8)
 }
 input[type=text] {padding:5px; margin:5px; width:100%; background-color:rgba(90,90,92, 0.6) !important;
     outline:none; box-shadow:0 0 1px 2px rgba(255,255,255, 0.5); border:6px; border-radius:2px;
-    color:rgba(234,234,234, 1.0); width:135px; height:32px;
+    color:rgba(234,234,234, 1.0); width:135px; height:32px; cursor:text
+}
+input[type=text]:hover{
+    box-shadow:0 0 1px 2px rgba(0,120,215); transition:0.1s; cursor:text
 }
 input[type=range] {height:26px; -webkit-appearance:none; margin:10px 0; width:115%}
 input[type=range]:focus {outline: none}
@@ -135,6 +139,11 @@ input[type=range]::-webkit-slider-thumb {box-shadow:none; border:none; height:20
   width:40px; border-radius:12px; background:rgba(255,255,255, 1.0);cursor:pointer;
   -webkit-appearance: none
 }
+
+input[type=range]::-webkit-slider-thumb:hover {
+background:rgba(0,120,215)
+}
+
 input[type=range]:focus::-webkit-slider-runnable-track {background:rgba(80,85,90, 1.0)}
 input[type=range]:disabled::-webkit-slider-thumb,
 input[type=range]:disabled:hover::-webkit-slider-thumb {
@@ -181,23 +190,7 @@ input[type=checkbox] {visibility:hidden}
         data-initial-script='%INITIAL-SCRIPT%'>
     </p>
 
-<div id="sss-ql-tag">
-    <script type="text/javascript">
-        (function () {
-            var param = {
-                        "o": "xqm48",
-                        "s": "86958",
-                        "t": "720x250-midori5x2",
-                        "u": "{referer}",
-                        "di": "{device_identifier}",
-                        "ono":"1",
-                        "c":"{category}",
-                        "subid":"{subid}"
-                    };
-            var d = document, s = d.createElement("script"), u = [], p; param.u = d.location.href; param.ref = d.referrer; param.phR = Math.random() + "_" + (new Date).getTime(); for (p in param) if (param.hasOwnProperty(p)) u.push(p + "=" + encodeURIComponent(param[p])); s.src = "//"+param["o"]+".veve.com/qlinit.js?" + u.join("&"); s.type = "text/javascript"; d.getElementsByTagName("head")[0].appendChild(s);
-        })();
-    </script>
-</div>
+<noscript>%JAVASCRIPT-DISABLED%</noscript>
 
 <div id="quickdial">
 </div>
@@ -250,7 +243,6 @@ input[type=checkbox] {visibility:hidden}
             </select>
         </div>
     </div>
-    
     <div class="buttonbox">
         <input id="button-cancel" type="button" value="%CANCEL%" />
         <input id="button-apply" type="button" value="%APPLY%" />

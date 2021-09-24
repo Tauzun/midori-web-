@@ -23,7 +23,6 @@ extern "C" {
 #include "libintl.h"
 }
 
-
 /**
  * @brief The class exposing GNU Gettext to QML
  */

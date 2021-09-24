@@ -304,9 +304,7 @@ AdBlockSubscription::~AdBlockSubscription()
 {
     qDeleteAll(m_rules);
 }
-
 // AdBlockCustomList
-
 AdBlockCustomList::AdBlockCustomList(QObject* parent)
     : AdBlockSubscription(tr("Custom Rules"), parent)
 {
@@ -315,10 +313,9 @@ AdBlockCustomList::AdBlockCustomList(QObject* parent)
 
 void AdBlockCustomList::loadSubscription(const QStringList &disabledRules)
 {
-    const QString blockThisSite = QStringLiteral("*browser-update.org*"); // Better off not polluting your site's pages with this garbage. Use the current html 5 spec and you'll be just fine ;)
-
-    const QString notBlockThisSite = QStringLiteral("@@|https://astian.org/midori-search/|$document");
-
+    // Better off not polluting your site's pages with browser checking garbage.
+    // Browser sniffing stifles innovation :( Instead, use the current html5 spec and you'll be just fine ;)
+    const QString blockThisSite2 = QStringLiteral("@@||astian.org^$document").toUtf8();
     const QString rules = QzTools::readAllFileContents(filePath());
 
     QFile file(filePath());
@@ -330,11 +327,9 @@ void AdBlockCustomList::loadSubscription(const QStringList &disabledRules)
         QTextStream stream(&file);
         stream.setCodec("UTF-8");
 
-        if (!rules.contains(blockThisSite + QLatin1String("\n")))
-            stream << blockThisSite << "\n";
-
-        if (!rules.contains(notBlockThisSite + QLatin1String("\n")))
-            stream << notBlockThisSite << "\n";
+        if (!rules.contains(blockThisSite2)){
+            stream << "!--- Default rules ---!" << "\n" << blockThisSite2 << "\n";
+        }
 
     }
     file.close();

@@ -159,9 +159,7 @@ void PasswordManager::switchBackend(const QString &backendID)
     m_backend->setActive(true);
 
     Settings settings;
-    settings.beginGroup(QStringLiteral("PasswordManager"));
-    settings.setValue(QStringLiteral("Backend"), backendID);
-    settings.endGroup();
+    settings.setValue(QStringLiteral("PasswordManager/Backend"), backendID);
 
     emit passwordBackendChanged();
 }

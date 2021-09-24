@@ -33,7 +33,7 @@ AboutDialog::AboutDialog(QWidget* parent)
     setAttribute(Qt::WA_DeleteOnClose);
 
     ui->setupUi(this);
-    ui->label->setPixmap(QIcon(QStringLiteral(":icons/other/midori.svg")).pixmap(QSize(256, 100) * 1.1));
+    ui->label->setPixmap(QIcon(QStringLiteral(":icons/other/about.svg")).pixmap(QSize(256, 100) * 1.1));
 
     showAbout();
 }
@@ -49,16 +49,16 @@ void AboutDialog::showAbout()
     aboutHtml += "<div style='margin:0px 20px'>";
     aboutHtml += QString("<p><a style='color:#0078d7' href=%1>%1</a></p>").arg(Qz::WWWADDRESS);
     aboutHtml += QString("<p>%1 %2</p>").arg(Qz::COPYRIGHT, Qz::AUTHOR);
-    aboutHtml += tr("<p><b>Version %1</b> &#124; ").arg(
+    aboutHtml += QString("<p><b>Version %1</b> &#124; ").arg(
 #ifdef MIDORI_GIT_REVISION
                        QString("%1").arg(MIDORI_GIT_REVISION)
 #else
                        Qz::VERSION
 #endif
                    );
-    aboutHtml += tr("<b>QtWebEngine %1</b>").arg(qVersion());
+    aboutHtml += QString("<b>QtWebEngine %1</b>").arg(qVersion());
 #ifdef Q_OS_LINUX
-    aboutHtml += tr(" &#124; <b>%1</b>").arg(qEnvironmentVariable("QT_QPA_PLATFORM"));
+    aboutHtml += QString(" &#124; <b>%1</b>").arg(qEnvironmentVariable("QT_QPA_PLATFORM"));
 #endif
     aboutHtml += "</p>";
 

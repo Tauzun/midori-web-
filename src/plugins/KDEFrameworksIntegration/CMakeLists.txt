@@ -12,16 +12,24 @@ set(KDEFrameworksIntegration_RSCS
 qt5_add_resources(RSCS ${KDEFrameworksIntegration_RSCS})
 
 add_library(KDEFrameworksIntegration MODULE ${KDEFrameworksIntegration_SRCS} ${RSCS})
-install(TARGETS KDEFrameworksIntegration DESTINATION ${BHAWK_INSTALL_PLUGINDIR})
+install(TARGETS KDEFrameworksIntegration DESTINATION ${MIDORI_INSTALL_PLUGINDIR})
 target_link_libraries(KDEFrameworksIntegration
-    BhawkPrivate
+    MidoriPrivate
     KF5::Wallet
     KF5::KIOCore
     KF5::KIOWidgets
     KF5::Crash
     KF5::CoreAddons
-    KF5::PurposeWidgets
+    KF5::Archive
 )
+
+if (KF5Purpose_FOUND)
+    target_link_libraries(KDEFrameworksIntegration
+        KF5::Purpose
+        KF5::PurposeWidgets
+    )
+    target_compile_definitions(KDEFrameworksIntegration PRIVATE ENABLE_PURPOSE)
+endif()
 
 if (NOT DEBUG)
     target_precompile_headers(KDEFrameworksIntegration PRIVATE

@@ -111,7 +111,7 @@ void DataPaths::init()
     }
 
     if (MainApplication::isTestModeEnabled()) {
-        m_paths[Config].append(QDir::tempPath() + QStringLiteral("/Midori-test"));
+        m_paths[Config].append(QDir::tempPath() + QStringLiteral("/Bhawk-test"));
     } else {
         m_paths[Config].append(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation));
     }

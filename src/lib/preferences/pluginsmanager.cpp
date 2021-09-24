@@ -38,13 +38,9 @@ PluginsManager::PluginsManager(QWidget* parent)
     ui->setupUi(this);
     ui->list->setLayoutDirection(Qt::LeftToRight);
     ui->butSettings->setIcon(IconProvider::settingsIcon());
-    ui->butRemove->setIcon(QIcon(QStringLiteral(":icons/menu/edit-delete.svg")));
-
     //Application plug-ins
     Settings settings;
-    settings.beginGroup("Plugin-Settings");
-    bool appPluginsEnabled = settings.value("EnablePlugins", true).toBool();
-    settings.endGroup();
+    bool appPluginsEnabled = settings.value("Plugin-Settings/EnablePlugins", true).toBool();
 
     ui->list->setEnabled(appPluginsEnabled);
 
@@ -83,9 +79,7 @@ void PluginsManager::save()
     }
 
     Settings settings;
-    settings.beginGroup("Plugin-Settings");
-    settings.setValue("AllowedPlugins", allowedPlugins);
-    settings.endGroup();
+    settings.setValue("Plugin-Settings/AllowedPlugins", allowedPlugins);
 }
 
 void PluginsManager::refresh()
@@ -234,7 +228,7 @@ void PluginsManager::removeClicked()
 
     Plugins::Plugin plugin = item->data(Qt::UserRole + 10).value<Plugins::Plugin>();
 
-    const auto button = QMessageBox::warning(this, tr("Confirmation"),
+    const QMessageBox::StandardButton button = QMessageBox::warning(this, tr("Confirmation"),
                                              tr("Are you sure you want to remove '%1'?").arg(plugin.pluginSpec.name),
                                              QMessageBox::Yes | QMessageBox::No);
     if (button != QMessageBox::Yes) {

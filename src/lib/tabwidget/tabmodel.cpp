@@ -230,7 +230,7 @@ void TabModel::tabInserted(int index)
     m_tabs.insert(index, tab);
     endInsertRows();
 
-    auto emitDataChanged = [this](WebTab *tab, int role) {
+    std::function<void (WebTab *, int)> emitDataChanged = [this](WebTab *tab, int role) {
         const QModelIndex idx = tabIndex(tab);
         emit dataChanged(idx, idx, {role});
     };

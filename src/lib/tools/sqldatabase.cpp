@@ -76,10 +76,10 @@ void SqlQueryJob::start()
     const QVector<QVariant> boundValues = m_boundValues;
     m_boundValues.clear();
 
-    auto watcher = new QFutureWatcher<Result>(this);
+    QFutureWatcher<Result> * watcher = new QFutureWatcher<Result>(this);
     connect(watcher, &QFutureWatcher<Result>::finished, this, [=]() {
         deleteLater();
-        const auto result = watcher->result();
+        const Result result = watcher->result();
         m_error = result.error;
         m_lastInsertId = result.lastInsertId;
         m_records = result.records;
@@ -115,12 +115,16 @@ SqlDatabase::~SqlDatabase()
 
 QSqlDatabase SqlDatabase::database()
 {
-    if (QThread::currentThread() == qApp->thread()) {
-        return QSqlDatabase::database();
+
+    if (qApp->thread()->isRunning()) {
+
+        if (QThread::currentThread() == qApp->thread()) {
+            return QSqlDatabase::database();
+        }
     }
 
     if (!s_databases.hasLocalData()) {
-        const QString threadStr = QStringLiteral("Bhawk/%1").arg((quintptr) QThread::currentThread());
+        const QString threadStr = QStringLiteral("Midori/%1").arg((quintptr) QThread::currentThread());
         QSqlDatabase::removeDatabase(threadStr);
         QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), threadStr);
         db.setDatabaseName(m_databaseName);

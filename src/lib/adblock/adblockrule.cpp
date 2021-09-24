@@ -458,8 +458,7 @@ void AdBlockRule::parseFilter()
     // Parse all options following $ char
     int optionsIndex = parsedLine.indexOf(QLatin1Char('$'));
     if (optionsIndex >= 0) {
-        const QStringList options = parsedLine.mid(optionsIndex + 1).split(QLatin1Char(','), QString::SkipEmptyParts);
-
+        const QStringList options = parsedLine.mid(optionsIndex + 1).split(QL1C(','), Qt::SkipEmptyParts);
         int handledOptions = 0;
         for (const QString &option : options) {
             if (option.startsWith(QLatin1String("domain="))) {
@@ -632,7 +631,7 @@ void AdBlockRule::parseFilter()
 
 void AdBlockRule::parseDomains(const QString &domains, const QChar &separator)
 {
-    const QStringList domainsList = domains.split(separator, QString::SkipEmptyParts);
+    const QStringList domainsList = domains.split(separator, Qt::SkipEmptyParts);
 
     for (const QString domain : domainsList) {
         if (domain.isEmpty()) {
@@ -791,7 +790,7 @@ bool AdBlockRule::isMatchingRegExpStrings(const QString &url) const
 {
     Q_ASSERT(m_regExp);
 
-    const auto matchers = m_regExp->matchers;
+    const QList<QStringMatcher> matchers = m_regExp->matchers;
     for (const QStringMatcher &matcher : matchers) {
         if (matcher.indexIn(url) == -1)
             return false;

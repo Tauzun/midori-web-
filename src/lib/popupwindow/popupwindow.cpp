@@ -145,7 +145,7 @@ PopupWindow::PopupWindow(PopupWebView* view)
     connect(m_view, &WebView::loadFinished, this, &PopupWindow::loadFinished);
     connect(m_view, &WebView::privacyChanged, m_locationBar, &PopupLocationBar::setPrivacyState);
 
-    auto pageChanged = [this](WebPage *page) {
+    std::function<void (WebPage *)> pageChanged = [this](WebPage *page) {
         connect(page, &WebPage::linkHovered, this, &PopupWindow::showStatusBarMessage);
         connect(page, &WebPage::geometryChangeRequested, this, &PopupWindow::setWindowGeometry);
     };

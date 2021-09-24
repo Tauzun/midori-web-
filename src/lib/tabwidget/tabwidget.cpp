@@ -50,6 +50,7 @@ AddTabButton::AddTabButton(TabWidget* tabWidget, TabBar* tabBar)
     setFocusPolicy(Qt::NoFocus);
     setAcceptDrops(true);
     setToolTip(TabWidget::tr("New Tab"));
+    resize(32, 32);
 }
 
 void AddTabButton::wheelEvent(QWheelEvent* event)
@@ -107,18 +108,15 @@ TabWidget::TabWidget(BrowserWindow *window, QWidget *parent)
     connect(m_menuTabs, &MenuTabs::closeTab, this, &TabWidget::requestCloseTab);
 
     m_menuClosedTabs = new QMenu(this);
-
     // AddTab button displayed next to last tab
     m_buttonAddTab = new AddTabButton(this, m_tabBar);
     m_buttonAddTab->setProperty("outside-tabbar", false);
     connect(m_buttonAddTab, &QAbstractButton::clicked, m_window, &BrowserWindow::addTab);
-
     // AddTab button displayed outside tabbar (as corner widget)
     m_buttonAddTab2 = new AddTabButton(this, m_tabBar);
     m_buttonAddTab2->setProperty("outside-tabbar", true);
     m_buttonAddTab2->hide();
     connect(m_buttonAddTab2, &QAbstractButton::clicked, m_window, &BrowserWindow::addTab);
-
     // ClosedTabs button displayed as a permanent corner widget
     m_buttonClosedTabs = new ToolButton(m_tabBar);
     m_buttonClosedTabs->setObjectName("tabwidget-button-closedtabs");
@@ -129,7 +127,6 @@ TabWidget::TabWidget(BrowserWindow *window, QWidget *parent)
     m_buttonClosedTabs->setFocusPolicy(Qt::NoFocus);
     m_buttonClosedTabs->setShowMenuInside(true);
     connect(m_buttonClosedTabs, &ToolButton::aboutToShowMenu, this, &TabWidget::aboutToShowClosedTabsMenu);
-
     // ListTabs button is showed only when tabbar overflows
     m_buttonListTabs = new ToolButton(m_tabBar);
     m_buttonListTabs->setObjectName("tabwidget-button-opentabs");
@@ -165,9 +162,7 @@ void TabWidget::loadSettings()
     m_newEmptyTabAfterActive = settings.value("newEmptyTabAfterActive", false).toBool();
     settings.endGroup();
 
-    settings.beginGroup("Web-URL-Settings");
-    m_urlOnNewTab = settings.value("newTabUrl", "https://astian.org/midori-start").toUrl();
-    settings.endGroup();
+    m_urlOnNewTab = settings.value("Web-URL-Settings/newTabUrl", "browser:speeddial").toUrl();
 
     m_tabBar->loadSettings();
 
@@ -283,8 +278,8 @@ void TabWidget::aboutToShowTabsMenu()
 void TabWidget::aboutToShowClosedTabsMenu()
 {
     m_menuClosedTabs->clear();
+    const QVector<ClosedTabsManager::Tab> closedTabs = closedTabsManager()->closedTabs();
 
-    const auto closedTabs = closedTabsManager()->closedTabs();
     for (int i = 0; i < closedTabs.count(); ++i) {
         const ClosedTabsManager::Tab tab = closedTabs.at(i);
         const QString title = QzTools::truncatedText(tab.tabState.title, 40);
@@ -610,7 +605,7 @@ void TabWidget::closeAllButCurrent(int index)
 
     WebTab* akt = weTab(index);
 
-    const auto tabs = allTabs(false);
+    const QList<WebTab *> tabs = allTabs(false);
     for (const WebTab* tab : tabs) {
         int tabIndex = tab->tabIndex();
         if (akt == widget(tabIndex)) {
@@ -626,7 +621,7 @@ void TabWidget::closeToRight(int index)
         return;
     }
 
-    const auto tabs = allTabs(false);
+    const QList<WebTab *> tabs = allTabs(false);
     for (const WebTab* tab : tabs) {
         int tabIndex = tab->tabIndex();
         if (index >= tabIndex) {
@@ -643,7 +638,7 @@ void TabWidget::closeToLeft(int index)
         return;
     }
 
-    const auto tabs = allTabs(false);
+    const QList<WebTab *> tabs = allTabs(false);
     for (const WebTab* tab : tabs) {
         int tabIndex = tab->tabIndex();
         if (index <= tabIndex) {
@@ -792,7 +787,7 @@ void TabWidget::restoreAllClosedTabs()
         return;
     }
 
-    const auto closedTabs = m_closedTabsManager->closedTabs();
+    const QVector<ClosedTabsManager::Tab> closedTabs = m_closedTabsManager->closedTabs();
     for (const ClosedTabsManager::Tab &tab : closedTabs) {
         int index = addView(QUrl(), tab.tabState.title, Qz::NT_CleanSelectedTab);
         WebTab* webTab = weTab(index);
@@ -861,8 +856,9 @@ bool TabWidget::restoreState(const QVector<WebTab::SavedTab> &tabs, int currentT
         }
     }
 
-    for (const auto p : qAsConst(childTabs)) {
-        const auto indices = p.second;
+    for (const QPair<WebTab *, QVector<int>> p : qAsConst(childTabs)) {
+        const QVector<int> indices = p.second;
+
         for (int index : indices) {
             WebTab *t = weTab(index);
             if (t) {

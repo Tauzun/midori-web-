@@ -182,7 +182,7 @@ QString DisableJS_Icon::modeCheck(QString sP) {
     QString settingApprovalMode;
     QSettings settings(sP + "/plug-ins.ini", QSettings::IniFormat);
     settings.beginGroup("DisableJS");
-    settingApprovalMode = settings.value("approval/mode", "no").toString().toLower();
+    settingApprovalMode = settings.value("approvalMode", "no").toString().toLower();
     settings.endGroup();
 
     return settingApprovalMode;

@@ -123,7 +123,7 @@ void WebSearchBar::aboutToShowMenu()
             if (title.isEmpty())
                 title = m_window->weView()->title();
 
-            menu->addAction(m_window->weView()->icon(), tr("Add %1 ...").arg(title), this, &WebSearchBar::addEngineFromAction)->setData(url);
+            //menu->addAction(m_window->weView()->icon(), tr("Add %1 ...").arg(title), this, &WebSearchBar::addEngineFromAction)->setData(url); // This works but I'm unsure about the demand for it
         }
 
         menu->addSeparator();
@@ -174,7 +174,8 @@ void WebSearchBar::setupEngines()
 
     m_boxSearchType->clearItems();
 
-    const auto engines = m_searchManager->allEngines();
+    const QVector<SearchEnginesManager::Engine> engines = m_searchManager->allEngines();
+
     for (const SearchEngine &en : engines) {
         ButtonWithMenu::Item item;
         item.icon = en.icon;
@@ -208,6 +209,8 @@ void WebSearchBar::searchChanged(const ButtonWithMenu::Item &item)
 
     m_searchManager->setActiveEngine(m_activeEngine);
 
+    //qzSettings->activeEngine = QString(m_activeEngine.name);
+
     if (qzSettings->searchOnEngineChange && !m_reloadingEngines && !text().isEmpty()) {
         search();
     }
@@ -216,9 +219,7 @@ void WebSearchBar::searchChanged(const ButtonWithMenu::Item &item)
 void WebSearchBar::instantSearchChanged(bool enable)
 {
     Settings settings;
-    settings.beginGroup("SearchEngines");
-    settings.setValue("SearchOnEngineChange", enable);
-    settings.endGroup();
+    settings.setValue("SearchEngines/SearchOnEngineChange", enable);
     qzSettings->searchOnEngineChange = enable;
 }
 
@@ -261,12 +262,12 @@ void WebSearchBar::contextMenuEvent(QContextMenuEvent* event)
     act->setCheckable(true);
     act->setChecked(qzSettings->showWSBSearchSuggestions);
     connect(act, &QAction::triggered, this, &WebSearchBar::enableSearchSuggestions);
-
-    QAction* instantSearch = menu->addAction(tr("Search when engine changed"));
+/* // This should always be the default and should be in the preference menu not here instead
+    QAction* instantSearch = menu->addAction(tr("Search again upon engine change"));
     instantSearch->setCheckable(true);
     instantSearch->setChecked(qzSettings->searchOnEngineChange);
     connect(instantSearch, &QAction::triggered, this, &WebSearchBar::instantSearchChanged);
-
+*/
     // Prevent choosing first option with double rightclick
     QPoint pos = event->globalPos();
     pos.setY(pos.y() + 1);

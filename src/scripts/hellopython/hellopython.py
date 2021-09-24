@@ -89,7 +89,7 @@ class HelloPlugin(Bhawk.PluginInterface, QtCore.QObject):
 
         self.settings.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.settings.setWindowTitle(i18n("Hello Python Settings"))
-        self.settings.setWindowIcon(QtGui.QIcon(":icons/bhawk-blue.svg"))
+        self.settings.setWindowIcon(QtGui.QIcon(":icons/midori-green.svg"))
         closeButton.clicked.connect(self.settings.close)
 
         self.settings.show()

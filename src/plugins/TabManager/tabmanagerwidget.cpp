@@ -111,7 +111,7 @@ QString TabManagerWidget::domainFromUrl(const QUrl &url, bool useHostName)
         return tr("Local File System:");
     }
     else if (url.scheme() == "browser" || urlString.isEmpty()) {
-        return tr("midori:");
+        return tr("browser:");
     }
     else if (url.scheme() == "ftp") {
         appendString.prepend(tr(" [FTP]"));
@@ -452,7 +452,7 @@ void TabManagerWidget::processActions()
 
     m_refreshBlocked = true;
 
-    QHash<BrowserWindow*, WebTab*> selectedTabs;
+    QMultiHash<BrowserWindow*, WebTab*> selectedTabs;
 
     const QString &command = sender()->objectName();
 
@@ -477,7 +477,7 @@ void TabManagerWidget::processActions()
                 continue;
             }
 
-            selectedTabs.insertMulti(mainWindow, webTab);
+            selectedTabs.insert(mainWindow, webTab);
         }
         winItem->setCheckState(0, Qt::Unchecked);
     }
@@ -518,7 +518,7 @@ void TabManagerWidget::changeGroupType()
     }
 }
 
-void TabManagerWidget::closeSelectedTabs(const QHash<BrowserWindow*, WebTab*> &tabsHash)
+void TabManagerWidget::closeSelectedTabs(const QMultiHash<BrowserWindow*, WebTab*> &tabsHash)
 {
     if (tabsHash.isEmpty()) {
         return;
@@ -534,7 +534,7 @@ void TabManagerWidget::closeSelectedTabs(const QHash<BrowserWindow*, WebTab*> &t
     }
 }
 
-static void detachTabsTo(BrowserWindow* targetWindow, const QHash<BrowserWindow*, WebTab*> &tabsHash)
+static void detachTabsTo(BrowserWindow* targetWindow, const QMultiHash<BrowserWindow*, WebTab*> &tabsHash)
 {
     const QList<BrowserWindow*> &windows = tabsHash.uniqueKeys();
     for (BrowserWindow* mainWindow : windows) {
@@ -552,7 +552,7 @@ static void detachTabsTo(BrowserWindow* targetWindow, const QHash<BrowserWindow*
     }
 }
 
-void TabManagerWidget::detachSelectedTabs(const QHash<BrowserWindow*, WebTab*> &tabsHash)
+void TabManagerWidget::detachSelectedTabs(const QMultiHash<BrowserWindow*, WebTab*> &tabsHash)
 {
     if (tabsHash.isEmpty() ||
             (tabsHash.uniqueKeys().size() == 1 &&
@@ -608,7 +608,7 @@ bool TabManagerWidget::bookmarkSelectedTabs(const QHash<BrowserWindow*, WebTab*>
     return true;
 }
 
-void TabManagerWidget::unloadSelectedTabs(const QHash<BrowserWindow*, WebTab*> &tabsHash)
+void TabManagerWidget::unloadSelectedTabs(const QMultiHash<BrowserWindow*, WebTab*> &tabsHash)
 {
     if (tabsHash.isEmpty()) {
         return;
@@ -796,7 +796,7 @@ void TabItem::setWebTab(WebTab* webTab)
     connect(m_webTab->webView(), &QWebEngineView::titleChanged, this, &TabItem::setTitle);
     connect(m_webTab->webView(), &QWebEngineView::iconChanged, this, &TabItem::updateIcon);
 
-    auto pageChanged = [this](WebPage *page) {
+    std::function<void(WebPage *)> pageChanged = [this](WebPage *page) {
         connect(page, &WebPage::audioMutedChanged, this, &TabItem::updateIcon);
         connect(page, &WebPage::loadFinished, this, &TabItem::updateIcon);
         connect(page, &WebPage::loadStarted, this, &TabItem::updateIcon);

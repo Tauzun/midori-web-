@@ -40,7 +40,7 @@ QmlTestHelper::QmlTestHelper()
 
 QJSValue QmlTestHelper::evaluate(const QString &source)
 {
-    auto out = testItem->evaluate(source);
+    QJSValue out = testItem->evaluate(source);
     if (out.isError()) {
         qWarning() << "Error:" << out.toString();
     }
@@ -49,7 +49,7 @@ QJSValue QmlTestHelper::evaluate(const QString &source)
 
 QObject *QmlTestHelper::evaluateQObject(const QString &source)
 {
-    auto out = evaluate(source);
+    QJSValue out = evaluate(source);
     if (out.isQObject()) {
         return out.toQObject();
     }

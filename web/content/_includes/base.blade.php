@@ -34,7 +34,7 @@
 										<div class="card-title h5">Hosted by</div>
 									</div>
 									<div class="card-image col-mx-auto"><a href="https://about.gitlab.com/" class="external-link"><img src="@url('assets/images/gitlab-logo-gray-rgb.svg')" class="img-responsive  width-128" alt="Gitlab" /></a></div>
-									<div class="card-footer"><form style="display: inline" action="https://gitlab.com/TW3/bhawk" method="get"><button class="btn btn-primary">Fork the code</button></form></div>
+									<div class="card-footer"><form style="display: inline" action="https://gitlab.com/TW3/b" method="get"><button class="btn btn-primary">Fork the code</button></form></div>
 								</div>
 							</div>
 						</div>

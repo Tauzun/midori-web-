@@ -37,6 +37,14 @@ GM_Settings::GM_Settings(GM_Manager* manager, QWidget* parent)
     ui->setupUi(this);
     ui->iconLabel->setPixmap(QIcon(QStringLiteral(":gm/data/icon.svg")).pixmap(32));
 
+    QSettings settings(m_manager->settingsPath() + QLatin1String("/plug-ins.ini"), QSettings::IniFormat);
+
+    if (settings.value("GreaseMonkey/noScriptIsolation", false).toBool()) {
+        ui->isolationCheckBox->setChecked(true);
+    } else {
+        ui->isolationCheckBox->setChecked(false);
+    }
+
     connect(ui->listWidget, &QListWidget::itemDoubleClicked,
             this, &GM_Settings::showItemInfo);
     connect(ui->listWidget, &GM_SettingsListWidget::updateItemRequested,
@@ -55,8 +63,23 @@ GM_Settings::GM_Settings(GM_Manager* manager, QWidget* parent)
             this, &GM_Settings::loadScripts);
     connect(this, &GM_Settings::accepted,
             manager, &GM_Manager::scriptsReload);
+    connect(ui->isolationCheckBox, &QCheckBox::toggled,
+            this, &GM_Settings::changeScriptIsolation);
 
     loadScripts();
+}
+
+bool GM_Settings::changeScriptIsolation()
+{
+    QSettings settings(m_manager->settingsPath() + QLatin1String("/plug-ins.ini"), QSettings::IniFormat);
+    if (ui->isolationCheckBox->isChecked()) {
+        settings.setValue(QStringLiteral("GreaseMonkey/noScriptIsolation"), true);
+    } else {
+        settings.setValue(QStringLiteral("GreaseMonkey/noScriptIsolation"), false);
+    }
+
+    return true;
+
 }
 
 void GM_Settings::openUserJs()
@@ -168,7 +191,7 @@ void GM_Settings::loadScripts()
 
     ui->listWidget->clear();
 
-    const auto allScripts = m_manager->allScripts();
+    const QList<GM_Script *> allScripts = m_manager->allScripts();
     for (GM_Script* script : allScripts) {
         QListWidgetItem* item = new QListWidgetItem(ui->listWidget);
         item->setText(script->name());

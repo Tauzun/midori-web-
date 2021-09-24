@@ -76,12 +76,15 @@ public:
     QString cursiveFont;
     QString fantasyFont;
     QString pictographFont;
+    QString cachePath;
     int defaultFontSize;
     int fixedFontSize;
     int minimumFontSize;
     int minimumLogicalFontSize;
+    int afterlaunch;
     bool dNSPrefetch;
     bool intPDFViewer;
+    bool checkDefaultBrowser;
     int wheelScrollLines;
     QString userStyleSheet;
     QString defaultEncoding;
@@ -144,6 +147,13 @@ public:
     bool notificationsEnabled;
     int proxyType;
     bool showMenuBar;
+    QString defaultEngine;
+    QString activeEngine;
+    bool showSearchBar;
+    QString pageHighlightColor;
+    QString pageHighlightedTextColor;
+    bool showNavInFullScreen;
+    bool fullScreenLocationBarAutoHide;
 
 private:
 

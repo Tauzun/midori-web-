@@ -381,7 +381,7 @@ void LocationCompleterView::setupSearchEngines()
         delete m_searchEnginesLayout->takeAt(0);
     }
 
-    const auto engines = mApp->searchEnginesManager()->allEngines();
+    const QVector<SearchEnginesManager::Engine> engines = mApp->searchEnginesManager()->allEngines();
     for (const SearchEngine &engine : engines) {
         ToolButton *button = new ToolButton(this);
         button->setIcon(engine.icon);

@@ -110,11 +110,11 @@ void SessionManagerDialog::refresh()
 {
     ui->treeWidget->clear();
 
-    const auto sessions = mApp->sessionManager()->sessionMetaData();
-    for (const auto &session : sessions) {
+    const QList<SessionManager::SessionMetaData> sessions = mApp->sessionManager()->sessionMetaData();
+    for (const SessionManager::SessionMetaData &session : sessions) {
         QTreeWidgetItem *item = new QTreeWidgetItem;
         item->setText(0, session.name);
-        item->setText(1, QFileInfo(session.filePath).lastModified().toString(Qt::DefaultLocaleShortDate));
+        item->setText(1, QLocale().toString(QFileInfo(session.filePath).lastModified(), QLocale::ShortFormat));
         item->setData(0, SessionFileRole, session.filePath);
         item->setData(0, IsBackupSessionRole, session.isBackup);
         item->setData(0, IsActiveSessionRole, session.isActive);

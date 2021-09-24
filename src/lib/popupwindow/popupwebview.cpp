@@ -97,7 +97,7 @@ void PopupWebView::_contextMenuEvent(QContextMenuEvent *event)
 
     if (WebInspector::isEnabled()) {
         m_menu->addSeparator();
-        m_menu->addAction(QIcon(QStringLiteral(":icons/menu/web-inspect.svg")), tr("Inspect Element"), this, &PopupWebView::inspectElement);
+        m_menu->addAction(QIcon(QStringLiteral(":icons/menu/web-inspect.svg")), tr("Inspect HTML"), this, &PopupWebView::inspectElement);
     }
 
     if (!m_menu->isEmpty()) {

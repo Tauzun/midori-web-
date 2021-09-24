@@ -17,11 +17,11 @@
         var ignoreNextChanged = false;
         var jQ = jQuery.noConflict();
 
-	function b64DecodeUnicode(str) {
-	    return decodeURIComponent(atob(str).split('').map(function(c) {
-        	return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-	    }).join(''));
-	}
+	    function b64DecodeUnicode(str) {
+	        return decodeURIComponent(atob(str).split('').map(function(c) {
+        	    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+	        }).join(''));
+	    }
 
         function emitChanged(pages) {
             ignoreNextChanged = true;
@@ -98,17 +98,17 @@
             if (boxUrl === '')
                 boxUrl = 'https://';
 
-            jQ('body').append('<div id="fadeOverlay" class="overlay" style="display:none;">' +
+            jQ('body').append('<div id="fadeOverlay" class="overlay" style="display:none">' +
                 '<div id="overlay-edit">' +
-                '<img src="' + jQ(box).children('img').first().attr('src') + '"> ' +
+                '<img src="' + jQ(box).children('img').first().attr('src') + '"/> ' +
                 '<table><tr><td>' + scriptData.url + ': </td><td>' +
-                '<input type="text" id="formUrl" value="' + boxUrl + '"></td></tr>' +
-                '<tr><td></td><td><div class="checkbox"><input type="checkbox" checked="checked" id="fetchTitle">' +
+                '<input type="text" id="formUrl" spellcheck="false" value="' + boxUrl + '" onclick="this.select();"/></td></tr>' +
+                '<tr><td></td><td><div class="checkbox"><input type="checkbox" checked="checked" id="fetchTitle"/>' +
                 '<label for="fetchTitle"></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ' + scriptData.titleFetchTitle + ' </div></td></tr>' +
                 '<tr id="titleLine"><td>' + scriptData.title + ': </td><td>' +
-                '<input type="text" id="formTitle" value="' + boxTitle + '"></td></tr>' +
-                '</table><p class="buttonbox"><input id="cancelEditBox" type="button" value=" ' + scriptData.cancel + ' ">&nbsp;&nbsp;&nbsp;' +
-                '<input id="acceptEditBox" type="button" value="   ' + scriptData.edit + '   "></p>' +
+                '<input type="text" id="formTitle" value="' + boxTitle + '"/></td></tr>' +
+                '</table><p class="buttonbox"><input id="cancelEditBox" type="button" value=" ' + scriptData.cancel + ' "/>&nbsp;&nbsp;&nbsp;' +
+                '<input id="acceptEditBox" type="button" value="   ' + scriptData.edit + '   "/></p>' +
                 '</div></div>');
 
             jQ('#titleLine').css({ 'visibility': 'hidden' });
@@ -317,7 +317,10 @@
         function alignPage() {
             var dialWidth = parseInt(scriptData.dialWidth);
             var dialHeight = Math.floor(Math.round(dialWidth / 1.54));
-            jQ('head').append('<style>#quickdial img{height:auto;width:' + dialWidth + 'px}</style>');
+            jQ('#quickdial img').css({
+                'width': dialWidth + 'px',
+                'height': 'auto'
+            });
             jQ('#quickdial div.entry').css({
                 'width': dialWidth + 'px',
                 'height': dialHeight + 'px'
@@ -513,6 +516,7 @@
             });
 
             alignPage();
+
         }
         // Initialize
         if (window._browser_external) {

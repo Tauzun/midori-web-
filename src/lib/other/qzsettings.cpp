@@ -63,7 +63,7 @@ void QzSettings::loadSettings()
     settings.endGroup();
 
     settings.beginGroup(QStringLiteral("Browser-Tabs-Settings"));
-    newTabPos = settings.value("OpenNewTabsSelected", false).toBool();
+    newTabPos = settings.value("OpenNewTabsSelected", false).toBool();    
     newTabPosition = newTabPos ? Qz::NT_CleanSelectedTab : Qz::NT_CleanNotSelectedTab;
     tabsOnTop = settings.value(QStringLiteral("TabsOnTop"), false).toBool();
     openPopupsInTabs = settings.value(QStringLiteral("OpenPopupsInTabs"), true).toBool();
@@ -85,6 +85,8 @@ void QzSettings::loadSettings()
     showBookmarksToolbar = settings.value(QStringLiteral("showBookmarksToolbar"), false).toBool();
     showNavigationToolbar = settings.value(QStringLiteral("showNavigationToolbar"), true).toBool();
     settingsDialogPage = settings.value(QStringLiteral("settingsDialogPage"), 0).toInt();
+    showNavInFullScreen = settings.value(QStringLiteral("ShowNavInFullscreen"), false).toBool();
+    fullScreenLocationBarAutoHide = settings.value(QStringLiteral("AutoHideNavInFullscreen"), true).toBool();
     settings.endGroup();
 
     settings.beginGroup(QStringLiteral("DownloadManager"));
@@ -93,6 +95,10 @@ void QzSettings::loadSettings()
     useExternalManager = settings.value(QStringLiteral("UseExternalManager"), false).toBool();
     externalManagerExecutable = settings.value(QStringLiteral("ExternalManagerExecutable"), "").toString();
     externalManagerArguments = settings.value(QStringLiteral("ExternalManagerArguments"), "").toString();
+    settings.endGroup();
+
+    settings.beginGroup(QStringLiteral("NavigationBar"));
+    showSearchBar = settings.value(QStringLiteral("ShowSearchBar"), false).toBool();
     settings.endGroup();
 
     settings.beginGroup(QStringLiteral("Notifications"));
@@ -111,6 +117,8 @@ void QzSettings::loadSettings()
     settings.endGroup();
 
     settings.beginGroup(QStringLiteral("SearchEngines"));
+    defaultEngine = settings.value("DefaultEngine", "DuckDuckGo").toString();
+    activeEngine = settings.value("activeEngine", "DuckDuckGo").toString();
     searchOnEngineChange = settings.value(QStringLiteral("SearchOnEngineChange"), true).toBool();
     searchFromAddressBar = settings.value(QStringLiteral("SearchFromAddressBar"), true).toBool();
     searchWithDefaultEngine = settings.value(QStringLiteral("SearchWithDefaultEngine"), true).toBool();
@@ -139,8 +147,9 @@ void QzSettings::loadSettings()
     allowLocalCache = settings.value(QStringLiteral("AllowLocalCache"), true).toBool();
     deleteCacheOnClose = settings.value(QStringLiteral("deleteCacheOnClose"), true).toBool();
     localCacheSize = settings.value(QStringLiteral("LocalCacheSize"), 200).toInt();
-    savePasswordsOnSites = settings.value(QStringLiteral("SavePasswordsOnSites"), true).toBool();
-    autoCompletePasswords = settings.value(QStringLiteral("AutoCompletePasswords"), true).toBool();
+    cachePath = settings.value(QStringLiteral("CachePath"), QString()).toString();
+    savePasswordsOnSites = settings.value(QStringLiteral("SavePasswordsOnSites"), false).toBool();
+    autoCompletePasswords = settings.value(QStringLiteral("AutoCompletePasswords"), false).toBool();
     allowHistory = settings.value(QStringLiteral("allowHistory"), true).toBool();
     deleteHistoryOnClose = settings.value(QStringLiteral("deleteHistoryOnClose"), false).toBool();
     deleteHTML5StorageOnClose = settings.value(QStringLiteral("deleteHTML5StorageOnClose"), true).toBool();
@@ -173,6 +182,8 @@ void QzSettings::loadSettings()
     dNSPrefetch = settings.value(QStringLiteral("DNSPrefetch"), true).toBool();
     intPDFViewer = settings.value(QStringLiteral("intPDFViewer"), true).toBool();
     defaultEncoding = settings.value(QStringLiteral("DefaultEncoding"), QStringLiteral("UTF-16")).toString();
+    pageHighlightColor = settings.value(QStringLiteral("PageHighlightColor"), QLatin1String("#0078D7")).toString();
+    pageHighlightedTextColor = settings.value(QStringLiteral("PageHighlightedTextColor"), QLatin1String("#fff")).toString();
     wheelScrollLines = settings.value(QStringLiteral("wheelScrollLines"), 5).toInt();
     userStyleSheet = settings.value(QStringLiteral("userStyleSheet"), QString()).toString();
 #ifdef DISABLE_CHECK_UPDATES
@@ -182,7 +193,10 @@ void QzSettings::loadSettings()
 #endif
     allowAllUrlSchemes = settings.value(QStringLiteral("AllowAllUnknownUrlSchemes"), false).toBool();
     userInteractUrlSchemes = settings.value(QStringLiteral("UserInteractUrlSchemes"), false).toBool();
-    allowPersistentCookies = settings.value(QStringLiteral("AllowPersistentCookies"), true).toBool();
+    allowPersistentCookies = settings.value(QStringLiteral("AllowPersistentCookies"), false).toBool();
+#ifdef Q_OS_WIN
+    checkDefaultBrowser = settings.value(QStringLiteral("CheckDefaultBrowser"), false).toBool();
+#endif
     settings.endGroup();
 
     settings.beginGroup(QStringLiteral("Web-Proxy"));
@@ -194,8 +208,9 @@ void QzSettings::loadSettings()
     settings.endGroup();
 
     settings.beginGroup(QStringLiteral("Web-URL-Settings"));
-    homepage = settings.value(QStringLiteral("homepage"), QUrl(QStringLiteral("https://astian.org"))).toUrl();
-    newTabUrl = settings.value(QStringLiteral("newTabUrl"), QUrl(QStringLiteral("https://astian.org/midori-start"))).toUrl();
+    homepage = settings.value(QStringLiteral("homepage"), QUrl(QStringLiteral("browser:start"))).toUrl();
+    afterlaunch = settings.value(QStringLiteral("afterLaunch"), 3).toInt();
+    newTabUrl = settings.value(QStringLiteral("newTabUrl"), QUrl(QStringLiteral("browser:speeddial"))).toUrl();
     settings.endGroup();
 
 }
@@ -272,6 +287,8 @@ if (resetPrefs) {
     settings.setValue(QStringLiteral("showBookmarksToolbar"), showBookmarksToolbar);
     settings.setValue(QStringLiteral("showNavigationToolbar"), showNavigationToolbar);
     settings.setValue(QStringLiteral("settingsDialogPage"), settingsDialogPage);
+    settings.setValue(QStringLiteral("ShowNavInFullscreen"), showNavInFullScreen);
+    settings.setValue(QStringLiteral("AutoHideNavInFullscreen"), fullScreenLocationBarAutoHide);
     settings.endGroup();
 
     settings.beginGroup(QStringLiteral("DownloadManager"));
@@ -280,6 +297,10 @@ if (resetPrefs) {
     settings.setValue(QStringLiteral("UseExternalManager"), useExternalManager);
     settings.setValue(QStringLiteral("ExternalManagerExecutable"), externalManagerExecutable);
     settings.setValue(QStringLiteral("ExternalManagerArguments"), externalManagerArguments);
+    settings.endGroup();
+
+    settings.beginGroup(QStringLiteral("NavigationBar"));
+    settings.setValue(QStringLiteral("ShowSearchBar"), showSearchBar);
     settings.endGroup();
 
     settings.beginGroup(QStringLiteral("Notifications"));
@@ -294,6 +315,8 @@ if (resetPrefs) {
     settings.endGroup();
 
     settings.beginGroup(QStringLiteral("SearchEngines"));
+    settings.setValue(QStringLiteral("DefaultEngine"), defaultEngine);
+    settings.setValue(QStringLiteral("activeEngine"), activeEngine);
     settings.setValue(QStringLiteral("SearchOnEngineChange"), searchOnEngineChange);
     settings.setValue(QStringLiteral("SearchFromAddressBar"), searchFromAddressBar);
     settings.setValue(QStringLiteral("SearchWithDefaultEngine"), searchWithDefaultEngine);
@@ -324,6 +347,7 @@ if (resetPrefs) {
     settings.setValue(QStringLiteral("AllowLocalCache"), allowLocalCache);
     settings.setValue(QStringLiteral("deleteCacheOnClose"), deleteCacheOnClose);
     settings.setValue(QStringLiteral("LocalCacheSize"), localCacheSize);
+    settings.setValue(QStringLiteral("CachePath"), cachePath);
     settings.setValue(QStringLiteral("SavePasswordsOnSites"), savePasswordsOnSites);
     settings.setValue(QStringLiteral("AutoCompletePasswords"), autoCompletePasswords);
     settings.setValue(QStringLiteral("allowHistory"), allowHistory);
@@ -363,6 +387,10 @@ if (resetPrefs) {
     settings.setValue(QStringLiteral("UserInteractUrlSchemes"), userInteractUrlSchemes);
     settings.setValue(QStringLiteral("AllowPersistentCookies"), allowPersistentCookies);
     settings.setValue(QStringLiteral("resetPrefs"), false);
+#ifdef Q_OS_WIN
+    settings.setValue(QStringLiteral("CheckDefaultBrowser"), checkDefaultBrowser);
+#endif
+
     settings.endGroup();
 
     settings.beginGroup(QStringLiteral("Web-Proxy"));
@@ -374,6 +402,7 @@ if (resetPrefs) {
 
     settings.beginGroup(QStringLiteral("Web-URL-Settings"));
     settings.setValue(QStringLiteral("homepage"), homepage);
+    settings.setValue(QStringLiteral("afterLaunch"), afterlaunch);
     settings.setValue(QStringLiteral("newTabUrl"), newTabUrl);
     settings.endGroup();
 }

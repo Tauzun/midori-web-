@@ -38,7 +38,6 @@ public:
     explicit TabbedWebView(WebTab* webTab);
 
     void setPage(WebPage* page);
-
     // BrowserWindow can be null!
     BrowserWindow* browserWindow() const;
     void setBrowserWindow(BrowserWindow* window);
@@ -71,6 +70,7 @@ private Q_SLOTS:
     void setIp(const QHostInfo &info);
 
     void inspectElement();
+    bool endInspection();
 
 private:
     void _contextMenuEvent(QContextMenuEvent *event) override;

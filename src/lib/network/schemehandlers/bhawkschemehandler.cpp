@@ -72,7 +72,7 @@ bool BhawkSchemeHandler::handleRequest(QWebEngineUrlRequestJob *job)
             }
         }
         mApp->destroyRestoreManager();
-        job->redirect(QUrl(QStringLiteral("https://astian.org")));
+        job->redirect(QUrl(QStringLiteral("browser:start")));
         return true;
     } else if (job->requestUrl().path() == QLatin1String("reportbug")) {
         job->redirect(QUrl(Qz::BUGSADDRESS));
@@ -149,15 +149,16 @@ QString BhawkSchemeReply::startPage()
     }
 
     sPage.append(QzTools::readAllFileContents(":html/start.html"));
-    sPage.replace(QLatin1String("%START-IMG%"), QStringLiteral("qrc:icons/other/midori.svg"));
-    //sPage.replace(QLatin1String("%BG-IMG%"), QStringLiteral("qrc:html/sd_bg.svg"));
+    sPage.replace(QLatin1String("%START-IMG%"), QStringLiteral("qrc:icons/other/startpage.svg"));
+    sPage.replace(QLatin1String("%FAVICON-IMG%"), QStringLiteral("qrc:icons/exeicons/midori.ico"));
+    //sPage.replace(QLatin1String("%BG-IMG%"), QStringLiteral("qrc:html/sd_bg.svg")); // background image can be added here in the future if need be
     sPage.replace(QLatin1String("%SEARCH-IMG%"), QStringLiteral("qrc:icons/other/search.png"));
     sPage.replace(QLatin1String("%DUCK-IMG%"), QStringLiteral("qrc:icons/sites/duck.png"));
     sPage.replace(QLatin1String("%TITLE%"), tr("Welcome to Midori Browser"));
     sPage.replace(QLatin1String("%BUTTON-LABEL%"), tr("Search"));
     sPage.replace(QLatin1String("%SEARCH-BY%"), tr("Search results provided by DuckDuckGo"));
     sPage.replace(QLatin1String("%WWW%"), Qz::ABOUTADDRESS);
-    sPage.replace(QLatin1String("%ABOUT-MIDORI%"), tr("About Midori Browser"));
+    sPage.replace(QLatin1String("%ABOUT-BHAWK%"), tr("About Midori Browser"));
     sPage.replace(QLatin1String("%PRIVATE-BROWSING%"), mApp->isPrivate() ? tr("<h1>Private Browsing</h1>") : QString());
 
     QString vanta = QStringLiteral("VANTA.WAVES({"
@@ -189,10 +190,11 @@ QString BhawkSchemeReply::aboutPage()
 
     if (aPage.isEmpty()) {
         aPage.append(QzTools::readAllFileContents(":html/about.html"));
-        aPage.replace(QLatin1String("%START-IMG%"), QStringLiteral("qrc:icons/other/midori.svg"));
+		aPage.replace(QLatin1String("%START-IMG%"), QStringLiteral("qrc:icons/other/startpage.svg"));
+        aPage.replace(QLatin1String("%FAVICON-IMG%"), QStringLiteral("qrc:icons/exeicons/midori.ico"));
         aPage.replace(QLatin1String("%COPYRIGHT-INCLUDE%"), QzTools::readAllFileContents(":html/copyright").toHtmlEscaped());
         aPage.replace(QLatin1String("%TITLE%"), tr("About Midori Browser"));
-        aPage.replace(QLatin1String("%ABOUT-MIDORI%"), tr("About Midori Browser"));
+        aPage.replace(QLatin1String("%ABOUT-BHAWK%"), tr("About Midori Browser"));
         aPage.replace(QLatin1String("%INFORMATIONS-ABOUT-VERSION%"), tr("Version Information"));
         aPage.replace(QLatin1String("%COPYRIGHT%"), tr("Copyright"));
         aPage.replace(QLatin1String("%VERSION-INFO%"),
@@ -205,8 +207,8 @@ QString BhawkSchemeReply::aboutPage()
 
         aPage.replace(QLatin1String("%MAIN-DEVELOPER%"), tr("Main developer"));
         aPage.replace(QLatin1String("%OG-DEVELOPER%"), tr("Original developer"));
-        aPage.replace(QLatin1String("%MAIN-DEVELOPER-TEXT%"), authorString(Qz::AUTHOR, "contact@astian.org"));
-        aPage.replace(QLatin1String("%OG-DEVELOPER-TEXT%"), authorString(Qz::OG_AUTHOR, "contact@astian.org"));
+        aPage.replace(QLatin1String("%MAIN-DEVELOPER-TEXT%"), authorString(Qz::AUTHOR, "2378845-TW3@users.noreply.gitlab.com"));
+        aPage.replace(QLatin1String("%OG-DEVELOPER-TEXT%"), authorString(Qz::OG_AUTHOR, "nowrep@gmail.com"));
         aPage = QzTools::applyDirectionToPage(aPage);
     }
 
@@ -219,6 +221,7 @@ QString BhawkSchemeReply::speeddialPage()
 
     if (dPage.isEmpty()) {
         dPage.append(QzTools::readAllFileContents(":html/speeddial.html"));
+        dPage.replace(QLatin1String("%FAVICON-IMG%"), QStringLiteral("qrc:icons/exeicons/speeddial.png"));
         dPage.replace(QLatin1String("%IMG_PLUS%"), QLatin1String("qrc:html/plus.svg"));
         dPage.replace(QLatin1String("%IMG_CLOSE%"), QLatin1String("qrc:html/close.svg"));
         dPage.replace(QLatin1String("%IMG_EDIT%"), QLatin1String("qrc:html/edit.svg"));
@@ -297,12 +300,12 @@ QString BhawkSchemeReply::configPage()
 
     if (cPage.isEmpty()) {
         cPage.append(QzTools::readAllFileContents(":html/config.html"));
-        cPage.replace(QLatin1String("%ABOUT-IMG%"), QStringLiteral("qrc:icons/other/midori.svg"));
+        cPage.replace(QLatin1String("%ABOUT-IMG%"), QStringLiteral("qrc:icons/other/about.svg"));
 
         cPage.replace(QLatin1String("%TITLE%"), tr("Configuration Information"));
         cPage.replace(QLatin1String("%CONFIG%"), tr("Configuration Information"));
         cPage.replace(QLatin1String("%INFORMATIONS-ABOUT-VERSION%"), tr("Version Information"));
-        cPage.replace(QLatin1String("%CONFIG-ABOUT%"), tr("This page contains information about Midori Browser's current configuration - relevant for troubleshooting. Please include this information when submitting bug reports."));
+        cPage.replace(QLatin1String("%CONFIG-ABOUT%"), tr("This page contains information about Midori Browser current configuration - relevant for troubleshooting. Please include this information when submitting bug reports."));
         cPage.replace(QLatin1String("%BROWSER-IDENTIFICATION%"), tr("Browser Identification"));
         cPage.replace(QLatin1String("%PATHS%"), tr("Paths"));
         cPage.replace(QLatin1String("%BUILD-CONFIG%"), tr("Build Configuration"));
@@ -315,9 +318,9 @@ QString BhawkSchemeReply::configPage()
         cPage.replace(QLatin1String("%PL-AUTH%"), tr("Author"));
         cPage.replace(QLatin1String("%PL-DESC%"), tr("Description"));
 
-        auto allPaths = [](DataPaths::Path type) {
+        std::function<QString (DataPaths::Path)> allPaths = [](DataPaths::Path type) {
             QString out;
-            const auto paths = DataPaths::allPaths(type);
+            const QStringList paths = DataPaths::allPaths(type);
             for (const QString &path : paths) {
                 if (!out.isEmpty()) {
                     out.append(QStringLiteral("<br>"));
@@ -392,12 +395,12 @@ QString BhawkSchemeReply::configPage()
 
     QString allGroupsString;
     QSettings* settings = Settings::globalSettings();
-    const auto groups = settings->childGroups();
+    const QStringList groups = settings->childGroups();
     for (const QString &group : groups) {
         QString groupString = QString("<tr><th colspan=\"2\">[%1]</th></tr>").arg(group);
         settings->beginGroup(group);
 
-        const auto keys = settings->childKeys();
+        const QStringList keys = settings->childKeys();
         for (const QString &key : keys) {
             const QVariant keyValue = settings->value(key);
             QString keyString;

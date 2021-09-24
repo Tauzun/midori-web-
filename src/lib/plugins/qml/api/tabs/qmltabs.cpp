@@ -41,7 +41,7 @@ bool QmlTabs::setCurrentIndex(const QVariantMap &map)
 
     const int index = map.value(QStringLiteral("index")).toInt();
 
-    const auto window = getWindow(map);
+    BrowserWindow *const window = getWindow(map);
     if (!window) {
         return false;
     }
@@ -51,7 +51,7 @@ bool QmlTabs::setCurrentIndex(const QVariantMap &map)
 
 bool QmlTabs::nextTab(int windowId)
 {
-    const auto window = getWindow(windowId);
+    BrowserWindow *const window = getWindow(windowId);
     if (!window) {
         return false;
     }
@@ -61,7 +61,7 @@ bool QmlTabs::nextTab(int windowId)
 
 bool QmlTabs::previousTab(int windowId)
 {
-    const auto window = getWindow(windowId);
+    BrowserWindow *const window = getWindow(windowId);
     if (!window) {
         return false;
     }
@@ -83,7 +83,7 @@ bool QmlTabs::moveTab(const QVariantMap &map)
     const int from = map.value(QStringLiteral("from")).toInt();
     const int to = map.value(QStringLiteral("to")).toInt();
 
-    const auto window = getWindow(map);
+    BrowserWindow *const window = getWindow(map);
     if (!window) {
         return false;
     }
@@ -100,7 +100,7 @@ bool QmlTabs::pinTab(const QVariantMap &map)
 
     const int index = map.value(QStringLiteral("index")).toInt();
 
-    const auto window = getWindow(map);
+    BrowserWindow *const window = getWindow(map);
     if (!window) {
         return false;
     }
@@ -124,7 +124,7 @@ bool QmlTabs::unpinTab(const QVariantMap &map)
 
     const int index = map.value(QStringLiteral("index")).toInt();
 
-    const auto window = getWindow(map);
+    BrowserWindow *const window = getWindow(map);
     if (!window) {
         return false;
     }
@@ -148,7 +148,7 @@ bool QmlTabs::detachTab(const QVariantMap &map)
 
     const int index = map.value(QStringLiteral("index")).toInt();
 
-    const auto window = getWindow(map);
+    BrowserWindow *const window = getWindow(map);
     if (!window) {
         return false;
     }
@@ -165,7 +165,7 @@ bool QmlTabs::duplicate(const QVariantMap &map)
 
     const int index = map.value(QStringLiteral("index")).toInt();
 
-    const auto window = getWindow(map);
+    BrowserWindow *const window = getWindow(map);
     if (!window) {
         return false;
     }
@@ -182,7 +182,7 @@ bool QmlTabs::closeTab(const QVariantMap &map)
 
     const int index = map.value(QStringLiteral("index")).toInt();
 
-    const auto window = getWindow(map);
+    BrowserWindow *const window = getWindow(map);
     if (!window) {
         return false;
     }
@@ -199,7 +199,7 @@ bool QmlTabs::reloadTab(const QVariantMap &map)
 
     const int index = map.value(QStringLiteral("index")).toInt();
 
-    const auto window = getWindow(map);
+    BrowserWindow *const window = getWindow(map);
     if (!window) {
         return false;
     }
@@ -216,7 +216,7 @@ bool QmlTabs::stopTab(const QVariantMap &map)
 
     const int index = map.value(QStringLiteral("index")).toInt();
 
-    const auto window = getWindow(map);
+    BrowserWindow *const window = getWindow(map);
     if (!window) {
         return false;
     }
@@ -233,17 +233,17 @@ QmlTab *QmlTabs::get(const QVariantMap &map) const
 
     const int index = map.value(QStringLiteral("index")).toInt();
 
-    const auto window = getWindow(map);
+    BrowserWindow *const window = getWindow(map);
     if (!window) {
         return nullptr;
     }
-    const auto webTab = window->tabWidget()->webTab(index);
+    WebTab *const webTab = window->tabWidget()->webTab(index);
     return QmlStaticData::instance().getTab(webTab);
 }
 
 int QmlTabs::normalTabsCount(int windowId) const
 {
-    const auto window = getWindow(windowId);
+    BrowserWindow *const window = getWindow(windowId);
     if (!window) {
         return -1;
     }
@@ -252,7 +252,7 @@ int QmlTabs::normalTabsCount(int windowId) const
 
 int QmlTabs::pinnedTabsCount(int windowId) const
 {
-    const auto window = getWindow(windowId);
+    BrowserWindow *const window = getWindow(windowId);
     if (!window) {
         return -1;
     }
@@ -261,7 +261,7 @@ int QmlTabs::pinnedTabsCount(int windowId) const
 
 QList<QObject*> QmlTabs::getAll(const QVariantMap &map) const
 {
-    const auto window = getWindow(map);
+    BrowserWindow *const window = getWindow(map);
     if (!window) {
         return QList<QObject*>();
     }
@@ -298,7 +298,7 @@ QList<QObject*> QmlTabs::search(const QVariantMap &map)
 bool QmlTabs::addTab(const QVariantMap &map)
 {
     const QString urlString = map.value(QStringLiteral("url")).toString();
-    const auto window = getWindow(map);
+    BrowserWindow *const window = getWindow(map);
     if (!window) {
         qDebug() << "Unable to add tab:" << "window not found";
         return false;
@@ -320,8 +320,9 @@ BrowserWindow *QmlTabs::getWindow(int windowId) const
         return mApp->getWindow();
     }
 
-    auto windowIdHash = QmlStaticData::instance().windowIdHash();
-    for (auto it = windowIdHash.cbegin(); it != windowIdHash.cend(); it++) {
+    QHash<BrowserWindow *, int> windowIdHash = QmlStaticData::instance().windowIdHash();
+    for (QHash<BrowserWindow *, int>::const_iterator it = windowIdHash.cbegin(); it != windowIdHash.cend(); it++) {
+
         BrowserWindow *window = it.key();
         if (QmlStaticData::instance().windowIdHash().value(window, -1) == windowId) {
             return window;

@@ -139,7 +139,7 @@ QString Scripts::universalJs() {
 
     QString source = QLatin1String("(function() {"
                           "window.onload = function() {"
-                          "if (window.location.protocol !== 'midori:') {"
+                          "if (window.location.protocol !== 'browser:') {"
                           "var anchors = document.getElementsByTagName('a');"
                           "for (var i = 0; i < anchors.length; i++) {"
                           " anchors[i].href = anchors[i].href.replace(/^http:\\/\\//i, 'https://');"
@@ -215,9 +215,9 @@ QString Scripts::sendPostData(const QUrl &url, const QByteArray &data)
     QString values;
     QUrlQuery query(data);
 
-    const auto &queryItems = query.queryItems(QUrl::FullyDecoded);
+    const QList<QPair<QString, QString>> &queryItems = query.queryItems(QUrl::FullyDecoded);
     for (int i = 0; i < queryItems.size(); ++i) {
-        const auto &pair = queryItems[i];
+        const QPair<QString, QString> &pair = queryItems[i];
         QString value = pair.first;
         QString key = pair.second;
         value.replace(QLatin1String("'"), QLatin1String("\\'"));
@@ -245,7 +245,7 @@ QString Scripts::completeFormData(const QByteArray &data)
                           "        var type = input.type.toLowerCase();"
                           "        if (type != 'text' && type != 'password' && type != 'email')"
                           "            continue;"
-                          "        if (input.name == key && input.name != "") {"
+                          "        if (input.name == key && input.name != '') {"
                           "            input.value = val;"
                           "            input.dispatchEvent(new Event('change'));"
                           "        }"

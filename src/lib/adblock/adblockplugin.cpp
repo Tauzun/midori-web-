@@ -45,7 +45,7 @@ void AdBlockPlugin::init(InitState state, const QString &settingsPath)
     connect(mApp->plugins(), &PluginProxy::mainWindowDeleted, this, &AdBlockPlugin::mainWindowDeleted);
 
     if (state == LateInitState) {
-        const auto windows = mApp->windows();
+        const QList<BrowserWindow *> windows = mApp->windows();
         for (BrowserWindow *window : windows) {
             mainWindowCreated(window);
         }
@@ -54,7 +54,7 @@ void AdBlockPlugin::init(InitState state, const QString &settingsPath)
 
 void AdBlockPlugin::unload()
 {
-    const auto windows = mApp->windows();
+    const QList<BrowserWindow *> windows = mApp->windows();
     for (BrowserWindow *window : windows) {
         mainWindowDeleted(window);
     }

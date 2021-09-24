@@ -106,7 +106,7 @@ void SiteIcon::mouseReleaseEvent(QMouseEvent* e)
     bool activated = false;
 
     if (e->button() == Qt::LeftButton && rect().contains(e->pos())) {
-        // Popup may not be always shown, eg. on midori: pages
+        // Popup may not be always shown, eg. on browser: pages
         activated = showPopup();
     }
 

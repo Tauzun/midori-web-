@@ -42,9 +42,10 @@
 #include "ui_jsprompt.h"
 #include "passwordmanager.h"
 #include "scripts.h"
-#if defined(ENABLE_KDE_FRAMEWORKS_INTEGRATION_PLUGIN) // Temporary hack to prevent building on Windows
+#include "webinspector.h"
+#if defined(ENABLE_KDE_FRAMEWORKS_INTEGRATION_PLUGIN)
     #include "ocssupport.h"
-#endif  // Temporary hack to prevent building on Windows
+#endif
 #include <iostream>
 
 #include <QDir>
@@ -100,7 +101,6 @@ WebPage::WebPage(QObject* parent)
     connect(this, &QWebEnginePage::proxyAuthenticationRequired, this, [this](const QUrl &, QAuthenticator *auth, const QString &proxyHost) {
         mApp->networkManager()->proxyAuthentication(proxyHost, auth, view());
     });
-
     // Workaround QWebEnginePage not scrolling to anchors when opened in background tab
     m_contentsResizedConnection = connect(this, &QWebEnginePage::contentsSizeChanged, this, [this]() {
         const QString fragment = url().fragment();
@@ -109,7 +109,6 @@ WebPage::WebPage(QObject* parent)
         }
         disconnect(m_contentsResizedConnection);
     });
-
     // Workaround for broken load started/finished signals in QtWebEngine 5.10, 5.11
     connect(this, &QWebEnginePage::loadProgress, this, [this](int progress) {
         if (progress == 100) {
@@ -213,13 +212,13 @@ bool WebPage::isLoading() const
 {
     return m_loadProgress < 100;
 }
-
 // static
 QStringList WebPage::internalSchemes()
 {
     return QStringList{
         QStringLiteral("http"),
         QStringLiteral("https"),
+        QStringLiteral("browser"),
         QStringLiteral("file"),
         QStringLiteral("ftp"),
         QStringLiteral("data"),
@@ -228,7 +227,6 @@ QStringList WebPage::internalSchemes()
         QStringLiteral("chrome")
     };
 }
-
 // static
 QStringList WebPage::supportedSchemes()
 {
@@ -237,7 +235,6 @@ QStringList WebPage::supportedSchemes()
     }
     return s_supportedSchemes;
 }
-
 // static
 void WebPage::addSupportedScheme(const QString &scheme)
 {
@@ -246,7 +243,6 @@ void WebPage::addSupportedScheme(const QString &scheme)
         s_supportedSchemes.append(scheme);
     }
 }
-
 // static
 void WebPage::removeSupportedScheme(const QString &scheme)
 {
@@ -302,11 +298,9 @@ void WebPage::finished()
                 m_fileWatcher->addPath(filePath);
             }
         }
-    }
-    else if (m_fileWatcher && !m_fileWatcher->files().isEmpty()) {
+    } else if (m_fileWatcher && !m_fileWatcher->files().isEmpty()) {
         m_fileWatcher->removePaths(m_fileWatcher->files());
     }
-
     // AutoFill
     m_autoFillUsernames = mApp->autoFill()->completePage(this, url());
 }
@@ -323,7 +317,9 @@ void WebPage::handleUnknownProtocol(const QUrl &url)
     const QString protocol = url.scheme();
 
     if (protocol == QLatin1String("mailto")) {
-        desktopServicesOpen(url);
+        if (!mApp->getWindow()->isFullScreen()) {
+            desktopServicesOpen(url);
+        }
         return;
     }
 
@@ -377,14 +373,14 @@ void WebPage::handleUnknownProtocol(const QUrl &url)
 void WebPage::desktopServicesOpen(const QUrl &url)
 {
     // Open same url only once in 2 and a half secs
-        const int sameUrlTimeout = 5 * 500;
+    const int sameUrlTimeout = 5 * 500;
     s_lastUnsupportedUrlTime.start();
 
     if (s_lastUnsupportedUrl != url || !s_lastUnsupportedUrlTime.isValid() || s_lastUnsupportedUrlTime.hasExpired(sameUrlTimeout)) {
         s_lastUnsupportedUrl = url;
         s_lastUnsupportedUrlTime.restart();
         QDesktopServices::openUrl(url);
-    }else {
+    } else {
         qWarning() << "WebPage::desktopServicesOpen Url" << url << "has already been opened!\n"
                    "Ignoring it to prevent infinite loop!";
     }
@@ -397,44 +393,49 @@ void WebPage::windowCloseRequested()
     view()->closeView();
 }
 
-void WebPage::fullScreenRequested(QWebEngineFullScreenRequest fullScreenRequest)
-{
-    view()->requestFullScreen(fullScreenRequest.toggleOn());
+void WebPage::fullScreenRequested(QWebEngineFullScreenRequest fullScreenRequest) {
 
+    view()->requestFullScreen(fullScreenRequest.toggleOn());
     const bool accepted = fullScreenRequest.toggleOn() == view()->isFullScreen();
 
-    if (accepted)
+    if (accepted) {
         fullScreenRequest.accept();
-    else
+    } else {
         fullScreenRequest.reject();
+    }
+
 }
 
-void WebPage::featurePermissionRequested(const QUrl &origin, const QWebEnginePage::Feature &feature)
-{
-    if (feature == MouseLock && view()->isFullScreen())
+void WebPage::featurePermissionRequested(const QUrl &origin, const QWebEnginePage::Feature &feature) {
+
+    if (feature == MouseLock && view()->isFullScreen()) {
         setFeaturePermission(origin, feature, PermissionGrantedByUser);
-    else
+    } else {
         mApp->html5PermissionsManager()->requestPermissions(this, origin, feature);
+    }
+
 }
 
-void WebPage::renderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode)
-{
+void WebPage::renderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode) {
+
     Q_UNUSED(exitCode)
 
-    if (terminationStatus == NormalTerminationStatus)
+    if (terminationStatus == NormalTerminationStatus) {
         return;
+    }
 
     QTimer::singleShot(0, this, [this]() {
         QString page = QzTools::readAllFileContents(":html/tabcrash.html");
-        page.replace(QLatin1String("%IMAGE%"), QzTools::pixmapToDataUrl(IconProvider::standardIcon(QStyle::SP_MessageBoxWarning).pixmap(45)).toString());
-        page.replace(QLatin1String("%TITLE%"), tr("Failed loading page"));
-        page.replace(QLatin1String("%HEADING%"), tr("Failed loading page"));
-        page.replace(QLatin1String("%LI-1%"), tr("Something went wrong while loading this page."));
-        page.replace(QLatin1String("%LI-2%"), tr("Try reloading the page or closing some tabs to make more memory available."));
-        page.replace(QLatin1String("%RELOAD-PAGE%"), tr("Reload page"));
+        page.replace(QStringLiteral("%IMAGE%"), QzTools::pixmapToDataUrl(IconProvider::standardIcon(QStyle::SP_MessageBoxWarning).pixmap(45)).toString());
+        page.replace(QStringLiteral("%TITLE%"), tr("Failed to load page"));
+        page.replace(QStringLiteral("%HEADING%"), tr("Failed loading page"));
+        page.replace(QStringLiteral("%LI-1%"), tr("Something went wrong while loading this page."));
+        page.replace(QStringLiteral("%LI-2%"), tr("Try reloading the page or closing some tabs to make more memory available."));
+        page.replace(QStringLiteral("%RELOAD-PAGE%"), tr("Reload page"));
         page = QzTools::applyDirectionToPage(page);
         setHtml(page.toUtf8(), url());
     });
+
 }
 
 bool WebPage::acceptNavigationRequest(const QUrl &url, QWebEnginePage::NavigationType type, bool isMainFrame)
@@ -453,11 +454,13 @@ bool WebPage::acceptNavigationRequest(const QUrl &url, QWebEnginePage::Navigatio
             return false;
         }
     }
-    #if defined(ENABLE_KDE_FRAMEWORKS_INTEGRATION_PLUGIN) // Temporary hack to prevent building on Windows
+#if !defined(Q_OS_WIN)
+    #if defined(ENABLE_KDE_FRAMEWORKS_INTEGRATION_PLUGIN)
         if (url.scheme() == QLatin1String("ocs") && OcsSupport::instance()->handleUrl(url)) {
             return false;
         }
-    #endif  // Temporary hack to prevent building on Windows
+    #endif
+#endif
     const bool result = QWebEnginePage::acceptNavigationRequest(url, type, isMainFrame);
 
     if (result) {
@@ -702,7 +705,7 @@ QWebEnginePage* WebPage::createWindow(QWebEnginePage::WebWindowType type)
     TabbedWebView *tView = qobject_cast<TabbedWebView*>(view());
     BrowserWindow *window = tView ? tView->browserWindow() : mApp->getWindow();
 
-    auto createTab = [=](Qz::NewTabPositionFlags pos) {
+    std::function<WebPage *(Qz::NewTabPositionFlags)> createTab = [=](Qz::NewTabPositionFlags pos) {
         int index = window->tabWidget()->addView(QUrl(), pos);
         TabbedWebView* view = window->weView(index);
         view->setPage(new WebPage);
@@ -752,4 +755,73 @@ QWebEnginePage* WebPage::createWindow(QWebEnginePage::WebWindowType type)
     }
 
     return Q_NULLPTR;
+}
+
+bool WebPage::setDefaultPageStatus() {
+
+    if (lifecycleState() != QWebEnginePage::LifecycleState::Active) {
+        setLifecycleState(QWebEnginePage::LifecycleState::Active);
+    }
+
+    return true;
+
+}
+
+bool WebPage::setFrozenPageStatus() {
+
+    if (!isVisible()) {
+
+        if (lifecycleState() != QWebEnginePage::LifecycleState::Frozen || lifecycleState() != QWebEnginePage::LifecycleState::Discarded) {
+            setLifecycleState(QWebEnginePage::LifecycleState::Frozen);
+            QTimer::singleShot(14400000, this, [this]() { // 14400000 miliseconds = 240 minutes (or 4hrs)
+                setDiscardedPageStatus();
+            });
+        }
+
+    } else {
+
+        setLifecycleState(QWebEnginePage::LifecycleState::Active);
+
+        if (QStringLiteral("http").contains(url().scheme())) {
+            if (!WebInspector::isEnabled()) {
+                QTimer::singleShot(7200000, this, [this]() { // 7200000 miliseconds = 120 minutes (or 2hrs)
+                    setFrozenPageStatus();
+                });
+            }
+        }
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+bool WebPage::setDiscardedPageStatus() {
+
+    if (!isVisible()) {
+
+        if (lifecycleState() != QWebEnginePage::LifecycleState::Discarded || lifecycleState() != QWebEnginePage::LifecycleState::Active) {
+            setLifecycleState(QWebEnginePage::LifecycleState::Discarded);
+        }
+
+    } else {
+
+        setLifecycleState(QWebEnginePage::LifecycleState::Active);
+
+        if (QStringLiteral("http").contains(url().scheme())) {
+            if (!WebInspector::isEnabled()) {
+                QTimer::singleShot(7200000, this, [this]() { // 7200000 miliseconds = 120 minutes (or 2hrs)
+                    setFrozenPageStatus();
+                });
+            }
+        }
+
+        return false;
+
+    }
+
+    return true;
+
 }

@@ -114,8 +114,8 @@ MainApplication::MainApplication(int &argc, char** argv)
 #endif
 {
     setApplicationName(QStringLiteral("midori"));
-    setOrganizationDomain(QStringLiteral("org.astian"));
-    setWindowIcon(QIcon(QStringLiteral(":icons/midori.svg")));
+    setOrganizationDomain(QStringLiteral("org.browser"));
+    setWindowIcon(QIcon(QStringLiteral(":icons/midori-green.svg")));
     setDesktopFileName(QStringLiteral("Midori Browser"));
 
 #ifdef GIT_REVISION
@@ -149,7 +149,7 @@ MainApplication::MainApplication(int &argc, char** argv)
 
     if (argc > 1) {
         CommandLineOptions cmd;
-        const auto actions = cmd.getActions();
+        const QVector<CommandLineOptions::ActionPair> actions = cmd.getActions();
         for (const CommandLineOptions::ActionPair &pair : actions) {
             switch (pair.action) {
             case Qz::CL_StartWithoutAddons:
@@ -215,10 +215,9 @@ MainApplication::MainApplication(int &argc, char** argv)
         std::cout << "Midori Browser: Running in Portable Mode." << std::endl;
         DataPaths::setPortableVersion();
     }
-
     // Don't start single application in private browsing
     if (!isPrivate()) {
-        QString appId = QStringLiteral("org.astian.midori");
+        QString appId = QStringLiteral("org.browser.bhawk");
 
         if (isPortable()) {
             appId.append(QLatin1String(".Portable"));
@@ -286,7 +285,7 @@ MainApplication::MainApplication(int &argc, char** argv)
     connect(m_webProfile, &QWebEngineProfile::downloadRequested, this, &MainApplication::downloadRequested);
 
     m_webProfile->setNotificationPresenter([&] (std::unique_ptr<QWebEngineNotification> notification) {
-        auto notifications = desktopNotifications();
+        DesktopNotificationsFactory * notifications = desktopNotifications();
         notifications->showNotification(
             QPixmap::fromImage(notification->icon()), notification->title(), notification->message()
         );
@@ -340,15 +339,14 @@ MainApplication::MainApplication(int &argc, char** argv)
     if (!isPrivate() && !isTestModeEnabled()) {
         Settings settings;
 #ifndef DISABLE_CHECK_UPDATES
-        bool checkUpdates = settings.value("Web-Browser-Settings/CheckUpdates", true).toBool();
+        checkUpdates = settings.value("Web-Browser-Settings/CheckUpdates", true).toBool();
 
         if (checkUpdates) {
             new Updater(window);
         }
 #else
-        bool checkUpdates = settings.value("Web-Browser-Settings/CheckUpdates", false).toBool();
+        checkUpdates = settings.value("Web-Browser-Settings/CheckUpdates", false).toBool();
 #endif
-
         sessionManager()->backupSavedSessions();
 
         if (m_isStartingAfterCrash || afterLaunch() == RestoreSession) {
@@ -465,7 +463,7 @@ void MainApplication::openSession(BrowserWindow* window, RestoreData &restoreDat
         window->restoreWindow(restoreData.windows.takeAt(0));
     }
 
-    const auto restoreWindows = restoreData.windows;
+    const QVector<BrowserWindow::SavedWindow> restoreWindows = restoreData.windows;
     for (const BrowserWindow::SavedWindow &data : restoreWindows) {
         BrowserWindow* window = createWindow(Qz::BW_OtherRestoredWindow);
         window->restoreWindow(data);
@@ -680,8 +678,8 @@ void MainApplication::startPrivateBrowsing(const QUrl &startUrl)
     }
 
     QStringList args;
-    args.append(QStringLiteral("--private"));
-    args.append(QStringLiteral("--profile=") + ProfileManager::currentProfile());
+    args.append(QStringLiteral("--opt-c"));
+    args.append(QStringLiteral("--opt-a=") + ProfileManager::currentProfile());
 
     if (!url.isEmpty()) {
         args << url.toEncoded();
@@ -712,7 +710,9 @@ void MainApplication::changeOccurred()
 void MainApplication::quitApplication()
 {
 #ifdef Q_OS_LINUX
-    qputenv("QT_QPA_PLATFORM", plat); // No Wayland support yet. Sorry
+    if (!plat.isEmpty()) {
+        qputenv("QT_QPA_PLATFORM", plat);
+    }
 #endif
     if (m_downloadManager && !m_downloadManager->canClose()) {
         m_downloadManager->show();
@@ -756,11 +756,12 @@ void MainApplication::postLaunch()
     }
 
     if (m_postLaunchActions.contains(ToggleFullScreen)) {
-        getWindow()->toggleFullScreen();
+        //getWindow()->toggleFullScreen();
+        QTimer::singleShot(1600, getWindow(), &BrowserWindow::toggleFullScreen);
     }
 
     createJumpList();
-#if !defined(Q_OS_WIN)
+#ifdef Q_OS_LINUX
     initPulseSupport();
 #endif
 
@@ -956,9 +957,7 @@ void MainApplication::loadSettings()
     webSettings->setAttribute(QWebEngineSettings::SpatialNavigationEnabled, qzSettings->spatialNavigationEnabled);
     webSettings->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, qzSettings->scrollAnimatorEnabled);
     webSettings->setAttribute(QWebEngineSettings::HyperlinkAuditingEnabled, qzSettings->hyperlinkAuditingEnabled);
-    // FIXME: WAYLAND SUPPORT: Fullscreen video on youtube on Linux using gnome running on wayland totally broken when platform plugin != xcb - Qt 5.15.2
-    webSettings->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, qzSettings->fullScreenSupportEnabled); //https://doc.qt.io/archives/qt-5.10/qtwebengine-webenginewidgets-videoplayer-example.html
-    // END FIXME
+    webSettings->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, qzSettings->fullScreenSupportEnabled);
     webSettings->setAttribute(QWebEngineSettings::LocalContentCanAccessRemoteUrls, qzSettings->localContentCanAccessRemoteUrls);
     webSettings->setAttribute(QWebEngineSettings::LocalContentCanAccessFileUrls, qzSettings->localContentCanAccessFileUrls);
     webSettings->setAttribute(QWebEngineSettings::ScreenCaptureEnabled, qzSettings->screenCaptureEnabled);
@@ -971,9 +970,9 @@ void MainApplication::loadSettings()
     webSettings->setAttribute(QWebEngineSettings::DnsPrefetchEnabled, qzSettings->dNSPrefetch);
     webSettings->setAttribute(QWebEngineSettings::PdfViewerEnabled, qzSettings->intPDFViewer);
 
-	webSettings->setDefaultTextEncoding(qzSettings->defaultEncoding);
+    webSettings->setDefaultTextEncoding(qzSettings->defaultEncoding);
 
-	setWheelScrollLines(qzSettings->wheelScrollLines);
+    setWheelScrollLines(qzSettings->wheelScrollLines);
 
     webSettings->setFontFamily(QWebEngineSettings::StandardFont, settings.value(QStringLiteral("Browser-Fonts/StandardFont"), webSettings->fontFamily(QWebEngineSettings::StandardFont)).toString());
     webSettings->setFontFamily(QWebEngineSettings::FixedFont, settings.value(QStringLiteral("Browser-Fonts/FixedFont"), webSettings->fontFamily(QWebEngineSettings::FixedFont)).toString());
@@ -989,6 +988,7 @@ void MainApplication::loadSettings()
 
     const bool userInteractUrlSchemes = qzSettings->userInteractUrlSchemes;
     const bool allowAllUrlSchemes = qzSettings->allowAllUrlSchemes; // https://doc.qt.io/qt-5/qwebenginesettings.html#UnknownUrlSchemePolicy-enum
+
     if (userInteractUrlSchemes) {
         webSettings->setUnknownUrlSchemePolicy(allowAllUrlSchemes ? QWebEngineSettings::AllowUnknownUrlSchemesFromUserInteraction : QWebEngineSettings::DisallowUnknownUrlSchemes);
     } else {
@@ -1055,7 +1055,12 @@ void MainApplication::loadTheme(const QString &name) {
         qss = QzTools::readAllFileContents(activeThemePath + QLatin1String("/main.css"));
 
         if (themeName == "Vivid") {
-            QString commonThemePath = DataPaths::locate(DataPaths::Themes, "Noir");
+            QString commonThemePath = DataPaths::locate(DataPaths::Themes, QString("Noir"));
+#if !defined(Q_OS_WIN)
+            if (commonThemePath.isEmpty()) {
+                commonThemePath = DataPaths::locate(DataPaths::ThemesExtra, QString("Noir"));
+            }
+#endif
             qss.append(QzTools::readAllFileContents(commonThemePath + QLatin1String("/common.css")));
         } else {
             qss.append(QzTools::readAllFileContents(activeThemePath + QLatin1String("/common.css")));
@@ -1150,18 +1155,16 @@ void MainApplication::setupUserScripts()
     script.setRunsOnSubFrames(true);
     script.setSourceCode(Scripts::setupWebChannel());
     m_webProfile->scripts()->insert(script);
-
-    // midori:restore
-    QWebEngineScript midoriRestore;
-    midoriRestore.setWorldId(WebPage::jsAppWorldSafe);
-    midoriRestore.setSourceCode(QzTools::readAllFileContents(QStringLiteral(":html/restore.user.js")));
-    m_webProfile->scripts()->insert(midoriRestore);
-
-    // midori:speeddial
-    QWebEngineScript midoriSpeedDial;
-    midoriSpeedDial.setWorldId(WebPage::jsAppWorldSafe);
-    midoriSpeedDial.setSourceCode(Scripts::setupSpeedDial());
-    m_webProfile->scripts()->insert(midoriSpeedDial);
+    // browser:restore
+    QWebEngineScript bhawkRestore;
+    bhawkRestore.setWorldId(WebPage::jsAppWorldSafe);
+    bhawkRestore.setSourceCode(QzTools::readAllFileContents(QStringLiteral(":html/restore.user.js")));
+    m_webProfile->scripts()->insert(bhawkRestore);
+    // browser:speeddial
+    QWebEngineScript bhawkSpeedDial;
+    bhawkSpeedDial.setWorldId(WebPage::jsAppWorldSafe);
+    bhawkSpeedDial.setSourceCode(Scripts::setupSpeedDial());
+    m_webProfile->scripts()->insert(bhawkSpeedDial);
 
     if (qzSettings->httpsByDefault) {
         // re-write http links to https
@@ -1180,27 +1183,15 @@ void MainApplication::setupUserScripts()
 void MainApplication::setUserStyleSheet(const QString &filePath)
 {
     QString userCss;
-// FIXME: Highlight colours here - would be nice to have config options
-#if !defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
-    // Don't grey out selection on losing focus (to prevent graying out found text)
-    QString highlightColor;
-    QString highlightedTextColor;
-#ifdef Q_OS_MACOS
-    QString highlightColor = QLatin1String("#b6d6fc");
-    QString highlightedTextColor = QLatin1String("#000");
-#else
-    QPalette pal = style()->standardPalette();
-    highlightColor = pal.color(QPalette::Highlight).name();
-    highlightedTextColor = pal.color(QPalette::HighlightedText).name();
-#endif
-    userCss += QString("::selection {background: %1; color: %2;} ").arg(highlightColor, highlightedTextColor);
-#endif
 
+    QString highlightColor = qzSettings->pageHighlightColor;
+    QString highlightedTextColor = qzSettings->pageHighlightedTextColor;
+
+    userCss += QString("::selection{background: %1; color: %2} ").arg(highlightColor, highlightedTextColor);
     userCss += QzTools::readAllFileContents(filePath).remove(QLatin1Char('\n'));
-
     const QString name = QStringLiteral("_browser_userstylesheet");
-
     QWebEngineScript oldScript = m_webProfile->scripts()->findScript(name);
+
     if (!oldScript.isNull()) {
         m_webProfile->scripts()->remove(oldScript);
     }
@@ -1215,6 +1206,7 @@ void MainApplication::setUserStyleSheet(const QString &filePath)
     script.setRunsOnSubFrames(true);
     script.setSourceCode(Scripts::setCss(userCss));
     m_webProfile->scripts()->insert(script);
+
 }
 
 void MainApplication::createJumpList()
@@ -1234,18 +1226,20 @@ void MainApplication::createJumpList()
     // Tasks
     QWinJumpListCategory *tasks = jumpList->tasks();
     tasks->setVisible(true);
-    tasks->addLink(IconProvider::newTabIcon(), tr("Open new tab"), applicationFilePath(), {QStringLiteral("--new-tab")});
-    tasks->addLink(IconProvider::newWindowIcon(), tr("Open new window"), applicationFilePath(), {QStringLiteral("--new-win")});
-    tasks->addLink(IconProvider::privateBrowsingIcon(), tr("Open new private window"), applicationFilePath(), {QStringLiteral("--private")});
+    tasks->addLink(IconProvider::newTabIcon(), tr("Open new tab"), applicationFilePath(), {QStringLiteral("--opt-u")});
+    tasks->addLink(IconProvider::newWindowIcon(), tr("Open new window"), applicationFilePath(), {QStringLiteral("--opt-i")});
+    tasks->addLink(IconProvider::privateBrowsingIcon(), tr("Open new private window"), applicationFilePath(), {QStringLiteral("--opt-c")});
 #endif
 }
 
-#if !defined(Q_OS_WIN)
+#ifdef Q_OS_LINUX
 void MainApplication::initPulseSupport()
 {
-    qputenv("PULSE_PROP_OVERRIDE_application.name", "midori");
-    qputenv("PULSE_PROP_OVERRIDE_application.icon_name", "midori");
-    qputenv("PULSE_PROP_OVERRIDE_media.icon_name", "midori");
+    const QByteArray appName = QString("midori").toLatin1();
+
+    qputenv("PULSE_PROP_OVERRIDE_application.name", appName);
+    qputenv("PULSE_PROP_OVERRIDE_application.icon_name", appName);
+    qputenv("PULSE_PROP_OVERRIDE_media.icon_name", appName);
 }
 #endif
 
@@ -1257,23 +1251,23 @@ RegisterQAppAssociation* MainApplication::associationManager()
         QString fileIconPath = QApplication::applicationFilePath() + ",1";
         QString appIconPath = QApplication::applicationFilePath() + ",0";
         m_registerQAppAssociation = new RegisterQAppAssociation("Midori Browser", QApplication::applicationFilePath(), appIconPath, desc, this);
-        m_registerQAppAssociation->addCapability(".html", "MidoriHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".htm", "MidoriHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".asp", "MidoriHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".aspx", "MidoriHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".jsp", "MidoriHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".mhtml", "MidoriHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".mht", "MidoriHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".php", "MidoriHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".phtm", "MidoriHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".phtml", "MidoriHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".xht", "MidoriHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".xhtm", "MidoriHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".xhtml", "MidoriHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability("http", "MidoriURL", "Midori URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
-        m_registerQAppAssociation->addCapability("https", "MidoriURL", "Midori URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
-        m_registerQAppAssociation->addCapability("ftp", "MidoriURL", "Midori URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
-        m_registerQAppAssociation->addCapability("ftps", "MidoriURL", "Midori URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
+        m_registerQAppAssociation->addCapability(".html", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".htm", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".asp", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".aspx", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".jsp", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".mhtml", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".mht", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".php", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".phtm", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".phtml", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".xht", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".xhtm", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".xhtml", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability("http", "BhawkURL", "Bhawk URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
+        m_registerQAppAssociation->addCapability("https", "BhawkURL", "Bhawk URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
+        m_registerQAppAssociation->addCapability("ftp", "BhawkURL", "Bhawk URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
+        m_registerQAppAssociation->addCapability("ftps", "BhawkURL", "Bhawk URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
     }
     return m_registerQAppAssociation;
 }

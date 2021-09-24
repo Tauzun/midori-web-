@@ -33,6 +33,7 @@
 #include <QBuffer>
 
 #include <QUrlQuery>
+#include <QSqlQuery>
 
 #define ENSURE_LOADED if (!m_settingsLoaded) loadSettings();
 
@@ -69,11 +70,8 @@ SearchEnginesManager::SearchEnginesManager(QObject* parent)
     , m_settingsLoaded(false)
     , m_saveScheduled(false)
 {
-    Settings settings;
-    settings.beginGroup("SearchEngines");
-    m_startingEngineName = settings.value("activeEngine", "DuckDuckGo").toString();
-    m_defaultEngineName = settings.value("DefaultEngine", "DuckDuckGo").toString();
-    settings.endGroup();
+    m_startingEngineName = qzSettings->activeEngine;
+    m_defaultEngineName = qzSettings->defaultEngine;
 
     connect(this, &SearchEnginesManager::enginesChanged, this, &SearchEnginesManager::scheduleSave);
 }
@@ -185,11 +183,8 @@ void SearchEnginesManager::restoreDefaults()
     addEngine(bing);
     addEngine(google);
 
-
-    Settings settings;
-    settings.beginGroup("SearchEngines");
-    m_defaultEngineName = settings.value("DefaultEngine", "DuckDuckGo").toString();
-    settings.endGroup();
+    m_defaultEngineName = qzSettings->defaultEngine;
+    m_startingEngineName = qzSettings->activeEngine;
 
     bool gotDefaultEngine = false;
     QSqlQuery dbEngineQuery(SqlDatabase::instance()->database());
@@ -211,8 +206,16 @@ void SearchEnginesManager::restoreDefaults()
         }
     }
 
-    if (gotDefaultEngine == false) { // Should never match this
-        m_defaultEngine = duck;
+    if (gotDefaultEngine == false) { // Should never match this unless there is an sql bug
+        if (m_defaultEngineName == duck.name) {
+            m_defaultEngine = duck;
+        } else if (m_defaultEngineName == bing.name) {
+            m_defaultEngine = bing;
+        } else if (m_defaultEngineName == google.name) {
+            m_defaultEngine = google;
+        } else {
+            m_defaultEngine = duck;
+        }
     }
 
     emit enginesChanged();
@@ -293,7 +296,7 @@ void SearchEnginesManager::addEngineFromForm(const QVariantMap &formData, WebVie
     QUrl parameterUrl = actionUrl;
 
     if (isPost) {
-        parameterUrl = QUrl("http://foo.bar");
+        parameterUrl = QUrl("https://foo.bar");
     }
 
     const QString &inputName = formData.value(QStringLiteral("inputName")).toString();
@@ -448,9 +451,8 @@ void SearchEnginesManager::setActiveEngine(const Engine &engine)
     m_activeEngine = engine;
 
     Settings settings;
-    settings.beginGroup("SearchEngines");
-    settings.setValue("activeEngine", m_activeEngine.name);
-    settings.endGroup();
+    settings.setValue(QStringLiteral("SearchEngines/activeEngine"), m_activeEngine.name);
+    qzSettings->activeEngine = QString(m_activeEngine.name);
 
     emit activeEngineChanged();
 }
@@ -466,9 +468,8 @@ void SearchEnginesManager::setDefaultEngine(const SearchEnginesManager::Engine &
     m_defaultEngine = engine;
 
     Settings settings;
-    settings.beginGroup("SearchEngines");
-    settings.setValue("DefaultEngine", m_defaultEngine.name);
-    settings.endGroup();
+    settings.setValue(QStringLiteral("SearchEngines/DefaultEngine"), m_defaultEngine.name);
+    qzSettings->defaultEngine = QString(m_defaultEngine.name);
 
     emit defaultEngineChanged();
 }
@@ -510,11 +511,6 @@ QVector<SearchEngine> SearchEnginesManager::allEngines()
 
 void SearchEnginesManager::saveSettings()
 {
-    Settings settings;
-    settings.beginGroup("SearchEngines");
-    settings.setValue("activeEngine", m_activeEngine.name);
-    settings.setValue("DefaultEngine", m_defaultEngine.name);
-    settings.endGroup();
 
     if (!m_saveScheduled) {
         return;

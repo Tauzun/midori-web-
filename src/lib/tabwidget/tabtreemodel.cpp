@@ -295,7 +295,7 @@ TabTreeModelItem *TabTreeModel::item(const QModelIndex &index) const
 
 TabTreeModelItem *TabTreeModel::createItems(TabTreeModelItem *root)
 {
-    const auto children = root->tab->childTabs();
+    const QVector<WebTab *> children = root->tab->childTabs();
     for (WebTab *child : children) {
         const QModelIndex index = sourceModel()->index(child->tabIndex(), 0);
         TabTreeModelItem *item = new TabTreeModelItem(child, index);
@@ -419,8 +419,8 @@ void TabTreeModel::syncTopLevelTabs()
     // Move all normal top-level tabs to the beginning to preserve order in session
 
     int index = -1;
+    const QVector<TabTreeModelItem *> items = m_root->children;
 
-    const auto items = m_root->children;
     for (TabTreeModelItem *item : items) {
         if (!item->tab->isPinned()) {
             const int tabIndex = item->tab->tabIndex();

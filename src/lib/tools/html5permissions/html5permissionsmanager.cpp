@@ -37,19 +37,16 @@ void HTML5PermissionsManager::requestPermissions(WebPage* page, const QUrl &orig
         qWarning() << "HTML5PermissionsManager: Unknown feature" << feature;
         return;
     }
-
     // Permission granted
     if (m_granted.value(feature).contains(origin.toString())) {
         page->setFeaturePermission(origin, feature, QWebEnginePage::PermissionGrantedByUser);
         return;
     }
-
     // Permission denied
     if (m_denied.value(feature).contains(origin.toString())) {
         page->setFeaturePermission(origin, feature, QWebEnginePage::PermissionDeniedByUser);
         return;
     }
-
     // Ask user for permission
     HTML5PermissionsNotification* notif = new HTML5PermissionsNotification(origin, page, feature);
     page->view()->addNotification(notif);

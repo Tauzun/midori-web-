@@ -6,15 +6,209 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>982</width>
-    <height>707</height>
+    <width>1080</width>
+    <height>720</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Preferences</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_5">
-   <item row="2" column="1" colspan="2">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetDefaultConstraint</enum>
+   </property>
+   <property name="verticalSpacing">
+    <number>6</number>
+   </property>
+   <item row="0" column="2">
+    <widget class="QLabel" name="caption"/>
+   </item>
+   <item row="4" column="3">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Preferred</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="3" column="2" colspan="2">
+    <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" rowspan="5">
+    <widget class="QListWidget" name="listWidget">
+     <property name="minimumSize">
+      <size>
+       <width>220</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>220</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="cursor" stdset="0">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="showDropIndicator" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>32</width>
+       <height>32</height>
+      </size>
+     </property>
+     <property name="textElideMode">
+      <enum>Qt::ElideRight</enum>
+     </property>
+     <property name="verticalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="movement">
+      <enum>QListView::Static</enum>
+     </property>
+     <property name="spacing">
+      <number>2</number>
+     </property>
+     <property name="viewMode">
+      <enum>QListView::ListMode</enum>
+     </property>
+     <property name="uniformItemSizes">
+      <bool>true</bool>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="selectionRectVisible">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>General</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Appearance</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Tabs</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Browsing</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Fonts</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Keyboard Shortcuts</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Downloads</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Password Manager</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Privacy</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Notifications</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Plug-ins</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Spell Check</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Other</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <spacer name="horizontalSpacer_65">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Minimum</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="2" colspan="2">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2" colspan="2">
     <widget class="QScrollArea" name="scrollArea">
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
@@ -27,8 +221,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>738</width>
-        <height>606</height>
+        <width>744</width>
+        <height>612</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -59,7 +253,7 @@
              <x>12</x>
              <y>-6</y>
              <width>691</width>
-             <height>591</height>
+             <height>611</height>
             </rect>
            </property>
            <property name="frameShape">
@@ -71,42 +265,65 @@
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
              <layout class="QFormLayout" name="formLayout_8">
+              <property name="sizeConstraint">
+               <enum>QLayout::SetDefaultConstraint</enum>
+              </property>
+              <property name="fieldGrowthPolicy">
+               <enum>QFormLayout::ExpandingFieldsGrow</enum>
+              </property>
               <property name="labelAlignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
               </property>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_24">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;On Launch&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
+              <property name="horizontalSpacing">
+               <number>2</number>
+              </property>
+              <property name="verticalSpacing">
+               <number>0</number>
+              </property>
+              <item row="0" column="1">
                <widget class="QLabel" name="label_3">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
                 <property name="text">
                  <string>After launch: </string>
                 </property>
                </widget>
               </item>
-              <item row="5" column="0">
-               <widget class="QCheckBox" name="checkDefaultBrowser">
-                <property name="text">
-                 <string>Check to see if Midori Browser is the default browser on startup</string>
+              <item row="1" column="1">
+               <spacer name="horizontalSpacer_26">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
                 </property>
-                <property name="checked">
-                 <bool>false</bool>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
                 </property>
-               </widget>
+               </spacer>
               </item>
-              <item row="5" column="1">
-               <widget class="QPushButton" name="checkNowDefaultBrowser">
-                <property name="text">
-                 <string>Check Now</string>
+              <item row="2" column="0">
+               <spacer name="verticalSpacer_10">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
                 </property>
-               </widget>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
-              <item row="6" column="0">
+              <item row="2" column="1">
                <widget class="QComboBox" name="afterLaunch">
+                <property name="cursor">
+                 <cursorShape>PointingHandCursor</cursorShape>
+                </property>
                 <item>
                  <property name="text">
                   <string>Open blank page</string>
@@ -134,43 +351,10 @@
                 </item>
                </widget>
               </item>
-              <item row="7" column="1">
-               <spacer name="horizontalSpacer_22">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::MinimumExpanding</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>37</width>
-                  <height>17</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="8" column="0">
-               <widget class="QLabel" name="label">
-                <property name="text">
-                 <string>Homepage: </string>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="0">
-               <widget class="MacToolButton" name="useCurrentBut">
-                <property name="text">
-                 <string>Use current</string>
-                </property>
-               </widget>
-              </item>
-              <item row="11" column="1">
+              <item row="3" column="1">
                <spacer name="horizontalSpacer_7">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::MinimumExpanding</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -180,52 +364,281 @@
                 </property>
                </spacer>
               </item>
-              <item row="12" column="0">
-               <widget class="QLabel" name="label_2">
+              <item row="4" column="1">
+               <spacer name="verticalSpacer_24">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Preferred</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="5" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_28"/>
+              </item>
+              <item row="6" column="1">
+               <widget class="QLabel" name="label">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
                 <property name="text">
-                 <string>On new tab: </string>
+                 <string>Homepage: </string>
                 </property>
                </widget>
               </item>
-              <item row="13" column="0">
-               <widget class="QComboBox" name="newTab">
-                <item>
-                 <property name="text">
-                  <string>Open blank tab</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Open homepage</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Open speed dial</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Open other page...</string>
-                 </property>
-                </item>
+              <item row="7" column="1">
+               <widget class="QLineEdit" name="homepage">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                </widget>
               </item>
-              <item row="15" column="0">
-               <widget class="MacToolButton" name="newTabUseCurrent">
+              <item row="8" column="1">
+               <spacer name="horizontalSpacer_8">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="9" column="1">
+               <spacer name="verticalSpacer_25">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Preferred</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="10" column="1">
+               <widget class="MacToolButton" name="useCurrentBut">
+                <property name="cursor">
+                 <cursorShape>PointingHandCursor</cursorShape>
+                </property>
                 <property name="text">
                  <string>Use current</string>
                 </property>
                </widget>
               </item>
-              <item row="16" column="0">
-               <widget class="QCheckBox" name="dontLoadTabsUntilSelected">
+              <item row="11" column="1">
+               <spacer name="verticalSpacer_27">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Preferred</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="12" column="1">
+               <spacer name="horizontalSpacer_28">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="13" column="1">
+               <widget class="QLabel" name="label_2">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
                 <property name="text">
-                 <string>Don't load tabs until selected</string>
+                 <string>New tabs: </string>
                 </property>
                </widget>
               </item>
-              <item row="16" column="1">
+              <item row="14" column="1">
+               <widget class="Line" name="line_4">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="15" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_27">
+                <item>
+                 <widget class="QComboBox" name="newTab">
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>Open blank tab</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Open homepage</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Open speed dial</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Open other page...</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_71">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Minimum</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="dontLoadTabsUntilSelected">
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="text">
+                   <string>Don't load tabs until selected</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="17" column="1">
+               <widget class="QFrame" name="newTabFrame">
+                <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                </layout>
+               </widget>
+              </item>
+              <item row="18" column="1">
+               <spacer name="horizontalSpacer_37">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="19" column="1">
+               <widget class="QLineEdit" name="newTabUrl">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
+              </item>
+              <item row="20" column="1">
+               <spacer name="horizontalSpacer_40">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="21" column="1">
+               <spacer name="verticalSpacer_28">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Preferred</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="22" column="1">
+               <widget class="MacToolButton" name="newTabUseCurrent">
+                <property name="cursor">
+                 <cursorShape>PointingHandCursor</cursorShape>
+                </property>
+                <property name="text">
+                 <string>Use current</string>
+                </property>
+               </widget>
+              </item>
+              <item row="23" column="1">
+               <widget class="Line" name="line_5">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="24" column="1">
                <spacer name="hSpacerDefaultBrowser">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -241,82 +654,161 @@
                 </property>
                </spacer>
               </item>
-              <item row="18" column="1">
-               <layout class="QHBoxLayout" name="hLayoutDefaultBrowser"/>
-              </item>
-              <item row="19" column="1">
-               <spacer name="horizontalSpacer_41">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::MinimumExpanding</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>250</width>
-                  <height>17</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="22" column="0">
+              <item row="26" column="1">
                <widget class="QLabel" name="label_4">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                  <underline>false</underline>
+                 </font>
+                </property>
                 <property name="text">
                  <string>&lt;b&gt;Profiles&lt;/b&gt;</string>
                 </property>
                </widget>
               </item>
-              <item row="24" column="0">
-               <widget class="QLabel" name="label_45">
-                <property name="text">
-                 <string>Active profile:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="24" column="1">
-               <widget class="QLabel" name="activeProfile">
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item row="25" column="0">
-               <widget class="QLabel" name="label_5">
-                <property name="text">
-                 <string>Startup profile:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="25" column="1">
-               <widget class="QComboBox" name="startProfile">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-               </widget>
-              </item>
-              <item row="26" column="0">
-               <widget class="QLabel" name="cannotDeleteActiveProfileLabel">
-                <property name="text">
-                 <string>Note: You cannot delete the active profile.</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="26" column="1">
-               <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item row="28" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_15">
                 <item>
-                 <spacer name="horizontalSpacer_39">
+                 <widget class="QLabel" name="label_45">
+                  <property name="text">
+                   <string>Active profile:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_69">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
                   <property name="sizeType">
-                   <enum>QSizePolicy::MinimumExpanding</enum>
+                   <enum>QSizePolicy::Minimum</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QLabel" name="activeProfile">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="29" column="1">
+               <spacer name="horizontalSpacer_67">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="30" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_22">
+                <item>
+                 <widget class="QLabel" name="label_5">
+                  <property name="text">
+                   <string>Startup profile:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_68">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Minimum</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="startProfile">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="33" column="1">
+               <spacer name="horizontalSpacer_44">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="34" column="1">
+               <spacer name="verticalSpacer_30">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Preferred</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="35" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_2">
+                <item>
+                 <widget class="QPushButton" name="createProfile">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="text">
+                   <string>New</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_15">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Minimum</enum>
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
@@ -337,26 +829,16 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
                   <property name="text">
                    <string>Delete</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="createProfile">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>New</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_40">
+                 <spacer name="horizontalSpacer_39">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -373,33 +855,13 @@
                 </item>
                </layout>
               </item>
-              <item row="28" column="0">
-               <widget class="QCheckBox" name="checkUpdates">
-                <property name="text">
-                 <string>Check for updates at startup</string>
-                </property>
-               </widget>
-              </item>
-              <item row="28" column="1">
-               <spacer name="horizontalSpacer_44">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::MinimumExpanding</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>250</width>
-                  <height>17</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="3" column="0">
-               <spacer name="verticalSpacer_10">
+              <item row="37" column="1">
+               <spacer name="verticalSpacer_29">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Preferred</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -409,7 +871,117 @@
                 </property>
                </spacer>
               </item>
-              <item row="23" column="0">
+              <item row="38" column="1">
+               <spacer name="horizontalSpacer_41">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="39" column="1">
+               <widget class="QLabel" name="cannotDeleteActiveProfileLabel">
+                <property name="font">
+                 <font>
+                  <italic>true</italic>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Note: You cannot delete the active profile.</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="41" column="1">
+               <spacer name="horizontalSpacer_45">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="42" column="1">
+               <widget class="Line" name="line_6">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="47" column="1">
+               <layout class="QHBoxLayout" name="hLayoutDefaultBrowser"/>
+              </item>
+              <item row="48" column="1">
+               <widget class="QCheckBox" name="checkDefaultBrowser">
+                <property name="cursor">
+                 <cursorShape>PointingHandCursor</cursorShape>
+                </property>
+                <property name="text">
+                 <string>Check to see if Midori Browser is the default browser on startup</string>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="50" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_26">
+                <item>
+                 <widget class="QCheckBox" name="checkUpdates">
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="text">
+                   <string>Check for updates at startup</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_70">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Minimum</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="checkNowDefaultBrowser">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="text">
+                   <string>Check Now</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="53" column="0">
                <spacer name="verticalSpacer_17">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -422,27 +994,7 @@
                 </property>
                </spacer>
               </item>
-              <item row="9" column="0" colspan="2">
-               <widget class="QLineEdit" name="homepage">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-               </widget>
-              </item>
-              <item row="14" column="0" colspan="2">
-               <widget class="QLineEdit" name="newTabUrl">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-               </widget>
-              </item>
-              <item row="27" column="0">
+              <item row="57" column="0">
                <spacer name="verticalSpacer_9">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -457,30 +1009,22 @@
               </item>
              </layout>
             </item>
-           </layout>
-          </widget>
-          <widget class="QFrame" name="newTabFrame">
-           <property name="geometry">
-            <rect>
-             <x>114</x>
-             <y>196</y>
-             <width>191</width>
-             <height>20</height>
-            </rect>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
+            <item>
+             <spacer name="horizontalSpacer_24">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Preferred</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
            </layout>
           </widget>
          </widget>
@@ -488,6 +1032,9 @@
           <layout class="QGridLayout" name="gridLayout_21">
            <item row="0" column="0">
             <widget class="QTabWidget" name="tabWidget_2">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="currentIndex">
               <number>0</number>
              </property>
@@ -515,42 +1062,10 @@
              </widget>
              <widget class="QWidget" name="tab_5">
               <attribute name="title">
-               <string>Advanced Options</string>
+               <string>Advanced</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_16">
-               <item row="1" column="1">
-                <layout class="QGridLayout" name="gridLayout_7">
-                 <item row="2" column="0">
-                  <widget class="QCheckBox" name="showNavigationToolbar">
-                   <property name="text">
-                    <string>Always show the navigation toolbar</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QCheckBox" name="instantBookmarksToolbar">
-                   <property name="text">
-                    <string>Enable the instant bookmarks toolbar</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QCheckBox" name="showStatusbar">
-                   <property name="text">
-                    <string>Always show the statusbar</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="0">
-                  <widget class="QCheckBox" name="showBookmarksToolbar">
-                   <property name="text">
-                    <string>Always show the bookmarks toolbar</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="2">
+               <item row="0" column="1">
                 <spacer name="horizontalSpacer_2">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
@@ -566,30 +1081,78 @@
                  </property>
                 </spacer>
                </item>
-               <item row="0" column="0" colspan="2">
-                <widget class="QLabel" name="label_18">
-                 <property name="text">
-                  <string>&lt;b&gt;Browser Window&lt;/b&gt;</string>
-                 </property>
-                </widget>
+               <item row="0" column="0">
+                <layout class="QGridLayout" name="gridLayout_7">
+                 <item row="2" column="0">
+                  <widget class="QCheckBox" name="showNavigationToolbar">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
+                   <property name="text">
+                    <string>Always show the navigation toolbar</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QCheckBox" name="instantBookmarksToolbar">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
+                   <property name="text">
+                    <string>Enable the instant bookmarks toolbar</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QCheckBox" name="showBookmarksToolbar">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
+                   <property name="text">
+                    <string>Always show the bookmarks toolbar</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QCheckBox" name="showSearchbar">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
+                   <property name="text">
+                    <string>Always show the searchbar</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QCheckBox" name="navInFullScreen">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
+                   <property name="text">
+                    <string>Show the navigation bar when in full screen mode</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="showStatusbar">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
+                   <property name="text">
+                    <string>Always show the statusbar</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="0">
+                  <widget class="QCheckBox" name="locBarAutoHide">
+                   <property name="text">
+                    <string>Automatically hide the location bar in full screen mode</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
-               <item row="1" column="0">
-                <spacer name="horizontalSpacer_8">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Preferred</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="3" column="1">
+               <item row="2" column="0">
                 <spacer name="verticalSpacer_12">
                  <property name="orientation">
                   <enum>Qt::Vertical</enum>
@@ -615,6 +1178,9 @@
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="0" column="0">
             <widget class="QTabWidget" name="tabWidget_3">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="currentIndex">
               <number>0</number>
              </property>
@@ -625,6 +1191,9 @@
               <layout class="QVBoxLayout" name="verticalLayout_2">
                <item>
                 <widget class="QCheckBox" name="hideTabsOnTab">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Hide tabs when there is only one tab</string>
                  </property>
@@ -632,6 +1201,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="activateLastTab">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Activate last tab when closing active tab</string>
                  </property>
@@ -639,6 +1211,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="openNewTabAfterActive">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Open new tabs after active tab</string>
                  </property>
@@ -646,6 +1221,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="openNewEmptyTabAfterActive">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Open new empty tabs after active tab</string>
                  </property>
@@ -653,6 +1231,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="openPopupsInTabs">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Open popup windows in tabs</string>
                  </property>
@@ -660,6 +1241,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="alwaysSwitchTabsWithWheel">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Always switch between tabs with mouse wheel</string>
                  </property>
@@ -667,6 +1251,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="switchToNewTabs">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Automatically switch to newly opened tab</string>
                  </property>
@@ -674,6 +1261,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="dontCloseOnLastTab">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Don't close window upon closing last tab</string>
                  </property>
@@ -681,6 +1271,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="askWhenClosingMultipleTabs">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Ask when closing multiple tabs</string>
                  </property>
@@ -688,6 +1281,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="showClosedTabsButton">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Show closed tabs button</string>
                  </property>
@@ -704,6 +1300,9 @@
                  </item>
                  <item>
                   <widget class="QComboBox" name="showCloseOnInactive">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <item>
                     <property name="text">
                      <string>Automatic</string>
@@ -779,6 +1378,9 @@
                      <height>0</height>
                     </size>
                    </property>
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <item>
                     <property name="text">
                      <string>History and Bookmarks</string>
@@ -821,13 +1423,29 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="useInlineCompletion">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Enable inline suggestions</string>
                  </property>
                 </widget>
                </item>
                <item>
+                <widget class="QCheckBox" name="showABSearchSuggestions">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="text">
+                  <string>Show search suggestions</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <widget class="QCheckBox" name="completionShowSwitchTab">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="toolTip">
                   <string>Press &quot;Shift&quot; to not switch the tab but load the url in the current tab</string>
                  </property>
@@ -838,6 +1456,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="alwaysShowGoIcon">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Always show go icon</string>
                  </property>
@@ -845,6 +1466,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="selectAllOnFocus">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Select all text by double clicking in address bar</string>
                  </property>
@@ -852,6 +1476,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="selectAllOnClick">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Select all text by clicking in address bar</string>
                  </property>
@@ -859,22 +1486,21 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="searchFromAddressBar">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
-                  <string>Enable automatic searching from the address bar</string>
+                  <string>Search using the address bar</string>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="QCheckBox" name="searchWithDefaultEngine">
-                 <property name="text">
-                  <string>Search with Default Engine</string>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
                  </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QCheckBox" name="showABSearchSuggestions">
                  <property name="text">
-                  <string>Show search suggestions</string>
+                  <string>Search engine is independent of the search bar</string>
                  </property>
                 </widget>
                </item>
@@ -896,6 +1522,9 @@
                </item>
                <item>
                 <widget class="QCheckBox" name="showLoadingInAddressBar">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Show loading progress in address bar</string>
                  </property>
@@ -928,6 +1557,9 @@
                   </item>
                   <item>
                    <widget class="QComboBox" name="progressStyleSelector">
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
                     <item>
                      <property name="text">
                       <string>Fill</string>
@@ -947,6 +1579,9 @@
                   </item>
                   <item>
                    <widget class="QCheckBox" name="checkBoxCustomProgressColor">
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
                     <property name="text">
                      <string>Custom color:</string>
                     </property>
@@ -963,6 +1598,9 @@
                      </property>
                      <item>
                       <widget class="MacToolButton" name="customColorToolButton">
+                       <property name="cursor">
+                        <cursorShape>PointingHandCursor</cursorShape>
+                       </property>
                        <property name="toolTip">
                         <string>Select color</string>
                        </property>
@@ -973,6 +1611,9 @@
                      </item>
                      <item>
                       <widget class="MacToolButton" name="resetProgressBarcolor">
+                       <property name="cursor">
+                        <cursorShape>PointingHandCursor</cursorShape>
+                       </property>
                        <property name="text">
                         <string>Reset</string>
                        </property>
@@ -1026,12 +1667,15 @@
           <layout class="QGridLayout" name="gridLayout_9">
            <item row="1" column="0">
             <widget class="QTabWidget" name="tabWidget">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="currentIndex">
               <number>0</number>
              </property>
              <widget class="QWidget" name="tab">
               <attribute name="title">
-               <string>Web Configuration</string>
+               <string>Web</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_18">
                <item row="4" column="0">
@@ -1058,6 +1702,9 @@
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
                      </property>
                      <property name="minimum">
                       <number>1</number>
@@ -1104,20 +1751,19 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="allowJavaScript">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Enable JavaScript</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="printEBackground">
-                   <property name="text">
-                    <string extracomment="when you are printing a webpage (using a printer), this setting determines whether to also print the background (colors, images, etc) of html elements">Print page background colours and images</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
                   <widget class="QCheckBox" name="animateScrolling">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Animated scrolling</string>
                    </property>
@@ -1125,6 +1771,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="spatialNavigation">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Enable spatial navigation</string>
                    </property>
@@ -1132,6 +1781,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="useNativeScrollbars">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Use native scrollbars</string>
                    </property>
@@ -1139,8 +1791,21 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="disableVideoAutoPlay">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Disable automatic playing of videos</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="printEBackground">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
+                   <property name="text">
+                    <string extracomment="when you are printing a webpage (using a printer), this setting determines whether to also print the background (colors, images, etc) of html elements">Print page background colours and images</string>
                    </property>
                   </widget>
                  </item>
@@ -1167,7 +1832,11 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QComboBox" name="defaultZoomLevel"/>
+                    <widget class="QComboBox" name="defaultZoomLevel">
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
+                     </property>
+                    </widget>
                    </item>
                    <item>
                     <spacer name="horizontalSpacer_12">
@@ -1230,6 +1899,9 @@
                 <layout class="QGridLayout" name="gridLayout_3">
                  <item row="0" column="0" colspan="3">
                   <widget class="QCheckBox" name="saveHistory">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Allow saving history</string>
                    </property>
@@ -1237,6 +1909,9 @@
                  </item>
                  <item row="1" column="1">
                   <widget class="QCheckBox" name="deleteHistoryOnClose">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Delete history on close</string>
                    </property>
@@ -1260,6 +1935,9 @@
                  </item>
                  <item row="2" column="0" colspan="3">
                   <widget class="QCheckBox" name="html5storage">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Allow local storage of HTML5 web content</string>
                    </property>
@@ -1267,6 +1945,9 @@
                  </item>
                  <item row="3" column="1">
                   <widget class="QCheckBox" name="deleteHtml5storageOnClose">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Delete locally stored HTML5 web content on close</string>
                    </property>
@@ -1295,6 +1976,9 @@
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
+                   </property>
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
                    </property>
                    <property name="text">
                     <string>Delete now</string>
@@ -1339,6 +2023,9 @@
                 <layout class="QGridLayout" name="gridLayout_4">
                  <item row="1" column="1" colspan="3">
                   <widget class="QCheckBox" name="removeCache">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Delete cache on close</string>
                    </property>
@@ -1374,6 +2061,9 @@
                    </item>
                    <item>
                     <widget class="MacToolButton" name="changeCachePath">
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
+                     </property>
                      <property name="text">
                       <string>...</string>
                      </property>
@@ -1383,6 +2073,9 @@
                  </item>
                  <item row="2" column="2">
                   <widget class="QSpinBox" name="cacheMB">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="suffix">
                     <string> MB</string>
                    </property>
@@ -1399,6 +2092,9 @@
                  </item>
                  <item row="0" column="0" colspan="3">
                   <widget class="QCheckBox" name="allowCache">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Allow storing network cache on disk</string>
                    </property>
@@ -1449,11 +2145,14 @@
              </widget>
              <widget class="QWidget" name="tab_3">
               <attribute name="title">
-               <string>Proxy Configuration</string>
+               <string>Proxy</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_8">
                <item row="1" column="0" colspan="2">
                 <widget class="QRadioButton" name="systemProxy">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>System proxy configuration</string>
                  </property>
@@ -1493,6 +2192,9 @@
                </item>
                <item row="0" column="0" colspan="2">
                 <widget class="QRadioButton" name="noProxy">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>No proxy</string>
                  </property>
@@ -1532,6 +2234,9 @@
                </item>
                <item row="2" column="0" colspan="2">
                 <widget class="QRadioButton" name="manualProxy">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="text">
                   <string>Manual configuration</string>
                  </property>
@@ -1601,6 +2306,9 @@
                 <layout class="QHBoxLayout" name="horizontalLayout_9">
                  <item>
                   <widget class="QComboBox" name="proxyType">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="currentText">
                     <string>HTTP</string>
                    </property>
@@ -1658,13 +2366,16 @@
              </widget>
              <widget class="QWidget" name="tab_4">
               <attribute name="title">
-               <string>Advanced Configuration</string>
+               <string>Advanced</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_23">
                <item row="4" column="0">
                 <layout class="QVBoxLayout" name="verticalLayout_1">
                  <item>
                   <widget class="QCheckBox" name="allowPlugins">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Enable Pepper plugin API (PPAPI)</string>
                    </property>
@@ -1672,6 +2383,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="intPDFViewer">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Use built-in PDF viewer (requires PPAPI)</string>
                    </property>
@@ -1679,6 +2393,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="linksInFocusChain">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Include links in focus chain</string>
                    </property>
@@ -1686,6 +2403,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="webRTCPublicIpOnly">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Prevent WebRTC from leaking local IP address</string>
                    </property>
@@ -1693,6 +2413,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="dnsPrefetch">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Enable DNS prefetching</string>
                    </property>
@@ -1700,6 +2423,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="httpsByDefault">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Enable https by default (NEW! - Restart required)</string>
                    </property>
@@ -1707,6 +2433,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="fullScreenSupportEnabled">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Enable fullscreen video</string>
                    </property>
@@ -1714,6 +2443,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="localContentCanAccessRemoteUrls">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Allow local content to access remote urls</string>
                    </property>
@@ -1721,6 +2453,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="localContentCanAccessFileUrls">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Local content can access file urls</string>
                    </property>
@@ -1728,6 +2463,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="screenCaptureEnabled">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Enable screen capture</string>
                    </property>
@@ -1735,6 +2473,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="touchIconsEnabled">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Enable touch icons</string>
                    </property>
@@ -1742,6 +2483,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="allowAllUrlSchemes">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Allow unknown url schemes</string>
                    </property>
@@ -1749,6 +2493,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="userInteractUrlSchemes">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Require user interaction to access urls from unknown schemes</string>
                    </property>
@@ -1756,6 +2503,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="allowPersistentCookies">
+                   <property name="cursor">
+                    <cursorShape>PointingHandCursor</cursorShape>
+                   </property>
                    <property name="text">
                     <string>Allow persistent cookies</string>
                    </property>
@@ -1791,7 +2541,7 @@
             <rect>
              <x>30</x>
              <y>0</y>
-             <width>471</width>
+             <width>533</width>
              <height>591</height>
             </rect>
            </property>
@@ -1802,14 +2552,7 @@
             <property name="formAlignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
             </property>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_27">
-              <property name="text">
-               <string>&lt;b&gt;Font Families&lt;/b&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0" colspan="2">
+            <item row="0" column="0" colspan="2">
              <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
                <layout class="QGridLayout" name="gridLayout_12">
@@ -1828,7 +2571,11 @@
                  </widget>
                 </item>
                 <item row="3" column="2">
-                 <widget class="QFontComboBox" name="fontSansSerif"/>
+                 <widget class="QFontComboBox" name="fontSansSerif">
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                 </widget>
                 </item>
                 <item row="0" column="0" colspan="2">
                  <widget class="QLabel" name="label_6">
@@ -1857,6 +2604,9 @@
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
@@ -1908,13 +2658,20 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="2">
-                 <widget class="QFontComboBox" name="fontSerif"/>
+                 <widget class="QFontComboBox" name="fontSerif">
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                 </widget>
                 </item>
                 <item row="9" column="0">
                  <widget class="QLabel" name="label_32">
@@ -1931,10 +2688,18 @@
                  </widget>
                 </item>
                 <item row="1" column="2">
-                 <widget class="QFontComboBox" name="fontFixed"/>
+                 <widget class="QFontComboBox" name="fontFixed">
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                 </widget>
                 </item>
                 <item row="6" column="2">
-                 <widget class="QFontComboBox" name="fontPictograph"/>
+                 <widget class="QFontComboBox" name="fontPictograph">
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                 </widget>
                 </item>
                 <item row="3" column="0" colspan="2">
                  <widget class="QLabel" name="label_30">
@@ -1951,13 +2716,24 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
                  </widget>
                 </item>
                 <item row="5" column="2">
-                 <widget class="QFontComboBox" name="fontFantasy"/>
+                 <widget class="QFontComboBox" name="fontFantasy">
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                 </widget>
                 </item>
                 <item row="4" column="2">
-                 <widget class="QFontComboBox" name="fontCursive"/>
+                 <widget class="QFontComboBox" name="fontCursive">
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                 </widget>
                 </item>
                 <item row="12" column="0">
                  <widget class="QLabel" name="label_47">
@@ -1980,6 +2756,9 @@
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
@@ -2010,6 +2789,9 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
                   </property>
@@ -2037,21 +2819,17 @@
          </widget>
          <widget class="QWidget" name="shortcutsPage">
           <layout class="QGridLayout" name="gridLayout">
-           <item row="2" column="0" colspan="2">
+           <item row="0" column="0" colspan="2">
             <widget class="QCheckBox" name="switchTabsAlt">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="text">
               <string>Switch to tabs with Alt + number of tab</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_13">
-             <property name="text">
-              <string>&lt;b&gt;Shortcuts&lt;/b&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
+           <item row="4" column="1">
             <spacer name="verticalSpacer_13">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -2067,25 +2845,11 @@
              </property>
             </spacer>
            </item>
-           <item row="4" column="0" colspan="2">
-            <widget class="QCheckBox" name="singleKeyShortcuts">
-             <property name="toolTip">
-              <string>Existing shortcuts:&lt;br/&gt;&lt;b&gt;1&lt;/b&gt; - previous tab&lt;br/&gt;&lt;b&gt;2&lt;/b&gt; - next tab&lt;br/&gt;&lt;b&gt;/&lt;/b&gt; - search on page</string>
-             </property>
-             <property name="text">
-              <string>Use single key shortcuts</string>
-             </property>
-            </widget>
-           </item>
            <item row="3" column="0" colspan="2">
-            <widget class="QCheckBox" name="loadSpeedDialsCtrl">
-             <property name="text">
-              <string>Load speed dials with Ctrl + number of speed dial</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0" colspan="2">
             <widget class="QCheckBox" name="closeAppWithCtrlQ">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="toolTip">
               <string>If unchecked, prevents accidental exit from the application if the Ctrl-W shortcut was intended.</string>
              </property>
@@ -2094,18 +2858,28 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <spacer name="horizontalSpacer_11">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+           <item row="2" column="0" colspan="2">
+            <widget class="QCheckBox" name="singleKeyShortcuts">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
+             <property name="toolTip">
+              <string>Existing shortcuts:&lt;br/&gt;&lt;b&gt;1&lt;/b&gt; - previous tab&lt;br/&gt;&lt;b&gt;2&lt;/b&gt; - next tab&lt;br/&gt;&lt;b&gt;/&lt;/b&gt; - search on page</string>
              </property>
-            </spacer>
+             <property name="text">
+              <string>Use single key shortcuts</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QCheckBox" name="loadSpeedDialsCtrl">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="text">
+              <string>Load speed dials with Ctrl + number of speed dial</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -2115,72 +2889,64 @@
             <rect>
              <x>10</x>
              <y>10</y>
-             <width>481</width>
-             <height>490</height>
+             <width>666</width>
+             <height>511</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
-             <layout class="QFormLayout" name="formLayout_2">
-              <property name="labelAlignment">
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             <widget class="QCheckBox" name="closeDownManOnFinish">
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
               </property>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_23">
+              <property name="text">
+               <string>Close download manager when downloading finishes</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="askEverytime">
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
+              <property name="text">
+               <string>Ask everytime for download location</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="useDefined">
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
+              <property name="text">
+               <string>Default folder location: </string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QLineEdit" name="downLoc"/>
+              </item>
+              <item>
+               <widget class="MacToolButton" name="downButt">
+                <property name="cursor">
+                 <cursorShape>PointingHandCursor</cursorShape>
+                </property>
                 <property name="text">
-                 <string>&lt;b&gt;Download Location&lt;/b&gt;</string>
+                 <string>...</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QRadioButton" name="askEverytime">
-                <property name="text">
-                 <string>Ask everytime for download location</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QRadioButton" name="useDefined">
-                <property name="text">
-                 <string>Use defined location: </string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="0">
-               <widget class="QLabel" name="label_22">
-                <property name="text">
-                 <string>&lt;b&gt;Download Options&lt;/b&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="0">
-               <widget class="QCheckBox" name="closeDownManOnFinish">
-                <property name="text">
-                 <string>Close download manager when downloading finishes</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0" colspan="2">
-               <layout class="QHBoxLayout" name="horizontalLayout_4">
-                <item>
-                 <widget class="QLineEdit" name="downLoc"/>
-                </item>
-                <item>
-                 <widget class="MacToolButton" name="downButt">
-                  <property name="text">
-                   <string>...</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item row="5" column="0">
-               <spacer name="horizontalSpacer_37">
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <spacer name="horizontalSpacer_11">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::MinimumExpanding</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -2190,97 +2956,31 @@
                 </property>
                </spacer>
               </item>
-              <item row="1" column="0">
-               <spacer name="verticalSpacer_18">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="7" column="0">
-               <spacer name="verticalSpacer_19">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_45">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <spacer name="verticalSpacer_23">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayout_8">
               <item>
                <widget class="QLabel" name="label_51">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>80</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                  <underline>false</underline>
+                 </font>
+                </property>
                 <property name="text">
                  <string>&lt;b&gt;External download manager&lt;/b&gt;</string>
                 </property>
                </widget>
               </item>
               <item>
-               <spacer name="horizontalSpacer_54">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <spacer name="verticalSpacer_22">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
                <widget class="QCheckBox" name="useExternalDownManager">
+                <property name="cursor">
+                 <cursorShape>PointingHandCursor</cursorShape>
+                </property>
                 <property name="text">
                  <string>Use external download manager</string>
                 </property>
@@ -2300,12 +3000,22 @@
                 </item>
                 <item>
                  <widget class="MacToolButton" name="chooseExternalDown">
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
                   <property name="text">
                    <string>...</string>
                   </property>
                  </widget>
                 </item>
                </layout>
+              </item>
+              <item>
+               <widget class="Line" name="line_3">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
               </item>
               <item>
                <widget class="QLabel" name="label_53">
@@ -2332,10 +3042,31 @@
               </item>
               <item>
                <widget class="QLabel" name="label_64">
+                <property name="font">
+                 <font>
+                  <italic>true</italic>
+                 </font>
+                </property>
                 <property name="text">
                  <string>&lt;b&gt;%d&lt;/b&gt; will be replaced with URL to be downloaded</string>
                 </property>
                </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_6">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Expanding</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </item>
@@ -2344,60 +3075,8 @@
          </widget>
          <widget class="QWidget" name="passwordManagerPage">
           <layout class="QGridLayout" name="gridLayout_11">
-           <item row="0" column="0" colspan="2">
-            <widget class="QLabel" name="label_20">
-             <property name="text">
-              <string>&lt;b&gt;AutoFill options&lt;/b&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QCheckBox" name="allowPassManager">
-             <property name="text">
-              <string>Allow saving passwords from sites</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <spacer name="horizontalSpacer_14">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Preferred</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="4" column="0" colspan="3">
-            <widget class="QFrame" name="AutoFillFrame">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <layout class="QHBoxLayout" name="autoFillFrame">
-              <property name="sizeConstraint">
-               <enum>QLayout::SetMinAndMaxSize</enum>
-              </property>
-             </layout>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QCheckBox" name="autoCompletePasswords">
-             <property name="text">
-              <string>Automatically complete passwords on sites</string>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="2">
-            <spacer name="horizontalSpacer_15">
+            <spacer name="horizontalSpacer_38">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -2412,13 +3091,48 @@
              </property>
             </spacer>
            </item>
-           <item row="3" column="0">
-            <spacer name="horizontalSpacer_38">
+           <item row="1" column="1">
+            <widget class="QCheckBox" name="autoCompletePasswords">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="text">
+              <string>Automatically complete passwords on sites</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="3">
+            <widget class="QFrame" name="AutoFillFrame">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <layout class="QHBoxLayout" name="autoFillFrame">
+              <property name="sizeConstraint">
+               <enum>QLayout::SetMinAndMaxSize</enum>
+              </property>
+             </layout>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="allowPassManager">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="text">
+              <string>Allow saving passwords from sites</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <spacer name="horizontalSpacer_14">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeType">
-              <enum>QSizePolicy::Preferred</enum>
+              <enum>QSizePolicy::MinimumExpanding</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -2436,20 +3150,29 @@
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
            </property>
            <item row="0" column="0">
-            <widget class="QLabel" name="label_12">
+            <widget class="QLabel" name="label_11">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
-              <string>&lt;b&gt;Cookies&lt;/b&gt;</string>
+              <string>Tracking</string>
              </property>
             </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QLabel" name="label_19">
+            <widget class="QCheckBox" name="doNotTrack">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="text">
-              <string>Manage Cookies</string>
+              <string>Send Do Not Track header to servers</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
+           <item row="2" column="0">
             <spacer name="horizontalSpacer_6">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -2465,40 +3188,43 @@
              </property>
             </spacer>
            </item>
-           <item row="2" column="0">
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_12">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>&lt;b&gt;Cookies&lt;/b&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_19">
+             <property name="text">
+              <string>Manage Cookies</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
             <widget class="QPushButton" name="cookieManagerBut">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="text">
-              <string>Cookie Manager</string>
+              <string>Cookies</string>
              </property>
             </widget>
            </item>
            <item row="5" column="0">
-            <widget class="QLabel" name="label_61">
-             <property name="mouseTracking">
-              <bool>true</bool>
-             </property>
-             <property name="text">
-              <string>&lt;b&gt;JavaScript&lt;/b&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_25">
-             <property name="mouseTracking">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Manage JavaScript privacy options</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
             <spacer name="horizontalSpacer_20">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -2514,13 +3240,117 @@
              </property>
             </spacer>
            </item>
+           <item row="5" column="1">
+            <spacer name="horizontalSpacer_62">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_62">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>&lt;b&gt;HTML5 Permissions&lt;/b&gt;</string>
+             </property>
+            </widget>
+           </item>
            <item row="7" column="0">
-            <widget class="QPushButton" name="jsOptionsButton">
+            <widget class="QLabel" name="label_63">
+             <property name="text">
+              <string>Manage HTML5 permissions</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QPushButton" name="html5permissions">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="text">
+              <string>Permissions</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <spacer name="horizontalSpacer_57">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="8" column="1">
+            <spacer name="horizontalSpacer_63">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="label_61">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="mouseTracking">
+              <bool>true</bool>
+             </property>
+             <property name="text">
+              <string>&lt;b&gt;JavaScript&lt;/b&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="label_25">
+             <property name="mouseTracking">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Manage JavaScript privacy options</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QPushButton" name="jsOptionsButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
              </property>
              <property name="text">
               <string>Options</string>
@@ -2528,20 +3358,6 @@
             </widget>
            </item>
            <item row="11" column="0">
-            <widget class="QLabel" name="label_62">
-             <property name="text">
-              <string>&lt;b&gt;HTML5 Permissions&lt;/b&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="12" column="0">
-            <widget class="QLabel" name="label_63">
-             <property name="text">
-              <string>Manage HTML5 permissions</string>
-             </property>
-            </widget>
-           </item>
-           <item row="12" column="1">
             <spacer name="horizontalSpacer_49">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -2557,43 +3373,20 @@
              </property>
             </spacer>
            </item>
-           <item row="13" column="0">
-            <widget class="QPushButton" name="html5permissions">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Permissions</string>
-             </property>
-            </widget>
-           </item>
-           <item row="14" column="0">
-            <spacer name="verticalSpacer_20">
+           <item row="11" column="1">
+            <spacer name="horizontalSpacer_64">
              <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::MinimumExpanding</enum>
+              <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>20</width>
-               <height>40</height>
+               <width>40</width>
+               <height>20</height>
               </size>
              </property>
             </spacer>
            </item>
-           <item row="15" column="0">
-            <widget class="QLabel" name="label_50">
-             <property name="text">
-              <string>&lt;b&gt;Other&lt;/b&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="17" column="1">
+           <item row="24" column="1">
             <spacer name="horizontalSpacer_47">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -2609,50 +3402,14 @@
              </property>
             </spacer>
            </item>
-           <item row="16" column="0">
-            <widget class="QCheckBox" name="doNotTrack">
-             <property name="text">
-              <string>Send Do Not Track header to servers</string>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="0">
-            <spacer name="verticalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="3" column="0">
-            <spacer name="verticalSpacer_24">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="notificationsPage">
           <layout class="QGridLayout" name="gridLayout_17">
-           <item row="3" column="1">
-            <spacer name="horizontalSpacer_27">
+           <item row="8" column="0" colspan="2">
+            <spacer name="horizontalSpacer_31">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Preferred</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -2662,14 +3419,40 @@
              </property>
             </spacer>
            </item>
-           <item row="2" column="0">
-            <widget class="QRadioButton" name="doNotUseNotifications">
-             <property name="text">
-              <string>Do not use Notifications</string>
+           <item row="10" column="0" colspan="2">
+            <widget class="QSpinBox" name="notificationTimeout">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="suffix">
+              <string> seconds</string>
              </property>
             </widget>
            </item>
-           <item row="12" column="0">
+           <item row="9" column="0" colspan="2">
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <widget class="QLabel" name="label_42">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Expiration timeout:</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="14" column="0">
             <spacer name="verticalSpacer_4">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -2684,26 +3467,6 @@
               </size>
              </property>
             </spacer>
-           </item>
-           <item row="11" column="0" colspan="6">
-            <widget class="QLabel" name="label_43">
-             <property name="text">
-              <string>&lt;b&gt;Note: &lt;/b&gt;You can change position of OSD Notification by using drag and drop.</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0" colspan="2">
-            <widget class="QRadioButton" name="useNativeSystemNotifications">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Use Native System Notifications (Linux only)</string>
-             </property>
-            </widget>
            </item>
            <item row="3" column="3">
             <spacer name="horizontalSpacer_5">
@@ -2721,20 +3484,7 @@
              </property>
             </spacer>
            </item>
-           <item row="6" column="0" colspan="2">
-            <spacer name="horizontalSpacer_31">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="10" column="0">
+           <item row="12" column="0">
             <spacer name="verticalSpacer_5">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -2750,38 +3500,7 @@
              </property>
             </spacer>
            </item>
-           <item row="7" column="0" colspan="2">
-            <layout class="QHBoxLayout" name="horizontalLayout_10">
-             <item>
-              <widget class="QLabel" name="label_42">
-               <property name="text">
-                <string>Expiration timeout:</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="3" column="0">
-            <widget class="QRadioButton" name="useOSDNotifications">
-             <property name="text">
-              <string>Use OSD Notifications</string>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="0" colspan="2">
-            <widget class="QSpinBox" name="notificationTimeout">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="suffix">
-              <string> seconds</string>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="3" colspan="2">
+           <item row="9" column="3" colspan="2">
             <spacer name="horizontalSpacer_17">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -2797,12 +3516,92 @@
              </property>
             </spacer>
            </item>
-           <item row="3" column="2">
+           <item row="13" column="0" colspan="6">
+            <widget class="QLabel" name="label_43">
+             <property name="font">
+              <font>
+               <italic>true</italic>
+              </font>
+             </property>
+             <property name="text">
+              <string>&lt;b&gt;Note: &lt;/b&gt;You can change position of OSD Notification by using drag and drop.</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
             <widget class="QPushButton" name="notificationPreview">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="text">
               <string>Preview</string>
              </property>
             </widget>
+           </item>
+           <item row="3" column="1">
+            <spacer name="horizontalSpacer_27">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Preferred</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="4" column="0" colspan="2">
+            <widget class="QRadioButton" name="useNativeSystemNotifications">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="text">
+              <string>Use Native System Notifications (Linux only)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QRadioButton" name="doNotUseNotifications">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="text">
+              <string>Do not use Notifications</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QRadioButton" name="useOSDNotifications">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="text">
+              <string>Use OSD Notifications</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <spacer name="horizontalSpacer_22">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
@@ -2838,6 +3637,9 @@
           <layout class="QGridLayout" name="gridLayout_20">
            <item row="3" column="0">
             <layout class="QFormLayout" name="formLayout_9">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
              <property name="labelAlignment">
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
              </property>
@@ -2847,33 +3649,20 @@
              <property name="verticalSpacing">
               <number>6</number>
              </property>
-             <item row="0" column="0" colspan="2">
-              <widget class="QLabel" name="label_10">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>&lt;b&gt;Spell Check options&lt;/b&gt;</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
+             <item row="0" column="0">
               <widget class="QCheckBox" name="spellcheckEnabled">
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
                <property name="text">
                 <string>Enable Spell Check</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="0" colspan="2">
+             <item row="1" column="0" colspan="2">
               <widget class="QListWidget" name="spellcheckLanguages">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -2881,31 +3670,53 @@
                <property name="maximumSize">
                 <size>
                  <width>16777215</width>
-                 <height>160</height>
+                 <height>600</height>
                 </size>
                </property>
+               <property name="cursor" stdset="0">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="showDropIndicator" stdset="0">
+                <bool>false</bool>
+               </property>
                <property name="dragEnabled">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <property name="dragDropMode">
                 <enum>QAbstractItemView::InternalMove</enum>
                </property>
               </widget>
              </item>
-             <item row="9" column="0">
+             <item row="2" column="0">
+              <widget class="QLabel" name="spellcheckNoLanguages">
+               <property name="text">
+                <string>No languages found</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
               <widget class="QLabel" name="label_48">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="text">
                 <string>&lt;b&gt;Dictionary directories&lt;/b&gt;</string>
                </property>
               </widget>
              </item>
-             <item row="10" column="0" colspan="2">
+             <item row="4" column="0" colspan="2">
               <widget class="QScrollArea" name="spellcheckDirectoriesScrollArea">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="cursor" stdset="0">
+                <cursorShape>ForbiddenCursor</cursorShape>
                </property>
                <property name="widgetResizable">
                 <bool>true</bool>
@@ -2915,8 +3726,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>716</width>
-                  <height>69</height>
+                  <width>98</width>
+                  <height>31</height>
                  </rect>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_14">
@@ -2927,8 +3738,13 @@
                </widget>
               </widget>
              </item>
-             <item row="11" column="0">
+             <item row="5" column="0">
               <widget class="QLabel" name="label_40">
+               <property name="font">
+                <font>
+                 <italic>true</italic>
+                </font>
+               </property>
                <property name="text">
                 <string>For more spell checking dictionaries, please try one from &lt;a style=&quot;color:#0078d7&quot; href=&quot;https://tw3.gitlab.io/qtwebenginedictionaries/&quot;&gt;QtWebEngine Dictionaries&lt;/a&gt;.</string>
                </property>
@@ -2940,48 +3756,82 @@
                </property>
               </widget>
              </item>
-             <item row="7" column="0" colspan="2">
-              <spacer name="horizontalSpacer_24">
+             <item row="7" column="0">
+              <spacer name="verticalSpacer_22">
                <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Maximum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
-                 <width>40</width>
-                 <height>20</height>
+                 <width>20</width>
+                 <height>40</height>
                 </size>
                </property>
               </spacer>
              </item>
-             <item row="4" column="0" colspan="2">
-              <spacer name="horizontalSpacer_26">
+             <item row="8" column="0">
+              <spacer name="verticalSpacer_20">
                <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Maximum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
-                 <width>40</width>
-                 <height>20</height>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="9" column="0">
+              <spacer name="verticalSpacer_19">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Maximum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="10" column="0">
+              <spacer name="verticalSpacer_18">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Maximum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
                 </size>
                </property>
               </spacer>
              </item>
              <item row="6" column="0">
-              <widget class="QLabel" name="spellcheckNoLanguages">
-               <property name="text">
-                <string>No languages found</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0" colspan="2">
-              <spacer name="horizontalSpacer_28">
+              <spacer name="verticalSpacer_23">
                <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Maximum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
-                 <width>40</width>
-                 <height>20</height>
+                 <width>20</width>
+                 <height>40</height>
                 </size>
                </property>
               </spacer>
@@ -2996,6 +3846,12 @@
             <layout class="QHBoxLayout" name="horizontalLayout_6">
              <item>
               <widget class="QLabel" name="label_8">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="text">
                 <string>Default preferences</string>
                </property>
@@ -3094,6 +3950,9 @@
            </item>
            <item row="14" column="0">
             <widget class="QPushButton" name="protocolHandlers">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="text">
               <string>Protocols</string>
              </property>
@@ -3117,6 +3976,9 @@
            </item>
            <item row="8" column="0">
             <widget class="QPushButton" name="uaManager">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="text">
               <string>User Agents</string>
              </property>
@@ -3142,6 +4004,12 @@
             <layout class="QHBoxLayout" name="horizontalLayout_25">
              <item>
               <widget class="QLabel" name="label_66">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="text">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Search engines&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
@@ -3167,6 +4035,9 @@
            </item>
            <item row="11" column="0">
             <widget class="QPushButton" name="searchEngines">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="text">
               <string>Manage</string>
              </property>
@@ -3193,6 +4064,12 @@
            </item>
            <item row="20" column="0" colspan="5">
             <widget class="QLabel" name="label_9">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>&lt;b&gt;User Style Sheet&lt;/b&gt;</string>
              </property>
@@ -3206,6 +4083,9 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="text">
               <string>Languages</string>
              </property>
@@ -3215,6 +4095,12 @@
             <layout class="QHBoxLayout" name="horizontalLayout_17">
              <item>
               <widget class="QLabel" name="label_60">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="text">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Browser identification&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
@@ -3272,6 +4158,9 @@
            </item>
            <item row="23" column="3">
             <widget class="MacToolButton" name="chooseUserStylesheet">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="text">
               <string>...</string>
              </property>
@@ -3281,6 +4170,12 @@
             <layout class="QHBoxLayout" name="horizontalLayout_8">
              <item>
               <widget class="QLabel" name="label_36">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="text">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Preferred language for web sites&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
@@ -3306,6 +4201,9 @@
            </item>
            <item row="18" column="0">
             <widget class="QPushButton" name="preferencesReset">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="text">
               <string>Reset</string>
              </property>
@@ -3319,150 +4217,18 @@
      </widget>
     </widget>
    </item>
-   <item row="3" column="1" colspan="2">
-    <widget class="Line" name="line_2">
+   <item row="2" column="4">
+    <spacer name="horizontalSpacer_66">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" rowspan="5">
-    <widget class="QListWidget" name="listWidget">
-     <property name="minimumSize">
-      <size>
-       <width>220</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>220</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="showDropIndicator" stdset="0">
-      <bool>false</bool>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>32</width>
-       <height>32</height>
-      </size>
-     </property>
-     <property name="verticalScrollMode">
-      <enum>QAbstractItemView::ScrollPerPixel</enum>
-     </property>
-     <property name="movement">
-      <enum>QListView::Static</enum>
-     </property>
-     <property name="spacing">
-      <number>2</number>
-     </property>
-     <property name="uniformItemSizes">
-      <bool>true</bool>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-     <property name="selectionRectVisible">
-      <bool>false</bool>
-     </property>
-     <item>
-      <property name="text">
-       <string>General</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Appearance</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Tabs</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Browsing</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Fonts</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Keyboard Shortcuts</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Downloads</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Password Manager</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Privacy</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Notifications</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Plug-ins</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Spell Check</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Other</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="4" column="2">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1" colspan="2">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="caption"/>
-   </item>
-   <item row="4" column="1">
-    <spacer name="verticalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeType">
-      <enum>QSizePolicy::Preferred</enum>
+      <enum>QSizePolicy::Minimum</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>20</width>
-       <height>40</height>
+       <width>40</width>
+       <height>20</height>
       </size>
      </property>
     </spacer>
@@ -3478,7 +4244,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>buttonBox</tabstop>
-  <tabstop>startProfile</tabstop>
   <tabstop>tabWidget_2</tabstop>
   <tabstop>hideTabsOnTab</tabstop>
   <tabstop>askWhenClosingMultipleTabs</tabstop>
@@ -3490,10 +4255,7 @@
   <tabstop>fontSerif</tabstop>
   <tabstop>fontSansSerif</tabstop>
   <tabstop>fontCursive</tabstop>
-  <tabstop>useDefined</tabstop>
-  <tabstop>downLoc</tabstop>
   <tabstop>downButt</tabstop>
-  <tabstop>closeDownManOnFinish</tabstop>
   <tabstop>allowPassManager</tabstop>
   <tabstop>useNativeSystemNotifications</tabstop>
   <tabstop>chooseUserStylesheet</tabstop>

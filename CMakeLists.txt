@@ -1,23 +1,20 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.17) # It is important that CMake version is the very first line in this file
 project(Midori VERSION 10.0.1)
-# CMake version must be the very first line
+
 set(CMAKE_CXX_STANDARD 14) # Enable C++14
 set(CMAKE_CXX_EXTENSIONS OFF) # Don't enable gcc-specific extensions
+add_definitions(-DQT_NO_URL_CAST_FROM_STRING -DQT_USE_QSTRINGBUILDER -DQT_NO_CAST_TO_ASCII) # Defines that are always set
 
-# Find ECM, with nice error handling in case of failure
+if (NOT DEBUG)
+    set(UNITY_BUILD true) # Faster builds courtesy of a new cmake feature
+endif()
 
 include(FeatureSummary)
-find_package(ECM 5.27.0 CONFIG)
+find_package(ECM 5.27.0 CONFIG) # Find ECM, with nice error handling in case of failure
 set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://commits.kde.org/extra-cmake-modules")
 feature_summary(WHAT REQUIRED_PACKAGES_NOT_FOUND FATAL_ON_MISSING_REQUIRED_PACKAGES)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-
-if (NOT DEBUG)
-    set(UNITY_BUILD true)
-endif()
-
 # Many includes from ECM, to get all the nice cmake functions and settings
-
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
@@ -26,9 +23,7 @@ include(ECMSetupVersion)
 include(ECMAddAppIcon)
 include(ECMQtDeclareLoggingCategory)
 include(ECMPoQmTools)
-
 # Output dirs (like ECM 5.38 does)
-
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
@@ -49,15 +44,10 @@ if (NOT WIN32)
     set(MIDORI_PLUGIN_PATH "${PLUGIN_PATH}" CACHE PATH "Default plugin search path")
 endif()
 
-# Defines that are always set
+set(QT_MIN_VERSION "5.14.2") # Required: Qt5
 
-add_definitions(-DQT_NO_URL_CAST_FROM_STRING -DQT_USE_QSTRINGBUILDER -DQT_NO_CAST_TO_ASCII)
-
-# Mandatory: Qt5
-
-set(QT_MIN_VERSION "5.14.2")
 if (WIN32)
-    find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS Core Widgets Network Sql QuickWidgets PrintSupport WebEngine WebEngineWidgets WebChannel)
+    find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS Core Widgets Network Sql QuickWidgets PrintSupport WebEngine WebEngineWidgets WebChannel LinguistTools)
 else()
     find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS Core Widgets Network Sql QuickWidgets PrintSupport WebChannel)
     find_package(Qt5WebEngine ${QT_MIN_VERSION} REQUIRED) # Workaround in case of unusual location on Linux (Flatpack)
@@ -79,32 +69,27 @@ if (UNIX AND NOT APPLE AND NOT NO_X11)
 endif()
 
 if (WIN32)
-        include(${CMAKE_SOURCE_DIR}/vsconfig/msvc.conf)
+	include(${CMAKE_SOURCE_DIR}/vsconfig/msvc.conf)
     find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS WinExtras)
 endif()
 
-# Mandatory: OpenSSL
-
-find_package(OpenSSL REQUIRED)
+find_package(OpenSSL REQUIRED) # Required: OpenSSL
 
 if (NOT WIN32)
 
-    # KF5I18n: Mandatory with downloaded translations (only for ki18n_install)
-
     if (EXISTS "${CMAKE_SOURCE_DIR}/po")
-        find_package(KF5I18n REQUIRED)
+        find_package(KF5I18n REQUIRED) # KF5I18n: Required for downloaded translations (only for ki18n_install)
     endif()
 
-    # Optional: GnomeKeyring
     find_package(PkgConfig)
+
     if (PKG_CONFIG_FOUND)
         option(BUILD_KEYRING "Gnome keyring password plugin" ON)
         if (BUILD_KEYRING)
-            pkg_check_modules(GNOME_KEYRING IMPORTED_TARGET gnome-keyring-1 )
+            pkg_check_modules(GNOME_KEYRING IMPORTED_TARGET gnome-keyring-1 ) # Optional: GnomeKeyring (Untested)
         endif()
     endif()
-
-    # Optional: KWallet, KIO, KCrash, KCoreAddons
+    # Optional: KWallet, KIO, KCrash, KCoreAddons, KF5Purpose, KF5Archive
     if (NOT NO_PLUGINS)
         set(KF5_MIN_VERSION "5.54.0")
         find_package(KF5Wallet ${KF5_MIN_VERSION} CONFIG)
@@ -119,17 +104,16 @@ if (NOT WIN32)
         set_package_properties(KF5Purpose PROPERTIES DESCRIPTION "KDE Frameworks Integration plugin" TYPE OPTIONAL)
         find_package(KF5Archive ${KF5_MIN_VERSION} CONFIG)
         set_package_properties(KF5Archive PROPERTIES DESCRIPTION "KDE Frameworks Integration plugin" TYPE OPTIONAL)
-        if (KF5Wallet_FOUND AND KF5KIO_FOUND AND KF5Crash_FOUND AND KF5CoreAddons_FOUND AND KF5Purpose_FOUND AND KF5Archive_FOUND)
+        if (KF5Wallet_FOUND AND KF5KIO_FOUND AND KF5Crash_FOUND AND KF5CoreAddons_FOUND AND KF5Archive_FOUND)
             set(ENABLE_KDE_FRAMEWORKS_INTEGRATION_PLUGIN TRUE)
         endif()
     endif()
+
 endif()
 
 if (NOT NO_PLUGINS)
 
-    # Optional: PySide2 - This is unlikely to be ever supported in midori
-
-    find_package(PySide2 "2.0.0" CONFIG)
+    find_package(PySide2 "2.0.0" CONFIG) # Optional: PySide2, Shiboken2 & Python3 - This plugin system is unlikely to be ever supported in midori
     find_package(Shiboken2 "2.0.0" CONFIG)
     find_package(Python3 COMPONENTS Development)
     set_package_properties(PySide2 PROPERTIES DESCRIPTION "Python plugins" TYPE OPTIONAL)
@@ -142,12 +126,10 @@ if (NOT NO_PLUGINS)
 
 endif()
 
-find_package(Intl)
-	if (Intl_FOUND)
+find_package(Intl) # Optional: gettext/libintl/Intl/libgettext or whatever it is called this week...
+	if (intl_FOUND)
     	set(HAVE_LIBINTL TRUE)
 endif()
-
-# Git revision
 
 if (EXISTS "${CMAKE_SOURCE_DIR}/.git")
   find_package(Git QUIET)
@@ -158,16 +140,14 @@ if (EXISTS "${CMAKE_SOURCE_DIR}/.git")
       OUTPUT_VARIABLE GIT_REVISION
     )
     string(REGEX REPLACE "\n" "" GIT_REVISION "${GIT_REVISION}")
-    set(MIDORI_GIT_REVISION "${GIT_REVISION}")
+    set(MIDORI_GIT_REVISION "${GIT_REVISION}") # Git revision
   else()
     message(STATUS "Git revision could not be determined")
   endif()
 endif()
 
 configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/src/config.h)
-
 # Include dirs used everywhere
-
 include_directories(
      ${CMAKE_SOURCE_DIR}/src/lib/3rdparty
      ${CMAKE_SOURCE_DIR}/src/lib/adblock
@@ -193,13 +173,11 @@ include_directories(
 )
 
 if (NOT NO_PLUGINS)
-include_directories(
-     ${CMAKE_SOURCE_DIR}/src/lib/plugins
-)
+	include_directories(
+		${CMAKE_SOURCE_DIR}/src/lib/plugins
+	)
 endif()
-
-# Finally, go into the subdirs
-
+# Finally, traverse the subdirs
 add_subdirectory(src)
 
 if (BUILD_TESTING)

@@ -25,6 +25,9 @@
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QCheckBox" name="jscanOpenWindow">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="text">
         <string>Open popup windows</string>
        </property>
@@ -32,6 +35,9 @@
      </item>
      <item>
       <widget class="QCheckBox" name="jscanActivateWindow">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="text">
         <string>Activate windows</string>
        </property>
@@ -39,6 +45,9 @@
      </item>
      <item>
       <widget class="QCheckBox" name="jscanAccessClipboard">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="text">
         <string>Access clipboard</string>
        </property>
@@ -46,6 +55,9 @@
      </item>
      <item>
       <widget class="QCheckBox" name="jscanPaste">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="text">
         <string>Paste from clipboard</string>
        </property>
@@ -68,8 +80,14 @@
    </item>
    <item>
     <widget class="QDialogButtonBox" name="jsoptsbbox">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+     <property name="centerButtons">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

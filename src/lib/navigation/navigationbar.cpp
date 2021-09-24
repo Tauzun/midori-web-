@@ -82,6 +82,7 @@ NavigationBar::NavigationBar(BrowserWindow* window)
     m_buttonBack->setAutoRaise(true);
     m_buttonBack->setEnabled(false);
     m_buttonBack->setFocusPolicy(Qt::NoFocus);
+    m_buttonBack->setCursor(Qt::PointingHandCursor);
 
     m_buttonForward = new ToolButton(this);
     m_buttonForward->setObjectName("navigation-button-next");
@@ -92,6 +93,7 @@ NavigationBar::NavigationBar(BrowserWindow* window)
     m_buttonForward->setAutoRaise(true);
     m_buttonForward->setEnabled(false);
     m_buttonForward->setFocusPolicy(Qt::NoFocus);
+    m_buttonForward->setCursor(Qt::PointingHandCursor);
 
     QHBoxLayout* backNextLayout = new QHBoxLayout();
     backNextLayout->setContentsMargins(0, 0, 0, 0);
@@ -102,6 +104,7 @@ NavigationBar::NavigationBar(BrowserWindow* window)
     backNextWidget->setLayout(backNextLayout);
 
     m_reloadStop = new ReloadStopButton(this);
+    m_reloadStop->setCursor(Qt::PointingHandCursor);
 
     m_buttonHome = new ToolButton(this);
     m_buttonHome->setObjectName("navigation-button-home");
@@ -110,6 +113,7 @@ NavigationBar::NavigationBar(BrowserWindow* window)
     m_buttonHome->setToolbarButtonLook(true);
     m_buttonHome->setAutoRaise(true);
     m_buttonHome->setFocusPolicy(Qt::NoFocus);
+    m_buttonHome->setCursor(Qt::PointingHandCursor);
 
     m_buttonAddTab = new ToolButton(this);
     m_buttonAddTab->setObjectName("navigation-button-addtab");
@@ -118,6 +122,7 @@ NavigationBar::NavigationBar(BrowserWindow* window)
     m_buttonAddTab->setToolbarButtonLook(true);
     m_buttonAddTab->setAutoRaise(true);
     m_buttonAddTab->setFocusPolicy(Qt::NoFocus);
+    m_buttonAddTab->setCursor(Qt::PointingHandCursor);
 
     m_menuBack = new Menu(this);
     m_menuBack->setCloseOnMiddleClick(true);
@@ -137,6 +142,7 @@ NavigationBar::NavigationBar(BrowserWindow* window)
     m_buttonTools->setAutoRaise(true);
     m_buttonTools->setFocusPolicy(Qt::NoFocus);
     m_buttonTools->setShowMenuInside(true);
+    m_buttonTools->setCursor(Qt::PointingHandCursor);
 
     m_menuTools = new Menu(this);
     m_buttonTools->setMenu(m_menuTools);
@@ -151,6 +157,7 @@ NavigationBar::NavigationBar(BrowserWindow* window)
     m_supMenu->setFocusPolicy(Qt::NoFocus);
     m_supMenu->setMenu(m_window->superMenu());
     m_supMenu->setShowMenuInside(true);
+    m_supMenu->setCursor(Qt::PointingHandCursor);
 
     m_searchLine = new WebSearchBar(m_window);
 
@@ -169,6 +176,7 @@ NavigationBar::NavigationBar(BrowserWindow* window)
     m_exitFullscreen->setFocusPolicy(Qt::NoFocus);
     m_exitFullscreen->setAutoRaise(true);
     m_exitFullscreen->setVisible(false);
+    m_exitFullscreen->setCursor(Qt::PointingHandCursor);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &QWidget::customContextMenuRequested, this, &NavigationBar::contextMenuRequested);
@@ -193,7 +201,9 @@ NavigationBar::NavigationBar(BrowserWindow* window)
     addWidget(m_reloadStop, QStringLiteral("button-reloadstop"), tr("Reload button"));
     addWidget(m_buttonHome, QStringLiteral("button-home"), tr("Home button"));
     addWidget(m_buttonAddTab, QStringLiteral("button-addtab"), tr("Add tab button"));
+    // Could use a spacer here
     addWidget(m_navigationSplitter, QStringLiteral("locationbar"), tr("Address and Search bar"));
+    // Could use a spacer here
     addWidget(m_buttonTools, QStringLiteral("button-tools"), tr("Tools button"));
     addWidget(m_exitFullscreen, QStringLiteral("button-exitfullscreen"), tr("Exit Fullscreen button"));
 
@@ -232,10 +242,12 @@ void NavigationBar::setCurrentView(TabbedWebView *view)
         return;
     }
 
-    auto connectPageActions = [this](QWebEnginePage *page) {
-        auto updateButton = [](ToolButton *button, QAction *action) {
+    std::function<void (QWebEnginePage *)> connectPageActions = [this](QWebEnginePage *page) {
+        std::function<void (ToolButton *, QAction *)> updateButton = [](ToolButton *button, QAction *action) {
+
             button->setEnabled(action->isEnabled());
         };
+
         auto updateBackButton = std::bind(updateButton, m_buttonBack, page->action(QWebEnginePage::Back));
         auto updateForwardButton = std::bind(updateButton, m_buttonForward, page->action(QWebEnginePage::Forward));
 
@@ -279,6 +291,7 @@ void NavigationBar::leaveFullScreen()
 void NavigationBar::setSuperMenuVisible(bool visible)
 {
     m_supMenu->setVisible(visible);
+    m_buttonTools->setVisible(visible);
 }
 
 int NavigationBar::layoutMargin() const
@@ -531,7 +544,6 @@ void NavigationBar::loadSettings()
     Settings settings;
     settings.beginGroup(QStringLiteral("NavigationBar"));
     m_layoutIds = settings.value(QStringLiteral("Layout"), defaultIds).toStringList();
-
     m_searchLine->setVisible(settings.value(QStringLiteral("ShowSearchBar"), false).toBool());
     settings.endGroup();
 
@@ -551,7 +563,6 @@ void NavigationBar::reloadLayout()
     }
 
     setUpdatesEnabled(false);
-
     // Clear layout
     while (m_layout->count() != 0) {
         QLayoutItem *item = m_layout->takeAt(0);
@@ -564,12 +575,10 @@ void NavigationBar::reloadLayout()
         }
         widget->setParent(nullptr);
     }
-
     // Hide all widgets
     for (const WidgetData &data : m_widgets) {
         data.widget->hide();
     }
-
     // Add widgets to layout
     for (const QString &id : qAsConst(m_layoutIds)) {
         const WidgetData data = m_widgets.value(id);
@@ -585,7 +594,6 @@ void NavigationBar::reloadLayout()
     }
 
     m_layout->addWidget(m_supMenu);
-
     // Make sure search bar is visible
     if (m_searchLine->isVisible() && m_navigationSplitter->sizes().at(1) == 0) {
         const int locationBarSize = m_navigationSplitter->sizes().at(0);
@@ -636,7 +644,7 @@ void NavigationBar::reload()
 
 void NavigationBar::goBack()
 {
-    auto view = m_window->weView();
+    TabbedWebView * view = m_window->weView();
     view->setFocus();
     view->back();
 }
@@ -654,7 +662,7 @@ void NavigationBar::goBackInNewTab()
 
 void NavigationBar::goForward()
 {
-    auto view = m_window->weView();
+    TabbedWebView * view = m_window->weView();
     view->setFocus();
     view->forward();
 }

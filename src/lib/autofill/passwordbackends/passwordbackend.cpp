@@ -25,7 +25,7 @@ PasswordBackend::PasswordBackend()
 QStringList PasswordBackend::getUsernames(const QUrl &url)
 {
     QStringList out;
-    const auto entries = getEntries(url);
+    const QVector<PasswordEntry> entries = getEntries(url);
     for (const PasswordEntry &entry : entries) {
         out.append(entry.username);
     }

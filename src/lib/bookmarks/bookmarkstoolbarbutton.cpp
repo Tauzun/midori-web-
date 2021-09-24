@@ -139,7 +139,7 @@ void BookmarksToolbarButton::menuAboutToShow()
     Q_ASSERT(qobject_cast<Menu*>(sender()));
     Menu *menu = static_cast<Menu*>(sender());
 
-    const auto menuActions = menu->actions();
+    const QList<QAction *> menuActions = menu->actions();
     for (QAction *action : menuActions) {
         BookmarkItem *item = static_cast<BookmarkItem*>(action->data().value<void*>());
         if (item && item->type() == BookmarkItem::Url && action->icon().isNull()) {

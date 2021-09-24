@@ -1,4 +1,4 @@
-add_definitions(-DBHAWK_SHAREDLIBRARY)
+add_definitions(-DMIDORI_SHAREDLIBRARY)
 
 set(SRCS
     3rdparty/qtsingleapplication/qtsingleapplication.cpp
@@ -282,7 +282,7 @@ if (ENABLE_KDE_FRAMEWORKS_INTEGRATION_PLUGIN)
     )
 endif()
 # Add the logging category for Midori
-ecm_qt_declare_logging_category(LOGGING_SRCS HEADER Midori_private_debug.h IDENTIFIER "MIDORI_PRIVATE_LOG" CATEGORY_NAME "org.astian.midori")
+ecm_qt_declare_logging_category(LOGGING_SRCS HEADER Midori_private_debug.h IDENTIFIER "MIDORI_PRIVATE_LOG" CATEGORY_NAME "org.browser.bhawk")
 
 if (HAVE_LIBINTL)
         set(SRCS ${SRCS} plugins/qml/api/i18n/qmli18n.cpp)
@@ -367,11 +367,10 @@ target_link_libraries(MidoriPrivate
     ${OPENSSL_CRYPTO_LIBRARY}
 )
 
-    if (HAVE_LIBINTL)
+if (HAVE_LIBINTL)
     target_include_directories(MidoriPrivate SYSTEM PUBLIC ${Intl_INCLUDE_DIRS})
     target_link_libraries(MidoriPrivate ${Intl_LIBRARIES})
 endif()
-
 
 if (ENABLE_KDE_FRAMEWORKS_INTEGRATION_PLUGIN)
     target_link_libraries(MidoriPrivate KF5::Archive)
@@ -633,9 +632,8 @@ if (NOT DEBUG)
         ${CMAKE_SOURCE_DIR}/src/lib/webtab/webtab.h
     )
 
-    if (HAVE_LIBINTL)
+if (HAVE_LIBINTL)
         target_precompile_headers(MidoriPrivate PRIVATE${CMAKE_SOURCE_DIR}/src/lib/plugins/qml/api/i18n/qmli18n.h)
 endif()
-
 
 endif()

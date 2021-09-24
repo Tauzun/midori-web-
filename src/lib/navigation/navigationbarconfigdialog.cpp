@@ -39,7 +39,7 @@ NavigationBarConfigDialog::NavigationBarConfigDialog(NavigationBar *navigationBa
 
 void NavigationBarConfigDialog::loadSettings()
 {
-    auto createItem = [this](const NavigationBar::WidgetData &data) {
+    std::function<QListWidgetItem *(const NavigationBar::WidgetData &)> createItem = [this](const NavigationBar::WidgetData &data) {
         QListWidgetItem *item = new QListWidgetItem();
         item->setText(data.name);
         item->setData(Qt::UserRole + 10, data.id);
@@ -86,7 +86,7 @@ void NavigationBarConfigDialog::saveSettings()
     settings.setValue(QStringLiteral("ShowSearchBar"), ui->showSearchBar->isChecked());
     settings.endGroup();
 
-    const auto windows = mApp->windows();
+    const QList<BrowserWindow *> windows = mApp->windows();
     for (BrowserWindow *window : windows) {
         window->navigationBar()->loadSettings();
     }
@@ -100,7 +100,7 @@ void NavigationBarConfigDialog::resetToDefaults()
     settings.remove(QStringLiteral("ShowSearchBar"));
     settings.endGroup();
 
-    const auto windows = mApp->windows();
+    const QList<BrowserWindow *> windows = mApp->windows();
     for (BrowserWindow *window : windows) {
         window->navigationBar()->loadSettings();
     }

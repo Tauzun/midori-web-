@@ -65,12 +65,20 @@ void TabbedWebView::setBrowserWindow(BrowserWindow* window)
     m_window = window;
 }
 
+bool TabbedWebView::endInspection() {
+
+    m_webTab->toggleWebInspector();
+
+    return true;
+}
+
 void TabbedWebView::inspectElement()
 {
-    if (m_webTab->haveInspector())
+    if (m_webTab->haveInspector()) {
         triggerPageAction(QWebEnginePage::InspectElement);
-    else
+    } else {
         m_webTab->showWebInspector(true);
+    }
 }
 
 WebTab* TabbedWebView::webTab() const
@@ -109,6 +117,7 @@ void TabbedWebView::slotLoadFinished()
     if (m_webTab->isCurrentTab() && m_window) {
         m_window->updateLoadingActions();
     }
+
 }
 
 void TabbedWebView::setIp(const QHostInfo &info)
@@ -186,12 +195,21 @@ void TabbedWebView::_contextMenuEvent(QContextMenuEvent *event)
 {
     m_menu->clear();
 
-    WebHitTestResult hitTest = page()->hitTestContent(event->pos());
-    createContextMenu(m_menu, hitTest);
+    if (!m_window->isFullScreen()) {
+        WebHitTestResult hitTest = page()->hitTestContent(event->pos());
+        createContextMenu(m_menu, hitTest);
+    } else {
+        return;
+    }
 
     if (WebInspector::isEnabled()) {
         m_menu->addSeparator();
-        m_menu->addAction(QIcon(QStringLiteral(":icons/menu/web-inspect.svg")), tr("Inspect Element"), this, &TabbedWebView::inspectElement);
+        m_menu->addAction(QIcon(QStringLiteral(":icons/menu/web-inspect.svg")), tr("Inspect HTML"), this, &TabbedWebView::inspectElement);
+
+        if (m_webTab->haveInspector()) {
+            m_menu->addAction(QIcon(QStringLiteral(":icons/menu/application-exit.svg")), tr("Close the web inspector"), this, &TabbedWebView::endInspection);
+        }
+
     }
 
     if (!m_menu->isEmpty()) {
@@ -211,8 +229,7 @@ void TabbedWebView::_mouseMoveEvent(QMouseEvent *event)
     if (m_window && m_window->isFullScreen()) {
         if (m_window->fullScreenNavigationVisible()) {
             m_window->hideNavigationWithFullScreen();
-        }
-        else if (event->y() < 5) {
+        } else if (event->y() < 5) {
             m_window->showNavigationWithFullScreen();
         }
     }

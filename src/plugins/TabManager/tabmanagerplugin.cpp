@@ -114,7 +114,7 @@ void TabManagerPlugin::insertManagerWidget()
     }
 
     if (m_initState) {
-        const auto windows = mApp->windows();
+        const QList<BrowserWindow *> windows = mApp->windows();
         for (BrowserWindow* window : windows) {
             mainWindowCreated(window, false);
         }
@@ -142,7 +142,7 @@ void TabManagerPlugin::mainWindowCreated(BrowserWindow* window, bool refresh)
 
 void TabManagerPlugin::setTabBarVisible(bool visible)
 {
-    const auto windows = mApp->windows();
+    const QList<BrowserWindow *> windows = mApp->windows();
     for (BrowserWindow* window : windows) {
         window->tabWidget()->tabBar()->setForceHidden(!visible);
     }
@@ -155,7 +155,7 @@ void TabManagerPlugin::removeManagerWidget()
     }
     else if (viewType() == ShowAsWindow) {
         // remove statusbar icon
-        const auto windows = mApp->windows();
+        const QList<BrowserWindow *> windows = mApp->windows();
         for (BrowserWindow* window : windows) {
             m_controller->removeStatusBarIcon(window);
         }
@@ -185,7 +185,7 @@ void TabManagerPlugin::setViewType(ViewType type)
             }
             else if (m_viewType == ShowAsWindow) {
                 // add statusbar icon
-                const auto windows = mApp->windows();
+                const QList<BrowserWindow *> windows = mApp->windows();
                 for (BrowserWindow* window : windows) {
                     m_controller->addStatusBarIcon(window);
                 }

@@ -63,6 +63,14 @@ HTML5PermissionsNotification::HTML5PermissionsNotification(const QUrl &origin, Q
         ui->textLabel->setText(tr("Allow %1 to hide your pointer?").arg(site));
         break;
 
+    case QWebEnginePage::DesktopVideoCapture:
+        ui->textLabel->setText(tr("Allow %1 to capture the display, for screen sharing purposes for example?").arg(site));
+        break;
+
+    case QWebEnginePage::DesktopAudioVideoCapture:
+        ui->textLabel->setText(tr("Allow %1 to capture both audio and video output, for screen sharing purposes for example?").arg(site));
+        break;
+
     default:
         qWarning() << "Unknown feature" << feature;
         break;

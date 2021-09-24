@@ -23,7 +23,7 @@ DownIcon::DownIcon(QWidget* parent)
     : ClickableLabel(parent)
 {
     setObjectName("locationbar-down-icon");
-    setCursor(Qt::ArrowCursor);
+    setCursor(Qt::PointingHandCursor);
 }
 
 void DownIcon::contextMenuEvent(QContextMenuEvent* ev)

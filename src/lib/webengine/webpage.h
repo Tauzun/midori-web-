@@ -74,6 +74,10 @@ public:
 
     bool isLoading() const;
 
+    bool setDefaultPageStatus();
+    bool setFrozenPageStatus();
+    bool setDiscardedPageStatus();
+
     static QStringList internalSchemes();
     static QStringList supportedSchemes();
     static void addSupportedScheme(const QString &scheme);

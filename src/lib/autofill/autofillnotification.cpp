@@ -46,14 +46,11 @@ AutoFillNotification::AutoFillNotification(const QUrl &url, const PageFormData &
     }
 
     if (m_updateData.isValid()) {
-        ui->label->setText(tr("Would you want Midori Browser to update saved password %1?").arg(userPart));
-
+        ui->label->setText(tr("Would you like Midori Browser to update saved password %1?").arg(userPart));
         ui->remember->setVisible(false);
         ui->never->setVisible(false);
-    }
-    else {
-        ui->label->setText(tr("Would you want Midori Browser to store and remember the password %1 %2?").arg(userPart, hostPart));
-
+    } else {
+        ui->label->setText(tr("Would you like Midori Browser to store and remember the password %1 %2?").arg(userPart, hostPart));
         ui->update->setVisible(false);
     }
 

@@ -63,7 +63,6 @@ DownloadManager::DownloadManager(QWidget* parent)
         QtWin::extendFrameIntoClientArea(this, -1, -1, -1, -1);
     }
 #endif
-    ui->clearButton->setIcon(QIcon(QStringLiteral(":icons/menu/edit-clear.svg")));
     QzTools::centerWidgetOnScreen(this);
 
     connect(ui->clearButton, &QAbstractButton::clicked, this, &DownloadManager::clearList);
@@ -123,7 +122,7 @@ void DownloadManager::keyPressEvent(QKeyEvent* e)
 void DownloadManager::closeDownloadTab(QWebEngineDownloadItem *item) const
 {
     // Attempt to close empty tab that was opened only for loading the download url
-    auto testWebView = [](TabbedWebView *view, const QUrl &url) {
+    std::function<bool (TabbedWebView *, const QUrl &)> testWebView = [](TabbedWebView *view, const QUrl &url) {
         if (!view->webTab()->isRestored()) {
             return false;
         }
@@ -320,8 +319,7 @@ void DownloadManager::download(QWebEngineDownloadItem *downloadItem)
             const QString mhtml = tr("MIME HTML Archive (*.mhtml)");
             const QString htmlSingle = tr("HTML Page, single (*.html)");
             const QString htmlComplete = tr("HTML Page, complete (*.html)");
-            const QString pdfDocu = tr("PDF Document, complete (*.pdf)");
-            const QString filter = QStringLiteral("%1;;%2;;%3").arg(mhtml, htmlSingle, htmlComplete, pdfDocu);
+            const QString filter = QStringLiteral("%1;;%2;;%3").arg(htmlComplete, htmlSingle, mhtml);
 
             QString selectedFilter;
             downloadPath = QFileDialog::getSaveFileName(mApp->activeWindow(), tr("Save page as..."),
@@ -341,8 +339,6 @@ void DownloadManager::download(QWebEngineDownloadItem *downloadItem)
                     format = QWebEngineDownloadItem::SingleHtmlSaveFormat;
                 } else if (selectedFilter == htmlComplete) {
                     format = QWebEngineDownloadItem::CompleteHtmlSaveFormat;
-                } else if (selectedFilter == pdfDocu) {
-                    format = QWebEngineDownloadItem::UnknownSaveFormat;
                 }
 
                 if (format != QWebEngineDownloadItem::UnknownSaveFormat) {
@@ -368,20 +364,21 @@ void DownloadManager::download(QWebEngineDownloadItem *downloadItem)
         downloadItem->cancel();
         return;
     }
-
     // Set download path and accept
     downloadItem->setDownloadDirectory(QFileInfo(downloadPath).absolutePath());
     downloadItem->setDownloadFileName(QFileInfo(downloadPath).fileName());
     downloadItem->accept();
 
     // Create download item
-    QListWidgetItem* listItem = new QListWidgetItem(ui->list);
+    QListWidgetItem* listItem = new QListWidgetItem();
     DownloadItem* downItem = new DownloadItem(listItem, downloadItem, QFileInfo(downloadPath).absolutePath(), QFileInfo(downloadPath).fileName(), openFile, this);
     downItem->setDownTimer(downloadTimer);
     downItem->startDownloading();
     connect(downItem, &DownloadItem::deleteItem, this, &DownloadManager::deleteItem);
     connect(downItem, &DownloadItem::downloadFinished, this, &DownloadManager::downloadFinished);
+    ui->list->insertItem(0, listItem);
     ui->list->setItemWidget(listItem, downItem);
+    ui->list->setCurrentRow(0);
     ui->list->setCurrentItem(listItem);
     listItem->setSizeHint(downItem->sizeHint());
     downItem->show();

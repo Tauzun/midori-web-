@@ -11,15 +11,18 @@
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-	    <widget class="QLineEdit" name="search">
-	        <property name="placeholderText">
-	            <string>Search</string>
-	        </property>
-	    </widget>
-	</item>
+   <item>
+    <widget class="QLineEdit" name="search">
+     <property name="placeholderText">
+      <string>Search</string>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QListWidget" name="list">
+     <property name="cursor" stdset="0">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="alternatingRowColors">
       <bool>true</bool>
      </property>
@@ -47,6 +50,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="text">
         <string>Settings</string>
        </property>
@@ -56,6 +62,9 @@
       <widget class="QPushButton" name="butRemove">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="text">
         <string>Remove</string>
@@ -78,7 +87,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <!-- <string>&lt;a style=&quot;color:#0078d7&quot; href=&quot;https://store.kde.org/browse/cat/571/&quot;&gt;Get more plug-ins...&lt;/a&gt;</string>-->
+        <string/>
        </property>
        <property name="openExternalLinks">
         <bool>true</bool>

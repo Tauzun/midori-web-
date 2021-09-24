@@ -66,10 +66,10 @@ void QmlPluginLoader::initEngineAndComponent()
     m_engine->setExtensionPath(m_path);
     m_engine->setExtensionName(m_name);
 #if HAVE_LIBINTL
-    auto i18n = new QmlI18n(m_name);
-    m_engine->globalObject().setProperty(QStringLiteral("__bhawk_i18n"), m_engine->newQObject(i18n));
-    m_engine->evaluate(QStringLiteral("i18n = function (s) { return __bhawk_i18n.i18n(s) };"));
-    m_engine->evaluate(QStringLiteral("i18np = function (s1, s2) { return __bhawk_i18n.i18np(s1, s2) }"));
+    QmlI18n * i18n = new QmlI18n(m_name);
+    m_engine->globalObject().setProperty(QStringLiteral("__midori_i18n"), m_engine->newQObject(i18n));
+    m_engine->evaluate(QStringLiteral("i18n = function (s) { return __midori_i18n.i18n(s) };"));
+    m_engine->evaluate(QStringLiteral("i18np = function (s1, s2) { return __midori_i18n.i18np(s1, s2) }"));
 #else
     m_engine->evaluate(QStringLiteral("i18n = function (s) { return s; };"));
     m_engine->evaluate(QStringLiteral("i18np = function (s1, s2) { return s1; }"));

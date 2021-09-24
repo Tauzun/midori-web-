@@ -217,7 +217,7 @@ void QmlBrowserActionButton::setIcon(const QString &icon)
     if (!m_popup) {
         return;
     }
-    auto qmlEngine = qobject_cast<QmlEngine*>(m_popup->creationContext()->engine());
+    QmlEngine * qmlEngine = qobject_cast<QmlEngine*>(m_popup->creationContext()->engine());
     if (!qmlEngine) {
         return;
     }

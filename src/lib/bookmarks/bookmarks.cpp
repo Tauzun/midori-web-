@@ -363,8 +363,8 @@ QVariantList Bookmarks::writeBookmarks(BookmarkItem* parent)
     Q_ASSERT(parent);
 
     QVariantList list;
+    const QList<BookmarkItem *> children = parent->children();
 
-    const auto children = parent->children();
     for (BookmarkItem* child : children) {
         QVariantMap map;
         map.insert(QStringLiteral("type"), BookmarkItem::typeToString(child->type()));
@@ -407,7 +407,7 @@ void Bookmarks::search(QList<BookmarkItem*>* items, BookmarkItem* parent, const 
     switch (parent->type()) {
     case BookmarkItem::Root:
     case BookmarkItem::Folder: {
-        const auto children = parent->children();
+        const QList<BookmarkItem *> children = parent->children();
         for (BookmarkItem* child : children) {
             search(items, child, url);
         }
@@ -437,7 +437,7 @@ void Bookmarks::search(QList<BookmarkItem*>* items, BookmarkItem* parent, const 
     switch (parent->type()) {
     case BookmarkItem::Root:
     case BookmarkItem::Folder: {
-        const auto children = parent->children();
+        const QList<BookmarkItem *> children = parent->children();
         for (BookmarkItem* child : children) {
             search(items, child, string, limit, sensitive);
         }
@@ -467,7 +467,7 @@ void Bookmarks::searchKeyword(QList<BookmarkItem*>* items, BookmarkItem* parent,
     switch (parent->type()) {
     case BookmarkItem::Root:
     case BookmarkItem::Folder: {
-        const auto children = parent->children();
+        const QList<BookmarkItem *> children = parent->children();
         for (BookmarkItem* child : children)
             searchKeyword(items, child, keyword);
         break;

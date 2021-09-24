@@ -64,7 +64,7 @@ void DisableJS::init(InitState state, const QString &settingsPath) {
     connect(mApp->plugins(), &PluginProxy::mainWindowCreated, m_manager, &DisableJS_Manager::mainWindowCreated);
     connect(mApp->plugins(), &PluginProxy::mainWindowDeleted, m_manager, &DisableJS_Manager::mainWindowDeleted);
 
-    const auto windows = mApp->windows();
+    const QList<BrowserWindow *> windows = mApp->windows();
 
     for (BrowserWindow *window : windows) {
         m_manager->mainWindowCreated(window);
@@ -102,7 +102,7 @@ bool DisableJS::saveSettings(const QString sType, const QString sValue) {
 
 bool DisableJS::r1() {
 
-    DisableJS::saveSettings("approval/mode", "no");
+    DisableJS::saveSettings("approvalMode", "no");
 
     return true;
 
@@ -110,7 +110,7 @@ bool DisableJS::r1() {
 
 bool DisableJS::r2() {
 
-    DisableJS::saveSettings("approval/mode", "yes");
+    DisableJS::saveSettings("approvalMode", "yes");
 
     return true;
 
@@ -140,7 +140,7 @@ void DisableJS::showSettings(QWidget* parent) {
     QSettings settings(m_settingsPath + "/plug-ins.ini", QSettings::IniFormat);
 
     settings.beginGroup("DisableJS");
-    settingApprovalMode = settings.value("approval/mode", "no").toString().toLower();
+    settingApprovalMode = settings.value("approvalMode", "no").toString().toLower();
     settings.endGroup();
 
     struct ApprovedSites {

@@ -84,7 +84,7 @@ void BookmarksMenu::menuAboutToShow()
     Q_ASSERT(qobject_cast<Menu*>(sender()));
     Menu *menu = static_cast<Menu*>(sender());
 
-    const auto menuActions = menu->actions();
+    const QList<QAction *> menuActions = menu->actions();
     for (QAction *action : menuActions) {
         BookmarkItem *item = static_cast<BookmarkItem*>(action->data().value<void*>());
         if (item && item->type() == BookmarkItem::Url && action->icon().isNull()) {
@@ -189,7 +189,7 @@ void BookmarksMenu::refresh()
     BookmarksTools::addActionToMenu(this, this, mApp->bookmarks()->toolbarFolder());
     addSeparator();
 
-    const auto children = mApp->bookmarks()->menuFolder()->children();
+    const QList<BookmarkItem *> children = mApp->bookmarks()->menuFolder()->children();
     for (BookmarkItem* child : children) {
         BookmarksTools::addActionToMenu(this, this, child);
     }

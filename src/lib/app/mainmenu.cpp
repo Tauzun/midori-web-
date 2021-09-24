@@ -75,6 +75,7 @@ void MainMenu::initMenuBar(QMenuBar* menuBar) const
 
 void MainMenu::initSuperMenu(QMenu* superMenu) const
 {
+    superMenu->setCursor(Qt::PointingHandCursor);
     superMenu->addAction(m_actions[QStringLiteral("File/NewTab")]);
     superMenu->addAction(m_actions[QStringLiteral("File/NewWindow")]);
     superMenu->addAction(m_actions[QStringLiteral("File/NewPrivateWindow")]);
@@ -179,7 +180,7 @@ void MainMenu::sendLink() {
 
     const QUrl mailUrl = QUrl::fromEncoded("mailto:%20?body=" + QUrl::toPercentEncoding(m_window->weView()->url().toEncoded()) + "&subject=" + QUrl::toPercentEncoding(m_window->weView()->title()));
 
-    if (!m_window->weView()->url().toString().contains("midori:", Qt::CaseInsensitive)) {
+    if (!m_window->weView()->url().toString().contains("browser:", Qt::CaseInsensitive)) {
 
         QDesktopServices::openUrl(mailUrl);
 
@@ -339,21 +340,21 @@ void MainMenu::aboutQt()
 void MainMenu::showInfoAboutApp()
 {
     if (m_window) {
-        m_window->tabWidget()->addView(QUrl(QStringLiteral("midori:about")), Qz::NT_CleanSelectedTab);
+        m_window->tabWidget()->addView(QUrl(QStringLiteral("browser:about")), Qz::NT_CleanSelectedTab);
     }
 }
 
 void MainMenu::showConfigInfo()
 {
     if (m_window) {
-        m_window->tabWidget()->addView(QUrl(QStringLiteral("midori:config")), Qz::NT_CleanSelectedTab);
+        m_window->tabWidget()->addView(QUrl(QStringLiteral("browser:config")), Qz::NT_CleanSelectedTab);
     }
 }
 
 void MainMenu::reportIssue()
 {
     if (m_window) {
-        m_window->tabWidget()->addView(QUrl(QStringLiteral("midori:reportbug")), Qz::NT_CleanSelectedTab);
+        m_window->tabWidget()->addView(QUrl(QStringLiteral("browser:reportbug")), Qz::NT_CleanSelectedTab);
     }
 }
 
@@ -470,7 +471,7 @@ void MainMenu::init()
     m_actions[QStringLiteral(name)] = action
 
     // Standard actions - needed on Mac to be placed correctly in "application" menu
-    QAction* action = new QAction(QIcon(QStringLiteral(":icons/menu/help-about.svg")), tr("&About Midori Browser"), this);
+    QAction* action = new QAction(QIcon(QStringLiteral(":icons/menu/help-about.svg")), tr("&About Midori"), this);
     action->setMenuRole(QAction::AboutRole);
     connect(action, &QAction::triggered, this, &MainMenu::showAboutDialog);
     m_actions[QStringLiteral("Standard/About")] = action;
@@ -573,8 +574,7 @@ void MainMenu::init()
     // Tools menu
     m_menuTools = new QMenu(tr("&Tools"));
     connect(m_menuTools, &QMenu::aboutToShow, this, &MainMenu::aboutToShowToolsMenu);
-    // Web search bar disabled by default
-    //ADD_ACTION("Tools/WebSearch", m_menuTools, QIcon(QStringLiteral(":icons/menu/search-icon.svg")), tr("&Web Search"), SLOT(webSearch()), "Ctrl+K");
+
     ADD_ACTION("Tools/SiteInfo", m_menuTools, QIcon(QStringLiteral(":icons/menu/dialog-information.svg")), tr("Site &Info"), SLOT(showSiteInfo()), "Ctrl+I");
     action->setShortcutContext(Qt::WidgetShortcut);
     m_menuTools->addSeparator();
@@ -583,8 +583,9 @@ void MainMenu::init()
     ADD_ACTION("Tools/WebInspector", m_menuTools, QIcon(QStringLiteral(":icons/menu/web-inspect.svg")), tr("Web In&spector"), SLOT(toggleWebInspector()), "Ctrl+Shift+I");
     ADD_ACTION("Tools/ClearRecentHistory", m_menuTools, QIcon(QStringLiteral(":icons/menu/edit-clear.svg")), tr("Clear Recent &History"), SLOT(showClearRecentHistoryDialog()), "Ctrl+Shift+Del");
 
-    if (!WebInspector::isEnabled())
+    if (!WebInspector::isEnabled()) {
         m_actions.value(QStringLiteral("Tools/WebInspector"))->setVisible(false);
+    }
 
     m_submenuExtensions = new QMenu(tr("&Plug-ins"));
     m_submenuExtensions->menuAction()->setVisible(false);

@@ -63,7 +63,7 @@ void QmlPlugin::initPlugin(Plugins::Plugin *plugin)
 
     const QString name = plugin->pluginSpec.name;
 
-    auto qmlPluginLoader = plugin->data.value<QmlPluginLoader*>();
+    QmlPluginLoader * qmlPluginLoader = plugin->data.value<QmlPluginLoader*>();
     if (!qmlPluginLoader) {
         qWarning() << "Failed to cast from data";
         return;

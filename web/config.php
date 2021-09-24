@@ -65,7 +65,7 @@ return [
      *
      */
 
-    'siteName' => 'Midori Browser',
+    'siteName' => 'Blue Hawk',
 
     'siteDescription' => 'A Web browser',
 

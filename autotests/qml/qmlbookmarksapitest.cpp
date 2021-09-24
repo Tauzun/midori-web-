@@ -32,7 +32,7 @@ void QmlBookmarksApiTest::cleanupTestCase()
 
 void QmlBookmarksApiTest::testBookmarkTreeNodeType()
 {
-    auto type = BookmarkItem::Type(m_testHelper.evaluate("Bhawk.Bookmarks.rootItem().type").toInt());
+    BookmarkItem::Type type = BookmarkItem::Type(m_testHelper.evaluate("Bhawk.Bookmarks.rootItem().type").toInt());
     QCOMPARE(mApp->bookmarks()->rootItem()->type(), type);
 
     type = BookmarkItem::Type(m_testHelper.evaluate("Bhawk.Bookmarks.toolbarFolder().type").toInt());
@@ -43,7 +43,8 @@ void QmlBookmarksApiTest::testBookmarkTreeNode()
 {
     QObject *bookmark = m_testHelper.evaluateQObject("Bhawk.Bookmarks.toolbarFolder()");
     QVERIFY(bookmark);
-    auto toolbarFolder = mApp->bookmarks()->toolbarFolder();
+
+    BookmarkItem * toolbarFolder = mApp->bookmarks()->toolbarFolder();
 
     QCOMPARE(toolbarFolder->title(), bookmark->property("title").toString());
     QCOMPARE(toolbarFolder->urlString(), bookmark->property("url").toString());
@@ -56,7 +57,7 @@ void QmlBookmarksApiTest::testBookmarkTreeNode()
 
 void QmlBookmarksApiTest::testBookmarksCreation()
 {
-    auto item = new BookmarkItem(BookmarkItem::Url);
+    BookmarkItem * item = new BookmarkItem(BookmarkItem::Url);
     item->setTitle("Example Domain");
     item->setUrl(QUrl("https://example.com/"));
     item->setDescription("Testing bookmark description");
@@ -76,7 +77,7 @@ void QmlBookmarksApiTest::testBookmarksCreation()
     qRegisterMetaType<BookmarkItem*>();
     QSignalSpy bookmarksSpy(mApp->bookmarks(), &Bookmarks::bookmarkAdded);
 
-    auto out = m_testHelper.evaluate("Bhawk.Bookmarks.create({"
+    QJSValue out = m_testHelper.evaluate("Bhawk.Bookmarks.create({"
                                 "    parent: Bhawk.Bookmarks.toolbarFolder(),"
                                 "    title: 'Example Plugin',"
                                 "    url: 'https://another-example.com'"
@@ -93,7 +94,7 @@ void QmlBookmarksApiTest::testBookmarksExistence()
 {
     // in continuation from testBookmarksCreation
 
-    auto result = m_testHelper.evaluate("Bhawk.Bookmarks.isBookmarked('https://example.com/')").toBool();
+    bool result = m_testHelper.evaluate("Bhawk.Bookmarks.isBookmarked('https://example.com/')").toBool();
     QVERIFY(result);
     QCOMPARE(mApp->bookmarks()->isBookmarked(QUrl("https://example.com/")), result);
 }
@@ -119,7 +120,7 @@ void QmlBookmarksApiTest::testBookmarksModification()
     qRegisterMetaType<BookmarkItem*>();
     QSignalSpy bookmarksSpy(mApp->bookmarks(), &Bookmarks::bookmarkChanged);
 
-    auto out = m_testHelper.evaluate("Bhawk.Bookmarks.update(Bhawk.Bookmarks.get('https://another-example.com'),{"
+    QJSValue out = m_testHelper.evaluate("Bhawk.Bookmarks.update(Falkon.Bookmarks.get('https://another-example.com'),{"
                                 "    title: 'Modified Example Plugin'"
                                 "})");
     QVERIFY(out.toBool());
@@ -150,7 +151,7 @@ void QmlBookmarksApiTest::testBookmarksRemoval()
     qRegisterMetaType<BookmarkItem*>();
     QSignalSpy bookmarksSpy(mApp->bookmarks(), &Bookmarks::bookmarkRemoved);
 
-    auto out = m_testHelper.evaluate("Bhawk.Bookmarks.remove(Bhawk.Bookmarks.get('https://another-example.com'))");
+    QJSValue out = m_testHelper.evaluate("Bhawk.Bookmarks.remove(Falkon.Bookmarks.get('https://another-example.com'))");
     QVERIFY(out.toBool());
 
     QCOMPARE(bookmarksSpy.count(), 1);

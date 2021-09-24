@@ -1,7 +1,13 @@
 <RCC>
     <qresource prefix="/">
-        <file>icons/bhawk-black.svg</file>
-        <file>icons/bhawk-white.svg</file>
+        <file>icons/midori-green.svg</file>
+        <file>icons/exeicons/midori.ico</file>
+        <file>icons/exeicons/page.ico</file>
+        <file>icons/exeicons/page16.png</file>
+        <file>icons/exeicons/page32.png</file>
+        <file>icons/exeicons/page48.png</file>
+        <file>icons/exeicons/page256.png</file>
+        <file>icons/exeicons/speeddial.png</file>
         <file>icons/browsers/firefox.png</file>
         <file>icons/browsers/firefox@2x.png</file>
         <file>icons/browsers/chrome.png</file>
@@ -139,6 +145,5 @@
         <file>icons/menu/go-down.svg</file>
         <file>icons/menu/user.svg</file>
         <file>icons/menu/transparent.svg</file>
-        <file>icons/midori.svg</file>
     </qresource>
 </RCC>

@@ -24,8 +24,8 @@ set(INCLUDES "")
 foreach(INCLUDE_DIR ${QT_INCLUDE_DIRS})
     list(APPEND INCLUDES "-I${INCLUDE_DIR}")
 endforeach()
-get_property(BhawkPrivate_INCLUDE_DIRS TARGET BhawkPrivate PROPERTY INCLUDE_DIRECTORIES)
-foreach(INCLUDE_DIR ${BhawkPrivate_INCLUDE_DIRS})
+get_property(MidoriPrivate_INCLUDE_DIRS TARGET MidoriPrivate PROPERTY INCLUDE_DIRECTORIES)
+foreach(INCLUDE_DIR ${MidoriPrivate_INCLUDE_DIRS})
     list(APPEND INCLUDES "-I${INCLUDE_DIR}")
 endforeach()
 
@@ -162,7 +162,7 @@ set(PyBhawk_SRCS
 )
 
 add_library(PyBhawk MODULE ${PyBhawk_SRCS})
-install(TARGETS PyBhawk DESTINATION ${BHAWK_INSTALL_PLUGINDIR})
+install(TARGETS PyBhawk DESTINATION ${MIDORI_INSTALL_PLUGINDIR})
 
 target_include_directories(PyBhawk
     PRIVATE
@@ -173,7 +173,7 @@ target_include_directories(PyBhawk
 
 target_link_libraries(PyBhawk
     PRIVATE
-    BhawkPrivate
+    MidoriPrivate
     Shiboken2::libshiboken
     PySide2::pyside2
     Python3::Python

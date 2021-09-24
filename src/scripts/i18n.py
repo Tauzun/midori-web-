@@ -24,6 +24,6 @@ i = locale.name().find('_')
 if i > 0: languages.append(locale.name()[:i])
 localedir = QtCore.QStandardPaths.locate(QtCore.QStandardPaths.GenericDataLocation, 'locale', QtCore.QStandardPaths.LocateDirectory)
 
-t = gettext.translation('midori_' + __package__, localedir, languages, fallback=True)
+t = gettext.translation('bhawk_' + __package__, localedir, languages, fallback=True)
 i18n = t.gettext
 i18np = t.ngettext

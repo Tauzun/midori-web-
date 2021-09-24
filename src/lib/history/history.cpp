@@ -82,11 +82,11 @@ void History::addHistoryEntry(const QUrl &url, QString title)
         title = tr("Empty Page");
     }
 
-    auto job = new SqlQueryJob(QStringLiteral("SELECT id, count, date, title FROM history WHERE url=?"), this);
+    SqlQueryJob * job = new SqlQueryJob(QSL("SELECT id, count, date, title FROM history WHERE url=?"), this);
     job->addBindValue(url);
     connect(job, &SqlQueryJob::finished, this, [=]() {
         if (job->records().isEmpty()) {
-            auto job = new SqlQueryJob(QStringLiteral("INSERT INTO history (count, date, url, title) VALUES (1,?,?,?)"), this);
+            SqlQueryJob * job = new SqlQueryJob(QSL("INSERT INTO history (count, date, url, title) VALUES (1,?,?,?)"), this);
             job->addBindValue(QDateTime::currentMSecsSinceEpoch());
             job->addBindValue(url);
             job->addBindValue(title);
@@ -102,13 +102,13 @@ void History::addHistoryEntry(const QUrl &url, QString title)
             });
             job->start();
         } else {
-            const auto record = job->records().at(0);
+            const QSqlRecord record = job->records().at(0);
             const int id = record.value(0).toInt();
             const int count = record.value(1).toInt();
             const QDateTime date = QDateTime::fromMSecsSinceEpoch(record.value(2).toLongLong());
             const QString oldTitle = record.value(3).toString();
 
-            auto job = new SqlQueryJob(QStringLiteral("UPDATE history SET count = count + 1, date=?, title=? WHERE url=?"), this);
+            SqlQueryJob * job = new SqlQueryJob(QSL("UPDATE history SET count = count + 1, date=?, title=? WHERE url=?"), this);
             job->addBindValue(QDateTime::currentMSecsSinceEpoch());
             job->addBindValue(title);
             job->addBindValue(url);

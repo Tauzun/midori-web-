@@ -111,13 +111,13 @@ void ClearPrivateData::dialogAccepted()
 
         switch (ui->historyLength->currentIndex()) {
         case 0: //Later Today
-            end = QDateTime(today).toMSecsSinceEpoch();
+            end = QDateTime(today.startOfDay()).toMSecsSinceEpoch();
             break;
         case 1: //Week
-            end = QDateTime(week).toMSecsSinceEpoch();
+            end = QDateTime(week.startOfDay()).toMSecsSinceEpoch();
             break;
         case 2: //Month
-            end = QDateTime(month).toMSecsSinceEpoch();
+            end = QDateTime(month.startOfDay()).toMSecsSinceEpoch();
             break;
         case 3: //All
             break;

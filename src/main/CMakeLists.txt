@@ -17,13 +17,13 @@ target_link_libraries(midori MidoriPrivate)
 
 if (APPLE)
     set_target_properties(midori PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
-    set_target_properties(midori PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.astian.midori")
-    set_target_properties(midori PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "MIdori")
+    set_target_properties(midori PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.browser.bhawk")
+    set_target_properties(midori PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Midori")
     install(FILES lib/data/icons/exeicons/midori.icns DESTINATION ${BUNDLE_INSTALL_DIR}/midori.app/Contents/Resources)
-    # FIXME: Hashed out because?
+    # APPLE locale - Apple builds are untested and likely don't work. hashed out line locale below might depend upon Intl?
     #install(DIRECTORY ${CMAKE_BINARY_DIR}/bin/locale DESTINATION ${BUNDLE_INSTALL_DIR}/midori.app/Contents/Resources)
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/themes DESTINATION ${BUNDLE_INSTALL_DIR}/midori.app/Contents/Resources)
-    install(DIRECTORY ${CMAKE_BINARY_DIR}/bin/plugins DESTINATION ${BUNDLE_INSTALL_DIR}/midori.app/Contents/Resources)
+    install(DIRECTORY ${CMAKE_BINARY_DIR}/bin/plugins DESTINATION ${BUNDLE_INSTALL_DIR}/bhawk.app/Contents/Resources)
 endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES FreeBSD OR CMAKE_SYSTEM_NAME MATCHES OpenBSD)

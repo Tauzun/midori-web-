@@ -118,7 +118,7 @@ void BookmarksToolbar::refresh()
 
     BookmarkItem* folder = mApp->bookmarks()->toolbarFolder();
 
-    const auto children = folder->children();
+    const QList<BookmarkItem *> children = folder->children();
     for (BookmarkItem* child : children) {
         addItem(child);
     }

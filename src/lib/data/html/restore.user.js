@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name     _browser_restore
 // @run-at   document-end
-// @include  midori:restore
+// @include  browser:restore
 // ==/UserScript==
 
 (function() {

@@ -49,12 +49,13 @@ UserAgentDialog::UserAgentDialog(QWidget* parent)
     QRegularExpression chromeRx(QStringLiteral("Chrome/([^\\s]+)"));
     const QString chromeVersion = chromeRx.match(m_manager->defaultUserAgent()).captured(1);
 
-    m_knownUserAgents << QString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36")
+    m_knownUserAgents << QString("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0")
+                      << QString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36")
+                      << QString("Mozilla/5.0 (Linux; Android 9; SM-G960F Build/PPR1.180610.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.157 Mobile Safari/537.36")
                       << QString("Mozilla/5.0 (Linux; Android 8.0.0; SM-G960F Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36")
                       << QString("Mozilla/5.0 (%1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%2 Safari/537.36").arg(os, chromeVersion)
                       << QString("Mozilla/5.0 (%1) AppleWebKit/602.3.12 (KHTML, like Gecko) Version/10.0.2 Safari/602.3.12").arg(os)
-                      << QString("Mozilla/5.0 (%1; rv:57.0) Gecko/20100101 Firefox/57.0").arg(os)
-					  << QString("Opera/9.80 (%1) Presto/2.12.388 Version/12.16").arg(os);
+                      << QString("Mozilla/5.0 (%1; rv:57.0) Gecko/20100101 Firefox/57.0").arg(os);
 
     ui->globalComboBox->addItems(m_knownUserAgents);
 

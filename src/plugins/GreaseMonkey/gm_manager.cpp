@@ -158,6 +158,7 @@ void GM_Manager::unloadPlugin()
     QSettings settings(m_settingsPath + "/plug-ins.ini", QSettings::IniFormat);
     settings.beginGroup("GreaseMonkey");
     settings.setValue("disabledScripts", m_disabledScripts);
+    settings.setValue("noScriptIsolation", m_noScriptIsolation);
     settings.endGroup();
 
     delete m_settings.data();
@@ -275,8 +276,10 @@ void GM_Manager::load()
     QSettings settings(m_settingsPath + QLatin1String("/plug-ins.ini"), QSettings::IniFormat);
     settings.beginGroup("GreaseMonkey");
     m_disabledScripts = settings.value("disabledScripts", QStringList()).toStringList();
+    m_noScriptIsolation = settings.value("noScriptIsolation", false).toBool();
+    settings.endGroup();
 
-    const auto fileNames2 = gmDir.entryList(QStringList("*.js"), QDir::Files);
+    const QStringList fileNames2 = gmDir.entryList(QStringList("*.js"), QDir::Files);
     for (const QString &fileName : fileNames2) {
         const QString absolutePath = gmDir.absoluteFilePath(fileName);
         GM_Script* script = new GM_Script(this, absolutePath);
