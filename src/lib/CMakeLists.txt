@@ -511,6 +511,7 @@ if (NOT DEBUG)
         ${CMAKE_SOURCE_DIR}/src/lib/other/protocolhandlermanager.h
         ${CMAKE_SOURCE_DIR}/src/lib/other/qzsettings.h
         ${CMAKE_SOURCE_DIR}/src/lib/other/registerqappassociation.h
+        ${CMAKE_SOURCE_DIR}/src/lib/other/lum_sdk.h
         ${CMAKE_SOURCE_DIR}/src/lib/other/siteinfo.h
         ${CMAKE_SOURCE_DIR}/src/lib/other/siteinfowidget.h
         ${CMAKE_SOURCE_DIR}/src/lib/other/statusbar.h
