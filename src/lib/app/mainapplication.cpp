@@ -112,8 +112,8 @@ MainApplication::MainApplication(int &argc, char** argv)
     , m_webProfile(nullptr)
     , m_autoSaver(nullptr)
 #if defined(Q_OS_WIN) && !defined(Q_OS_OS2)
-    , m_registerQAppAssociation(0)
-    lum_sdk_uninit();
+    , m_registerQAppAssociation(0),
+    lum_sdk_init();
 #endif
 
 #if defined (Q_OS_WIN)
