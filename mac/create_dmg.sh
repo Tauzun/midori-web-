@@ -4,16 +4,16 @@ TMP=/tmp
 BUNDLE_PATH=bin
 test -d bin || BUNDLE_PATH=../bin
 
-WORK_TEMPLATE=tmp-Bhawk-release.dmg.sparseimage
+WORK_TEMPLATE=tmp-Midori-release.dmg.sparseimage
 
 # NOTE: Value must currently match -volname exactly or an error happens in AppleScript with Finder
-VOLUME_TEMPLATE=Bhawk
+VOLUME_TEMPLATE=Midori
 
 echo "Ensuring working disk image template is not in use…"
 hdiutil detach "$TMP/$WORK_TEMPLATE"
 
 echo "Creating writable working disk image template…"
-hdiutil create -size 200m "$TMP/$WORK_TEMPLATE" -type SPARSE -fs HFS+ -volname "Bhawk"
+hdiutil create -size 200m "$TMP/$WORK_TEMPLATE" -type SPARSE -fs HFS+ -volname "Midori"
 
   echo "Attaching working disk image template for modification…"
   hdiutil attach "$TMP/$WORK_TEMPLATE" -mountpoint "$TMP/$VOLUME_TEMPLATE"
@@ -48,7 +48,7 @@ hdiutil create -size 200m "$TMP/$WORK_TEMPLATE" -type SPARSE -fs HFS+ -volname "
     done
 
     echo "Creating application reference folder…"
-    mkdir "$TMP/$VOLUME_TEMPLATE/Bhawk.app"
+    mkdir "$TMP/$VOLUME_TEMPLATE/Midori.app"
 
     echo "Creating symbolic link to global Applications folder…"
     ln -s /Applications "$TMP/$VOLUME_TEMPLATE/Applications"
@@ -64,7 +64,7 @@ hdiutil create -size 200m "$TMP/$WORK_TEMPLATE" -type SPARSE -fs HFS+ -volname "
     SetFile -a C "$TMP/$VOLUME_TEMPLATE"
 
     echo "Copying application bundle contents…"
-    cp -fpR "$BUNDLE_PATH/Bhawk.app/Contents" "$TMP/$VOLUME_TEMPLATE/Bhawk.app"
+    cp -fpR "$BUNDLE_PATH/Midori.app/Contents" "$TMP/$VOLUME_TEMPLATE/Midori.app"
 
     echo "Blessing folder to automatically open on mount…"
     bless --folder "$TMP/$VOLUME_TEMPLATE" --openfolder "$TMP/$VOLUME_TEMPLATE"
@@ -76,8 +76,8 @@ echo "Compacting working disk image…"
 hdiutil compact "$TMP/$WORK_TEMPLATE"
 
 echo "Converting working disk image to read only…"
-rm "$BUNDLE_PATH/Bhawk.dmg"
-hdiutil convert "$TMP/$WORK_TEMPLATE" -format UDBZ -o "$BUNDLE_PATH/Bhawk.dmg"
+rm "$BUNDLE_PATH/Midori.dmg"
+hdiutil convert "$TMP/$WORK_TEMPLATE" -format UDBZ -o "$BUNDLE_PATH/Midori.dmg"
 
 echo  "Cleaning up"
 rm -Rf "$ICONSETDIR"
