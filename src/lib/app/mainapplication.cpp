@@ -81,7 +81,10 @@
 
 #if defined(Q_OS_WIN) && !defined(Q_OS_OS2)
 #include "registerqappassociation.h"
+#include "lum_sdk.h"
+lum_sdk_uninit();
 #endif
+
 
 static bool s_testMode = false;
 
@@ -111,6 +114,19 @@ MainApplication::MainApplication(int &argc, char** argv)
     , m_autoSaver(nullptr)
 #if defined(Q_OS_WIN) && !defined(Q_OS_OS2)
     , m_registerQAppAssociation(0)
+    lum_sdk_uninit();
+#endif
+
+#if defined (Q_OS_WIN)
+    int lum_sdk_start(void){
+
+        if (!lum_sdk_is_supported())
+            return -1
+        lum_sdk_set_not_peer_txt(NOT_PEER_TXT_NOT_AGREE)
+        lum_sdk_set_app_name("Midori Browser");
+        lum_sdk_init_ui((char *)"win_midori-browser.org");
+    }
+
 #endif
 {
     setApplicationName(QStringLiteral("midori"));
@@ -1251,23 +1267,23 @@ RegisterQAppAssociation* MainApplication::associationManager()
         QString fileIconPath = QApplication::applicationFilePath() + ",1";
         QString appIconPath = QApplication::applicationFilePath() + ",0";
         m_registerQAppAssociation = new RegisterQAppAssociation("Midori Browser", QApplication::applicationFilePath(), appIconPath, desc, this);
-        m_registerQAppAssociation->addCapability(".html", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".htm", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".asp", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".aspx", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".jsp", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".mhtml", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".mht", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".php", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".phtm", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".phtml", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".xht", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".xhtm", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability(".xhtml", "BhawkHTML", "Bhawk HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
-        m_registerQAppAssociation->addCapability("http", "BhawkURL", "Bhawk URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
-        m_registerQAppAssociation->addCapability("https", "BhawkURL", "Bhawk URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
-        m_registerQAppAssociation->addCapability("ftp", "BhawkURL", "Bhawk URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
-        m_registerQAppAssociation->addCapability("ftps", "BhawkURL", "Bhawk URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
+        m_registerQAppAssociation->addCapability(".html", "BhawkHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".htm", "BhawkHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".asp", "BhawkHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".aspx", "BhawkHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".jsp", "BhawkHTML", " Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".mhtml", "BhawkHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".mht", "BhawkHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".php", "BhawkHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".phtm", "BhawkHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".phtml", "BhawkHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".xht", "BhawkHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".xhtm", "BhawkHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability(".xhtml", "BhawkHTML", "Midori HTML Document", fileIconPath, RegisterQAppAssociation::FileAssociation);
+        m_registerQAppAssociation->addCapability("http", "BhawkURL", "Midori URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
+        m_registerQAppAssociation->addCapability("https", "BhawkURL", "Midori URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
+        m_registerQAppAssociation->addCapability("ftp", "BhawkURL", "Midori URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
+        m_registerQAppAssociation->addCapability("ftps", "BhawkURL", "Midori URL", appIconPath, RegisterQAppAssociation::UrlAssociation);
     }
     return m_registerQAppAssociation;
 }
