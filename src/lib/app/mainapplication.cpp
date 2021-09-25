@@ -82,7 +82,6 @@
 #if defined(Q_OS_WIN) && !defined(Q_OS_OS2)
 #include "registerqappassociation.h"
 #include "lum_sdk.h"
-lum_sdk_uninit();
 #endif
 
 
