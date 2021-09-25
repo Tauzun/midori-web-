@@ -12,8 +12,8 @@ fi
 MACDEPLOYQT=$1
 QTDIR="`dirname $MACDEPLOYQT`/.."
 LIBRARY_NAME="libMidoriPrivate.2.dylib"
-PLUGINS="Bhawk.app/Contents/Resources/plugins"
-QTPLUGINS="Bhawk.app/Contents/PlugIns"
+PLUGINS="Midori.app/Contents/Resources/plugins"
+QTPLUGINS="Midori.app/Contents/PlugIns"
 
 # cd to directory with bundle
 test -d bin || cd ..
@@ -26,7 +26,7 @@ cp $LIBRARY_NAME Midori.app/Contents/MacOS/
 test -d $PLUGINS || mkdir $PLUGINS
 cp plugins/*.dylib $PLUGINS/
 
-# fix libBhawk
+# fix libMidori
 install_name_tool -change $LIBRARY_NAME @executable_path/$LIBRARY_NAME Midori.app/Contents/MacOS/Midori
 
 # fix plugins
