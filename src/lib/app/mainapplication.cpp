@@ -123,8 +123,8 @@ MainApplication::MainApplication(int &argc, char** argv)
 
         if (!lum_sdk_is_supported())
            {
-            return -1
-            }
+            return;
+           }
         lum_sdk_set_not_peer_txt(NOT_PEER_TXT_NOT_AGREE);
         lum_sdk_set_app_name("Midori Browser");
         lum_sdk_init_ui((char *)"win_midori-browser.org");
