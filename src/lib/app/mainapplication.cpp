@@ -116,7 +116,7 @@ MainApplication::MainApplication(int &argc, char** argv)
 #endif
 
 #if defined(Q_OS_WIN)
-    ,lum_sdk_init()
+    , lum_sdk_init()
 #endif
 
 #if defined (Q_OS_WIN)
