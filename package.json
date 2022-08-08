@@ -3,7 +3,7 @@
   "version": "1.1.5-beta.2",
   "description": "Midori a lightweight, fast and free web browser for Windows, Linux MacOS and Android.",
   "engines": {
-    "node": "16.x"},
+    "node": "14.x"},
   "keywords": [
     "web-browser",
     "material",
